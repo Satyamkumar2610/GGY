@@ -1,11 +1,16 @@
 "use client";
 
-import { gsap, MOTION_QUERIES, ScrollTrigger, useGSAP } from "@/lib/gsap";
+import { gsap, MOTION_QUERIES, ScrollTrigger, SplitText, useGSAP } from "@/lib/gsap";
 import { scrollToY } from "@/lib/scroll";
 
 /**
  * Archive motion, owned by GSAP.
- * - Figures count up from zero when they enter.
+ * - The chapter's vermilion arrives as a sheet narrower than the page, with
+ *   rounded shoulders, and widens to full bleed as it reaches the top.
+ * - The title rises line by line out of its own masks; the running head
+ *   draws its rule and the introduction settles in after it.
+ * - Figures count up from zero when they enter, while the ledger draws the
+ *   rule under each one in turn.
  * - Large screens: the road pins and the track travels sideways with scroll;
  *   year cards rise into place and archival photographs develop from a pale
  *   monochrome print as they cross the screen.
@@ -18,6 +23,57 @@ export function ArchiveMotion() {
     const mm = gsap.matchMedia();
 
     mm.add(MOTION_QUERIES.any, () => {
+      gsap.fromTo(
+        q("[data-archive-sheet]"),
+        { clipPath: "inset(0% 7% 0% 7% round 56px 56px 0px 0px)" },
+        {
+          clipPath: "inset(0% 0% 0% 0% round 0px 0px 0px 0px)",
+          ease: "swing",
+          scrollTrigger: { trigger: root, start: "top bottom", end: "top 12%", scrub: 1 },
+        },
+      );
+
+      const title = q("[data-archive-title]")[0] as HTMLElement | undefined;
+      if (title) {
+        SplitText.create(title, {
+          type: "lines",
+          mask: "lines",
+          autoSplit: true,
+          onSplit: (self) =>
+            gsap.from(self.lines, {
+              yPercent: 112,
+              rotate: 2.5,
+              transformOrigin: "0% 100%",
+              duration: 1.4,
+              stagger: 0.12,
+              ease: "land",
+              scrollTrigger: { trigger: title, start: "top 85%", once: true },
+            }),
+        });
+      }
+
+      const kicker = q("[data-archive-kicker]")[0];
+      gsap
+        .timeline({ scrollTrigger: { trigger: kicker, start: "top 88%", once: true } })
+        .from(q("[data-archive-rule]"), { scaleX: 0, duration: 1.6, ease: "land" })
+        .from(q("[data-archive-kicker] .caps"), { autoAlpha: 0, y: 12, duration: 0.9, stagger: 0.1, ease: "power3.out" }, 0.1);
+
+      q("[data-archive-intro]").forEach((el) => {
+        gsap.from(el, {
+          autoAlpha: 0,
+          y: 24,
+          duration: 1.1,
+          ease: "power3.out",
+          scrollTrigger: { trigger: el, start: "top 90%", once: true },
+        });
+      });
+
+      const ledger = q(".archive-figures")[0];
+      gsap
+        .timeline({ scrollTrigger: { trigger: ledger, start: "top 85%", once: true } })
+        .from(q("[data-figure-rule]"), { scaleX: 0, duration: 1.4, stagger: 0.09, ease: "land" })
+        .from(q("[data-figure-label]"), { autoAlpha: 0, y: 14, duration: 0.9, stagger: 0.09, ease: "power3.out" }, 0.25);
+
       q("[data-count]").forEach((el) => {
         const target = Number((el as HTMLElement).dataset.count);
         const obj = { v: 0 };

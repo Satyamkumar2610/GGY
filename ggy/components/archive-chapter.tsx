@@ -40,9 +40,11 @@ function Figure({ value, label, note }: { value: string; label: string; note?: b
   const n = parseInt(value, 10);
   const suffix = value.replace(String(n), "");
   return (
-    <div className="archive-figure flex flex-col">
-      <dt className="caption order-3 mt-3 max-w-[11rem]">{label}</dt>
-      <div aria-hidden="true" className="route-rule order-2 mt-4 text-ink" />
+    <div className="archive-figure flex flex-col" data-figure>
+      <dt className="caption order-3 mt-3 max-w-[11rem]" data-figure-label>
+        {label}
+      </dt>
+      <div aria-hidden="true" className="route-rule order-2 mt-4 text-ink" data-figure-rule />
       <dd className="num order-1 whitespace-nowrap text-[clamp(3.25rem,2rem+3.6vw,6rem)] leading-[0.9] text-ink">
         <span data-count={n}>{n}</span>
         <span>{suffix}</span>
@@ -52,28 +54,42 @@ function Figure({ value, label, note }: { value: string; label: string; note?: b
   );
 }
 
+const firstYear = pastEditions[0].year;
+const lastYear = pastEditions[pastEditions.length - 1].year;
+
 /**
- * The archive: saffron at full strength, the brand's own orange. Figures
- * count up as they arrive; then the reader travels sideways along a decade
- * of routes, with archival photographs developing from monochrome between
- * the years.
+ * The archive: vermilion at full strength. The chapter arrives as a sheet
+ * that widens to the page, its title rising line by line; the figures sit in
+ * a ruled ledger, count up and draw their rules as they arrive. Then the
+ * reader travels sideways along a decade of routes, with archival
+ * photographs developing from monochrome between the years.
  */
 export function ArchiveChapter() {
   return (
-    <section id="archive" aria-labelledby="archive-title" className="on-saffron ground relative" data-archive>
-      <div className="page pb-[clamp(4rem,8vw,6rem)] pt-[clamp(7rem,14vw,12rem)]">
-        <div className="grid items-end gap-10 lg:grid-cols-12 lg:gap-[var(--gap)]">
-          <h2 id="archive-title" className="d-xl lg:col-span-8">
+    <section id="archive" aria-labelledby="archive-title" className="on-vermilion archive-chapter ground relative" data-archive>
+      <div aria-hidden="true" className="archive-sheet" data-archive-sheet />
+      <div className="archive-head pb-[clamp(4rem,8vw,6rem)] pt-[clamp(6rem,12vw,10rem)]">
+        <div className="archive-kicker" data-archive-kicker>
+          <span className="caps">The archive</span>
+          <span aria-hidden="true" className="archive-kicker-rule" data-archive-rule />
+          <span className="caps num">
+            {firstYear}–{lastYear}
+          </span>
+        </div>
+        <div className="mt-[clamp(2.5rem,5vw,4rem)] grid items-end gap-10 lg:grid-cols-12 lg:gap-[var(--gap)]">
+          <h2 id="archive-title" className="d-xl lg:col-span-8" data-archive-title>
             A decade on the road
           </h2>
-          <p className="max-w-[24rem] lg:col-span-4">
+          <p className="max-w-[22rem] lg:col-span-4 lg:justify-self-end" data-archive-intro>
             Every figure and route in this chapter is reproduced from the 2025 brochure and describes past editions, not the upcoming one.
           </p>
         </div>
 
         <div className="mt-[clamp(4rem,8vw,6rem)]">
-          <p className="label">Figures as printed in the brochure before the 8th edition</p>
-          <dl className="mt-10 grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-3 lg:grid-cols-5">
+          <p className="label" data-archive-intro>
+            Figures as printed in the brochure before the 8th edition
+          </p>
+          <dl className="archive-figures mt-6 grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-3 lg:grid-cols-5 lg:gap-x-0">
             {journeyStats.map((s) => (
               <Figure key={s.label} value={s.value} label={s.label} note={Boolean(s.note)} />
             ))}
@@ -83,7 +99,7 @@ export function ArchiveChapter() {
 
       {/* The road: a horizontal track on large screens, a list elsewhere */}
       <div className="archive-road" data-road>
-        <div className="archive-road-head page flex items-baseline justify-between gap-6">
+        <div className="archive-road-head archive-head flex items-baseline justify-between gap-6">
           <h3 className="d-m">Past routes</h3>
           <p className="caption">States on the upcoming route are underlined.</p>
         </div>
@@ -122,7 +138,7 @@ export function ArchiveChapter() {
             );
           })}
         </ol>
-        <nav aria-label="Jump to a year" className="page mt-6 lg:mt-0">
+        <nav aria-label="Jump to a year" className="archive-head mt-6 lg:mt-0">
           <div aria-hidden="true" className="archive-progress relative mb-4 h-px bg-ink/25">
             <div className="absolute inset-0 origin-left scale-x-0 bg-ink" data-road-progress />
           </div>

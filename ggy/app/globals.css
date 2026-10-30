@@ -28,6 +28,8 @@
   --color-cream: #f6ead6;
   --color-cream-deep: #eeddc0;
   --color-saffron: #c2651f; /* 4.2:1 on cream: large type and marks only */
+  --color-vermilion: #e05338; /* chapter ground: ink 4.9:1, ember 4.4:1, cream 3.2:1 (large type only) */
+  --color-vermilion-deep: #c2402a; /* raised fills on vermilion */
   --color-saffron-soft: #e9a24c; /* on ember and photographs */
   --color-ember: #2a1114; /* deep warm ground, replaces ink behind content */
   --color-ember-2: #3b1a1e;
@@ -605,14 +607,69 @@ html.lenis body {
    letters widen and lean with the speed of the scroll.
    ===================================================================== */
 
+/* The band is a card set into the page, narrower than it, so the colour
+   reads as an object rather than a stripe. */
+.band-wrap {
+  padding: clamp(1rem, 2.4vw, 2rem) var(--gutter);
+  background: var(--color-paper);
+}
 .band {
   --wdth: 112;
   --lean: 0deg;
   position: relative;
+  isolation: isolate;
   overflow: hidden;
-  background: var(--color-crimson);
+  max-width: 82rem;
+  margin-inline: auto;
+  border-radius: var(--radius-sheet);
+  background: var(--color-vermilion);
   color: var(--color-cream);
-  padding-block: clamp(1.75rem, 3.4vw, 3rem);
+  padding: clamp(1rem, 1.8vw, 1.4rem) clamp(1.1rem, 2.6vw, 2.25rem);
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--color-cream) 22%, transparent) inset,
+    0 2.5rem 4rem -2.5rem color-mix(in srgb, var(--color-crimson-deep) 55%, transparent);
+}
+/* A hairline frame just inside the edge, like a printed border. */
+.band::before {
+  content: "";
+  position: absolute;
+  inset: clamp(0.45rem, 0.8vw, 0.65rem);
+  border: 1px solid color-mix(in srgb, var(--color-cream) 34%, transparent);
+  border-radius: calc(var(--radius-sheet) - 0.55rem);
+  pointer-events: none;
+  z-index: 1;
+}
+.band-meta {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-inline: clamp(0.5rem, 1.4vw, 1.25rem);
+  color: var(--color-ink);
+}
+.band-meta .caps {
+  font-size: 0.6875rem;
+  white-space: nowrap;
+}
+.band-meta-rule {
+  flex: 1;
+  height: 1px;
+  background-image: linear-gradient(to right, currentColor 0 6px, transparent 6px 12px);
+  background-size: 12px 1px;
+  opacity: 0.45;
+  transform-origin: center;
+}
+@media (max-width: 40rem) {
+  .band-meta .caps:last-child {
+    display: none;
+  }
+}
+/* The words fade in and out at the card's edges instead of being cut. */
+.band-stage {
+  padding-block: clamp(0.6rem, 1.6vw, 1.4rem);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 9%, #000 91%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 9%, #000 91%, transparent);
 }
 .band-track {
   display: flex;
@@ -623,14 +680,14 @@ html.lenis body {
   display: flex;
   align-items: center;
   flex: none;
-  gap: clamp(1.75rem, 3.5vw, 3.5rem);
-  padding-right: clamp(1.75rem, 3.5vw, 3.5rem);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  padding-right: clamp(1.5rem, 3vw, 3rem);
   transform: skewX(var(--lean));
 }
 .band-word {
   font-family: var(--font-display);
   font-weight: 300;
-  font-size: clamp(3.25rem, 1.6rem + 7vw, 9.5rem);
+  font-size: clamp(2.75rem, 1.4rem + 5.6vw, 7.5rem);
   line-height: 1.05;
   letter-spacing: -0.03em;
   white-space: nowrap;
@@ -638,16 +695,24 @@ html.lenis body {
 }
 .band-word.script-deva,
 .band-word.script-guj {
-  font-size: clamp(2.6rem, 1.3rem + 5.6vw, 7.6rem);
+  font-size: clamp(2.2rem, 1.1rem + 4.5vw, 6rem);
   letter-spacing: 0;
-  color: var(--color-saffron-soft);
+  color: var(--color-ember);
 }
+/* An open diamond with a solid heart, turned by the loop. */
 .band-mark {
+  position: relative;
   flex: none;
-  width: clamp(0.7rem, 1.2vw, 1.15rem);
-  height: clamp(0.7rem, 1.2vw, 1.15rem);
+  width: clamp(0.85rem, 1.3vw, 1.3rem);
+  height: clamp(0.85rem, 1.3vw, 1.3rem);
   rotate: 45deg;
-  background: var(--color-saffron-soft);
+  border: 1px solid var(--color-ember);
+}
+.band-mark::after {
+  content: "";
+  position: absolute;
+  inset: 28%;
+  background: var(--color-cream);
 }
 
 /* =====================================================================
@@ -878,24 +943,24 @@ html.lenis body {
   background: var(--color-ember-2);
 }
 
-/* The brand's orange at full strength, for one chapter: ink text on flat
-   saffron, rather than ivory on ember. Everything placed on it is solid ink
-   — no faded "dim" text — because saffron's mid luminance does not leave
+/* Vermilion at full strength, for one chapter: ink text on a flat warm
+   ground, rather than ivory on ember. Everything placed on it is solid ink
+   — no faded "dim" text — because vermilion's mid luminance does not leave
    enough headroom for a lighter tint to still pass contrast. */
-.on-saffron {
+.on-vermilion {
   position: relative;
   isolation: isolate;
-  background: var(--color-saffron);
+  background: var(--color-vermilion);
   color: var(--color-ink);
 }
-.on-saffron .caption,
-.on-saffron .tba {
+.on-vermilion .caption,
+.on-vermilion .tba {
   color: var(--color-ink);
 }
-.on-saffron .note-ref {
+.on-vermilion .note-ref {
   color: var(--color-ink);
 }
-.on-saffron :focus-visible {
+.on-vermilion :focus-visible {
   outline-color: var(--color-ink);
 }
 
@@ -1197,6 +1262,72 @@ html.lenis body {
 }
 .component-card:hover {
   background: var(--color-light);
+}
+
+/* =====================================================================
+   Archive: the head and the figures
+   ===================================================================== */
+
+/* The vermilion is a sheet laid over the cream the format chapter ends on,
+   so while it is still narrower than the page its margins continue that
+   chapter. Motion clips the sheet, never the section or its pinned road. */
+.archive-chapter {
+  background: var(--color-cream);
+}
+.archive-sheet {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: var(--color-vermilion);
+  pointer-events: none;
+}
+
+/* The chapter's reading measure: narrower than the page, so the head and
+   the figures sit as one composed block. */
+.archive-head {
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.archive-kicker {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.archive-kicker-rule {
+  flex: 1;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.35;
+  transform-origin: left center;
+}
+/* The figures as a ruled ledger: a rule above, a hairline between columns. */
+.archive-figures {
+  border-top: 1px solid color-mix(in srgb, var(--color-ink) 35%, transparent);
+}
+.archive-figure {
+  position: relative;
+  padding-top: 1.75rem;
+}
+@media (min-width: 64rem) {
+  .archive-figure + .archive-figure {
+    padding-left: clamp(1rem, 1.6vw, 1.75rem);
+    border-left: 1px solid color-mix(in srgb, var(--color-ink) 22%, transparent);
+  }
+}
+.archive-figure .num {
+  transition: font-variation-settings 700ms var(--ease), letter-spacing 700ms var(--ease);
+}
+@media (hover: hover) {
+  .archive-figure:hover .num {
+    font-variation-settings: "wdth" 84;
+    letter-spacing: -0.05em;
+  }
+}
+/* The rule under each figure draws itself; the dotted road is its own. */
+.archive-figure .route-rule {
+  transform-origin: left center;
 }
 
 /* =====================================================================
@@ -1606,7 +1737,7 @@ html.lenis body {
 }
 
 /* Year index chips under the archive road. Solid ink throughout: on the
-   saffron ground a lighter tint would not clear text contrast, so emphasis
+   vermilion ground a lighter tint would not clear text contrast, so emphasis
    comes from a fill rather than a colour change. */
 .year-chip {
   min-height: 2.75rem;
