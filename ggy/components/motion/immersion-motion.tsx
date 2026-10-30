@@ -13,7 +13,7 @@ const EXITS = [
 
 /**
  * The idea stage, owned by GSAP.
- * - Arriving: the window grows a little and the words close in on it from
+ * - Arriving: the window grows into place and the words close in on it from
  *   both sides, scrubbed to the scroll.
  * - Pinned: the window opens to the full screen while the photograph inside
  *   settles from a close crop, so the view seems to fall into the picture;
@@ -34,19 +34,24 @@ export function ImmersionMotion() {
       const frame = q("[data-frame]")[0];
       const media = q(".immersion-media")[0];
       const words = q("[data-word]");
+      const inners = q("[data-word-inner]");
+      const img = q(".immersion-media img");
       const small = narrow ? "inset(30% 10% 30% 10%)" : "inset(26% 33% 26% 33%)";
-      const smaller = narrow ? "inset(36% 18% 36% 18%)" : "inset(34% 41% 34% 41%)";
       // The brochure photograph is not large: crop into it less on phones,
       // where the window is narrow and the enlargement would show.
       const zoom = narrow ? { far: 1.25, near: 1.12 } : { far: 1.6, near: 1.4 };
       const vw = () => window.innerWidth;
       const vh = () => window.innerHeight;
 
+      // Arrival and pin never share an element or property, so the two
+      // scrubbed timelines cannot fight over a value: the arrival moves the
+      // words' inner spans, scales the frame and zooms the image itself; the
+      // pin moves the words, clips the frame and zooms the image's wrapper.
       gsap
-        .timeline({ scrollTrigger: { trigger: stage, start: "top bottom", end: "top top", scrub: 0.8 } })
-        .fromTo(frame, { clipPath: smaller }, { clipPath: small, ease: "none" }, 0)
-        .fromTo(media, { scale: zoom.far }, { scale: zoom.near, ease: "none" }, 0)
-        .from(words, { x: (i) => (i % 2 ? 1 : -1) * vw() * 0.22, ease: "power2.out", stagger: 0.06 }, 0);
+        .timeline({ defaults: { ease: "none" }, scrollTrigger: { trigger: stage, start: "top bottom", end: "top top", scrub: 0.6 } })
+        .fromTo(frame, { scale: 0.82 }, { scale: 1 }, 0)
+        .fromTo(img, { scale: zoom.far / zoom.near }, { scale: 1 }, 0)
+        .fromTo(inners, { x: (i) => (i % 2 ? 1 : -1) * vw() * 0.22 }, { x: 0, ease: "power2.out", stagger: 0.06 }, 0);
 
       gsap
         .timeline({
@@ -64,15 +69,11 @@ export function ImmersionMotion() {
           },
         })
         .to(q("[data-immersion-note]"), { autoAlpha: 0, duration: 0.15 }, 0)
-        // Explicit starts, rendered lazily: the arrival above owns these
-        // properties until the pin begins.
-        .fromTo(frame, { clipPath: small }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1, ease: "power2.inOut", immediateRender: false }, 0.05)
-        .fromTo(media, { scale: zoom.near }, { scale: 1, duration: 1.1, ease: "power2.inOut", immediateRender: false }, 0.05)
-        .fromTo(
+        .fromTo(frame, { clipPath: small }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1, ease: "power2.inOut" }, 0.05)
+        .fromTo(media, { scale: zoom.near }, { scale: 1, duration: 1.1, ease: "power2.inOut" }, 0.05)
+        .to(
           words,
-          { x: 0, y: 0 },
           {
-            immediateRender: false,
             x: (i) => EXITS[i % 4].x * vw(),
             y: (i) => EXITS[i % 4].y * vh(),
             duration: (i) => 0.75 + i * 0.07,

@@ -38,6 +38,28 @@ export function IdeaMotion() {
       };
     });
 
+    // The description fills with ink word by word, scrubbed: the reader's
+    // scroll is the pen. Words wait at a faint proof, never at nothing.
+    mm.add(MOTION_QUERIES.any, () => {
+      const statement = q("[data-ink]")[0] as HTMLElement | undefined;
+      if (!statement) return;
+      SplitText.create(statement, {
+        type: "words",
+        autoSplit: true,
+        onSplit: (self) =>
+          gsap.fromTo(
+            self.words,
+            { opacity: 0.16 },
+            {
+              opacity: 1,
+              ease: "none",
+              stagger: 0.12,
+              scrollTrigger: { trigger: statement, start: "top 78%", end: "bottom 42%", scrub: 0.5 },
+            },
+          ),
+      });
+    });
+
     // The plate holds its two inks until the reader is with it.
     mm.add(MOTION_QUERIES.any, () => {
       const plate = q(".duotone")[0] as HTMLElement | undefined;

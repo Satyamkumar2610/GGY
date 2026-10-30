@@ -19,24 +19,26 @@ export function ImmersionStage() {
       <div className="immersion-stage" data-immersion-stage>
         <figure className="immersion-frame" data-frame>
           <div className="immersion-media is-wide">
-            <Image src={p.src} alt={p.alt} fill quality={85} sizes="(min-width: 48rem) 100vw, 1px" className="object-cover" />
+            <Image src={p.src} alt={p.alt} fill quality={82} sizes="(min-width: 48rem) 100vw, 1px" className="object-cover" />
           </div>
           <div className="immersion-media is-tall">
-            <Image src={tall.src} alt={tall.alt} fill quality={85} sizes="(min-width: 48rem) 1px, 100vw" className="object-cover" />
+            <Image src={tall.src} alt={tall.alt} fill quality={82} sizes="(min-width: 48rem) 1px, 100vw" className="object-cover" />
           </div>
           <div aria-hidden="true" className="immersion-scrim" data-scrim />
           <figcaption className="immersion-caption caption" data-caption>
-            <span className="is-wide">{p.caption}.</span>
-            <span className="is-tall">{tall.caption}.</span> Photograph from the GGY brochure.
+            <span className="is-wide">{p.caption.replace(/\.$/, "")}.</span>
+            <span className="is-tall">{tall.caption.replace(/\.$/, "")}.</span> Photograph from the GGY brochure.
           </figcaption>
         </figure>
         <ul className="immersion-words" aria-label="The four words on the brochure cover">
           {about.tagline.map((w, i) => (
             <li key={w} className="immersion-word" data-word>
-              <span aria-hidden="true" className="immersion-index num">
-                0{i + 1}
+              <span className="immersion-word-inner" data-word-inner>
+                <span aria-hidden="true" className="immersion-index num">
+                  0{i + 1}
+                </span>
+                {w}
               </span>
-              {w}
             </li>
           ))}
         </ul>

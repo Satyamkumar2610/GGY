@@ -1101,6 +1101,35 @@ html.lenis body {
   line-height: 1.02;
   letter-spacing: -0.035em;
 }
+/* The brochure's description, set as a statement that fills with ink. */
+.idea-statement {
+  max-width: 30ch;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(1.75rem, 0.9rem + 3vw, 4.2rem);
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  font-variation-settings: "wdth" 100;
+  color: var(--color-ivory);
+}
+.ink-key {
+  font-style: normal;
+  color: var(--color-saffron-soft);
+}
+
+/* Reading progress: a hairline across the top of the window in the
+   secondary colour, which reads on paper, cream and crimson alike. */
+.scroll-progress {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 60;
+  height: 3px;
+  background: var(--color-saffron);
+  transform: scaleX(0);
+  transform-origin: left center;
+  pointer-events: none;
+}
+
 /* The idea stage: four words around a window onto the delegates.
    Without motion: the photograph, then the words in a row. With motion
    (.js-motion is set before first paint) the stage is one screen tall, the
@@ -1188,7 +1217,7 @@ html.lenis body {
   inset: 0;
   overflow: hidden;
   background: var(--color-crimson-deep);
-  clip-path: inset(34% 41% 34% 41%);
+  clip-path: inset(26% 33% 26% 33%);
 }
 .js-motion .immersion-media {
   position: absolute;
@@ -1215,6 +1244,10 @@ html.lenis body {
   padding: 0;
   pointer-events: none;
 }
+.immersion-word-inner {
+  display: inline-block;
+  will-change: transform;
+}
 .js-motion .immersion-word {
   position: absolute;
   font-size: clamp(2.6rem, 0.6rem + 7.4vw, 9.5rem);
@@ -1237,7 +1270,7 @@ html.lenis body {
 }
 @media (max-width: 47.99rem) {
   .js-motion .immersion-frame {
-    clip-path: inset(36% 18% 36% 18%);
+    clip-path: inset(30% 10% 30% 10%);
   }
   .js-motion .immersion-word:nth-child(1) { top: 16%; }
   .js-motion .immersion-word:nth-child(2) { top: 24%; }

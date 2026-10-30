@@ -13,12 +13,36 @@ function Mark() {
   );
 }
 
+// The phrases of the brochure's description that carry it, lit in saffron
+// as the statement fills.
+const KEYS = ["10-day immersive travel program", "witness transformative governance projects firsthand", "visionary policymakers"];
+
+/** The brochure's text, verbatim, with its key phrases marked. */
+function InkText({ text }: { text: string }) {
+  const parts = text.split(new RegExp(`(${KEYS.join("|")})`));
+  return (
+    <>
+      {parts.map((part, i) =>
+        KEYS.includes(part) ? (
+          <em key={i} className="ink-key">
+            {part}
+          </em>
+        ) : (
+          part
+        ),
+      )}
+    </>
+  );
+}
+
 /**
  * The idea: the programme's own description of itself, set as a statement on
  * the crimson ground. Two phrases take a brush mark as the reader arrives;
  * then the four words from the brochure cover open onto the delegates
- * themselves, and the second photograph is printed in two inks until it
- * reaches the reader, when it comes back to colour.
+ * themselves. The brochure's description is set large and fills with ink
+ * word by word at the pace of the scroll, and the second photograph is
+ * printed in two inks until it reaches the reader, when it comes back to
+ * colour.
  */
 export function IdeaChapter() {
   return (
@@ -50,16 +74,14 @@ export function IdeaChapter() {
       <ImmersionStage />
 
       <div className="page">
-        <div className="mt-[clamp(4rem,9vw,7rem)] grid gap-12 lg:grid-cols-12 lg:gap-[var(--gap)]">
-          <AnnotatedPhoto photoKey="openLandscape" sizes="(min-width: 1024px) 58vw, 100vw" className="lg:col-span-7 lg:-ml-[var(--gutter)]" dark duotone />
+        <p className="idea-statement" data-ink>
+          <InkText text={about.text[0]} />
+          <NoteRef id="duration" />
+        </p>
+        <p className="caption mt-6">From the {BROCHURE}.</p>
 
-          <div className="lg:col-span-4 lg:col-start-9 lg:pt-[8%]">
-            <p className="lede text-cream/85">
-              {about.text[0]}
-              <NoteRef id="duration" />
-            </p>
-            <p className="caption mt-4">From the {BROCHURE}.</p>
-          </div>
+        <div className="mt-[clamp(4rem,9vw,7rem)] grid lg:grid-cols-12 lg:gap-[var(--gap)]">
+          <AnnotatedPhoto photoKey="openLandscape" sizes="(min-width: 1024px) 66vw, 100vw" className="lg:col-span-8 lg:col-start-5 lg:-mr-[var(--gutter)]" dark duotone />
         </div>
       </div>
       <IdeaMotion />

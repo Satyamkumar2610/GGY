@@ -14,10 +14,12 @@ import { ScrollRefresh } from "@/components/motion/scroll-refresh";
 import { PageMotion } from "@/components/motion/page-motion";
 import { Interactions } from "@/components/motion/interactions";
 import { Band } from "@/components/band";
+import { ScrollProgress } from "@/components/motion/scroll-progress";
 
 export default function Home() {
   return (
     <>
+      <ScrollProgress />
       <SiteHeader />
       <main id="main" tabIndex={-1} className="overflow-x-clip outline-none">
         <Hero />
