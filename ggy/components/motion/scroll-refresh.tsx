@@ -1,0 +1,18 @@
+"use client";
+
+import { useEffect } from "react";
+import { ScrollTrigger } from "@/lib/gsap";
+
+/** Recalculate ScrollTrigger positions once web fonts have loaded. */
+export function ScrollRefresh() {
+  useEffect(() => {
+    let cancelled = false;
+    document.fonts?.ready.then(() => {
+      if (!cancelled) ScrollTrigger.refresh();
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  return null;
+}
