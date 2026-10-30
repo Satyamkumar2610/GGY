@@ -18,8 +18,10 @@
   --color-muted: #6b635b; /* 5.2:1 on paper */
   --color-dim: #aaa39a; /* secondary on ink, 7.5:1 */
 
-  --color-crimson: #8e2531; /* 7.5:1 on paper */
-  --color-crimson-deep: #6b1823; /* finale ground */
+  /* The primary: the parent university's crimson. Ivory on it 10:1. */
+  --color-crimson: #710017; /* 11:1 on paper */
+  --color-crimson-deep: #55000f; /* finale ground */
+  --color-crimson-lit: #86001c; /* the lit plane of a crimson ground */
   --color-crimson-on-ink: #e2737b; /* 6.2:1 on ink */
 
   /* Warm family. Saffron is the colour of the delegates' scarves and carries
@@ -59,9 +61,7 @@
   /* Shape follows hierarchy: objects that sit on the page are rounded,
      photographs less so, controls fully. Sections themselves stay square. */
   --radius-sheet: 1.75rem;
-  --radius-sheet-lg: clamp(1.25rem, 2.4vw, 2.25rem);
-  --sheet-inset: clamp(0.625rem, 2.6vw, 2.75rem);
-  --sheet-max: 90rem;
+
   --radius-media: 1rem;
   --radius-thumb: 0.6rem;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -612,10 +612,8 @@ html.lenis body {
    letters widen and lean with the speed of the scroll.
    ===================================================================== */
 
-/* The band is a card set into the page, narrower than it, so the colour
-   reads as an object rather than a stripe. */
+/* The band runs the full width of the page. */
 .band-wrap {
-  padding: clamp(1rem, 2.4vw, 2rem) var(--gutter);
   background: var(--color-paper);
 }
 .band {
@@ -624,18 +622,15 @@ html.lenis body {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  max-width: 82rem;
-  margin-inline: auto;
   background: var(--color-saffron);
   color: var(--color-cream);
-  padding: clamp(1rem, 1.8vw, 1.4rem) clamp(1.1rem, 2.6vw, 2.25rem);
+  padding: clamp(1rem, 1.8vw, 1.4rem) var(--gutter);
 }
-/* A hairline frame just inside the edge, like a printed border. */
+/* Two hairlines just inside the top and bottom edges, like a printed rule. */
 .band-frame {
   position: absolute;
-  inset: clamp(0.45rem, 0.8vw, 0.65rem);
-  border: 1px solid color-mix(in srgb, var(--color-cream) 34%, transparent);
-  border-radius: calc(var(--radius-sheet-lg) - 0.55rem);
+  inset: clamp(0.45rem, 0.8vw, 0.65rem) 0;
+  border-block: 1px solid color-mix(in srgb, var(--color-cream) 34%, transparent);
   pointer-events: none;
   z-index: 1;
 }
@@ -645,7 +640,6 @@ html.lenis body {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding-inline: clamp(0.5rem, 1.4vw, 1.25rem);
   color: var(--color-ink);
 }
 .band-meta .caps {
@@ -668,8 +662,9 @@ html.lenis body {
 /* The words fade in and out at the card's edges instead of being cut. */
 .band-stage {
   padding-block: clamp(0.6rem, 1.6vw, 1.4rem);
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 9%, #000 91%, transparent);
-  mask-image: linear-gradient(to right, transparent, #000 9%, #000 91%, transparent);
+  margin-inline: calc(var(--gutter) * -1);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
 }
 .band-track {
   display: flex;
@@ -915,8 +910,12 @@ html.lenis body {
 .on-ember {
   position: relative;
   isolation: isolate;
-  background: var(--color-ember);
+  background: var(--color-crimson);
   color: var(--color-ivory);
+}
+/* On the crimson ground, notes and marks are lit in saffron, 5.7:1. */
+.on-ember .note-ref {
+  color: var(--color-saffron-soft);
 }
 /* Grounds are flat colour. Depth comes from grain, rules and photography —
    never from a gradient wash. */
@@ -986,7 +985,7 @@ html.lenis body {
   transition: opacity 900ms var(--ease);
 }
 .duotone::before {
-  background: var(--color-ember);
+  background: var(--color-crimson-deep);
   mix-blend-mode: lighten;
 }
 .duotone::after {
@@ -1102,33 +1101,148 @@ html.lenis body {
   line-height: 1.02;
   letter-spacing: -0.035em;
 }
-.idea-tagline {
+/* The idea stage: four words around a window onto the delegates.
+   Without motion: the photograph, then the words in a row. With motion
+   (.js-motion is set before first paint) the stage is one screen tall, the
+   photograph fills it behind a clip that GSAP opens, and the words are
+   placed around the window, off a common grid but never on the same line. */
+.immersion {
+  margin-block: clamp(4rem, 9vw, 7rem);
+}
+.immersion-stage {
+  position: relative;
+}
+.immersion-frame {
+  position: relative;
+  margin: 0;
+}
+.immersion-media {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--color-crimson-deep);
+}
+.immersion .is-tall {
+  display: none;
+}
+.immersion-media.is-tall {
+  aspect-ratio: 3 / 4;
+}
+@media (max-width: 47.99rem) {
+  .immersion .is-wide {
+    display: none;
+  }
+  .immersion .is-tall {
+    display: initial;
+  }
+  .immersion-media.is-tall {
+    display: block;
+  }
+}
+.immersion-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgb(40 0 8 / 0.78), rgb(40 0 8 / 0.15) 45%, transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+}
+.immersion-caption {
+  max-width: 28rem;
+  padding: 1rem var(--gutter) 0;
+}
+.immersion-words {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: clamp(0.9rem, 2.4vw, 2.2rem);
-  margin-top: clamp(3rem, 7vw, 5.5rem);
+  gap: 0.5rem 2rem;
+  padding: clamp(2rem, 4vw, 3rem) var(--gutter) 0;
+}
+.immersion-word {
   font-family: var(--font-display);
   font-weight: 300;
-  font-size: clamp(1.5rem, 0.8rem + 2.3vw, 3.3rem);
+  font-size: clamp(2.25rem, 1rem + 4vw, 4rem);
   line-height: 1;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+  font-variation-settings: "wdth" 112;
+  color: var(--color-ivory);
 }
-.idea-tagline li {
-  display: flex;
-  align-items: center;
-  gap: clamp(0.9rem, 2.4vw, 2.2rem);
+.immersion-index {
+  display: block;
+  margin-bottom: 0.6em;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--color-saffron-soft);
 }
-.idea-tagline li + li::before {
-  content: "";
-  flex: none;
-  width: 0.34em;
-  height: 0.34em;
-  rotate: 45deg;
-  background: var(--color-saffron-soft);
+.immersion-note {
+  padding: 1rem var(--gutter) 0;
 }
-.idea-tagline span {
-  display: inline-block;
+.js-motion .immersion {
+  margin-block: clamp(3rem, 6vw, 5rem);
+}
+.js-motion .immersion-stage {
+  height: 100svh;
+  overflow: hidden;
+}
+.js-motion .immersion-frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--color-crimson-deep);
+  clip-path: inset(34% 41% 34% 41%);
+}
+.js-motion .immersion-media {
+  position: absolute;
+  inset: 0;
+  aspect-ratio: auto;
+  will-change: transform;
+}
+.js-motion .immersion-caption {
+  position: absolute;
+  left: var(--gutter);
+  bottom: clamp(1.25rem, 3vw, 2.5rem);
+  padding: 0;
+  color: var(--color-cream);
+}
+.js-motion .immersion-scrim,
+.js-motion .immersion-caption {
+  opacity: 0;
+}
+.js-motion .immersion-words {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: block;
+  padding: 0;
+  pointer-events: none;
+}
+.js-motion .immersion-word {
+  position: absolute;
+  font-size: clamp(2.6rem, 0.6rem + 7.4vw, 9.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  will-change: transform;
+}
+/* Around the window: high left, higher right, low left, lowest right. */
+.js-motion .immersion-word:nth-child(1) { left: var(--gutter); top: 13%; }
+.js-motion .immersion-word:nth-child(2) { right: var(--gutter); top: 27%; text-align: right; }
+.js-motion .immersion-word:nth-child(3) { left: calc(var(--gutter) + 6vw); bottom: 25%; }
+.js-motion .immersion-word:nth-child(4) { right: calc(var(--gutter) + 9vw); bottom: 9%; text-align: right; }
+.js-motion .immersion-note {
+  position: absolute;
+  right: var(--gutter);
+  top: calc(var(--header-h) + 1.5rem);
+  padding: 0;
+  max-width: 14rem;
+  text-align: right;
+}
+@media (max-width: 47.99rem) {
+  .js-motion .immersion-frame {
+    clip-path: inset(36% 18% 36% 18%);
+  }
+  .js-motion .immersion-word:nth-child(1) { top: 16%; }
+  .js-motion .immersion-word:nth-child(2) { top: 24%; }
+  .js-motion .immersion-word:nth-child(3) { left: var(--gutter); bottom: 22%; }
+  .js-motion .immersion-word:nth-child(4) { right: var(--gutter); bottom: 14%; }
 }
 
 /* The road: a dotted line with milestones, the site's journey motif. */
@@ -1268,11 +1382,9 @@ html.lenis body {
    Archive: the head and the figures
    ===================================================================== */
 
-/* The chapter's reading measure: narrower than the page, so the head and
-   the figures sit as one composed block. */
 .archive-head {
   width: 100%;
-  max-width: 80rem;
+  max-width: var(--page-max);
   margin-inline: auto;
   padding-inline: var(--gutter);
 }
@@ -1884,49 +1996,34 @@ html.lenis body {
 }
 
 /* =====================================================================
-   Sheets and gloss
+   Lit grounds
 
-   After the hero, every coloured chapter is a sheet set into the paper,
-   narrower than the page, rather than a band that runs edge to edge.
-   Its finish is lacquer: light pools along the top edge, a bright lip and
-   a darker heel catch the rim, and a soft two-step shadow lifts it off the
-   paper. A bar of reflected light crosses the surface as the page scrolls
-   beneath a fixed light — the only thing about the sheet that moves.
+   Coloured chapters run the full width of the page. Their finish follows
+   the parent university's crimson: the ground is broken into broad planes
+   of light, brighter toward the upper left and falling into shadow toward
+   the lower right, and a soft bar of reflected light crosses it as the
+   page scrolls beneath a fixed light.
 
    Nothing here creates a containing block (no transform, filter or
-   contain), so pinned content inside a sheet still pins to the viewport.
-   Declared last so its background-image longhand survives the grounds'
-   background shorthand.
+   contain), so pinned content inside still pins to the viewport. Declared
+   last so its background-image longhand survives the grounds' background
+   shorthand.
    ===================================================================== */
 
-.sheet {
-  margin-inline: max(var(--sheet-inset), calc((100% - var(--sheet-max)) / 2));
-  margin-block: var(--sheet-inset);
-}
 .gloss {
   --sheen: -8%;
   position: relative;
   isolation: isolate;
   overflow: clip;
-  border-radius: var(--radius-sheet-lg);
   background-image:
-    radial-gradient(90% 14rem at 50% 0%, rgb(255 255 255 / 0.1), transparent 70%),
-    linear-gradient(to bottom, rgb(255 255 255 / 0.06), transparent 22rem);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.3),
-    inset 0 0 0 1px rgb(255 255 255 / 0.07),
-    inset 0 -1px 0 rgb(0 0 0 / 0.16),
-    0 0 0 1px rgb(42 17 20 / 0.05),
-    0 2px 4px -1px rgb(42 17 20 / 0.08),
-    0 28px 56px -28px rgb(42 17 20 / 0.3),
-    0 72px 110px -72px rgb(42 17 20 / 0.4);
+    linear-gradient(162deg, rgb(255 255 255 / 0.07) 0%, transparent 34%),
+    linear-gradient(200deg, transparent 0 46%, rgb(0 0 0 / 0.07) 46% 72%, rgb(0 0 0 / 0.16) 100%),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.05), transparent 16rem);
 }
-/* The reflected light: a soft bar, slightly off vertical, carried across
-   by scroll. Under the content, over the ground. The layer is three sheets
-   wide and the bar is a straight 90deg gradient skewed into its lean, so
-   its fade never depends on how tall the sheet is: both edges are always
-   clear. --sheen runs from -24% to 24%, carrying the bar from just off one
-   side of the sheet to just off the other. */
+/* The reflected light. The layer is three grounds wide and the bar is a
+   straight 90deg gradient skewed into its lean, so its fade never depends
+   on how tall the ground is. --sheen runs from -24% to 24%, carrying the
+   bar from just off one side to just off the other. */
 .gloss::before {
   content: "";
   position: absolute;
@@ -1935,15 +2032,17 @@ html.lenis body {
   pointer-events: none;
   background: linear-gradient(
     90deg,
-    transparent 45%,
-    rgb(255 255 255 / 0.05) 47.8%,
-    rgb(255 255 255 / 0.13) 50%,
-    rgb(255 255 255 / 0.05) 52.2%,
-    transparent 55%
+    transparent 44%,
+    rgb(255 255 255 / 0.04) 47.5%,
+    rgb(255 255 255 / 0.1) 50%,
+    rgb(255 255 255 / 0.04) 52.5%,
+    transparent 56%
   );
-  transform: translateX(var(--sheen)) skewX(-12deg);
+  transform: translateX(var(--sheen)) skewX(-14deg);
 }
-/* On the light cream sheet a white sheen would vanish; it reads as warmth. */
 .gloss.bg-cream::before {
-  background: linear-gradient(90deg, transparent 45%, rgb(255 255 255 / 0.4) 50%, transparent 55%);
+  background: linear-gradient(90deg, transparent 44%, rgb(255 255 255 / 0.4) 50%, transparent 56%);
+}
+.gloss.bg-cream {
+  background-image: linear-gradient(162deg, rgb(255 255 255 / 0.35) 0%, transparent 40%);
 }

@@ -53,9 +53,9 @@ export function FieldGallery() {
   const current = open === null ? null : photos[keys[open]];
 
   return (
-    <section id="gallery" aria-labelledby="gallery-title" className="on-dark on-ember ground sheet gloss py-[clamp(6rem,12vw,10rem)]">
+    <section id="gallery" aria-labelledby="gallery-title" className="on-dark on-ember ground gloss py-[clamp(6rem,12vw,10rem)]">
       <div className="page grid gap-6 lg:grid-cols-12 lg:gap-[var(--gap)]">
-        <h2 id="gallery-title" className="d-l lg:col-span-7">
+        <h2 id="gallery-title" className="d-l lg:col-span-7" data-drift>
           Field photographs
         </h2>
         <p className="max-w-[24rem] text-dim lg:col-span-3 lg:col-start-10 lg:self-end">

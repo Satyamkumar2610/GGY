@@ -9,10 +9,10 @@ import { Readiness } from "./readiness";
  */
 export function AdmissionsChapter() {
   return (
-    <section id="admissions" aria-labelledby="admissions-title" className="on-crimson on-dark sheet gloss bg-crimson-deep text-ivory">
+    <section id="admissions" aria-labelledby="admissions-title" className="on-crimson on-dark gloss bg-crimson-deep text-ivory">
       <div className="page py-[clamp(6rem,12vw,10rem)]">
         <div className="grid items-end gap-12 lg:grid-cols-12 lg:gap-[var(--gap)]">
-          <h2 id="admissions-title" className="d-l lg:col-span-7">
+          <h2 id="admissions-title" className="d-l lg:col-span-7" data-drift>
             Applications for the next Yatra have not yet opened.
           </h2>
           <div className="lg:col-span-4 lg:col-start-9">

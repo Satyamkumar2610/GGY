@@ -9,8 +9,8 @@ import { scrollToY } from "@/lib/scroll";
  *   rises up the screen, and the running head draws its rule — both scrubbed.
  * - Figures count up from zero when they enter, while the ledger is ruled
  *   off under each one in turn, at the pace of the scroll.
- * - Large screens: the road pins and the track travels sideways with scroll,
- *   inside the sheet's width rather than the window's;
+ * - Large screens: the road pins and the track travels sideways with scroll
+ *   across the road's own width;
  *   year cards rise into place and archival photographs develop from a pale
  *   monochrome print as they cross the screen.
  */
@@ -103,7 +103,7 @@ export function ArchiveMotion() {
           scrub: 1.2,
           anticipatePin: 1,
           invalidateOnRefresh: true,
-          // The second pin on the page, so it refreshes after the hero's.
+          // The third pin on the page, so it refreshes after the hero and the idea stage.
           refreshPriority: 1,
         },
       });

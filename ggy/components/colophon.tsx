@@ -11,7 +11,7 @@ import { FooterMotion } from "./motion/footer-motion";
 export function Colophon() {
   const external = Object.values(photos).filter((p) => p.source !== "ggy-brochure");
   return (
-    <footer id="notes" aria-labelledby="notes-title" className="on-dark on-ember ground sheet gloss" data-footer>
+    <footer id="notes" aria-labelledby="notes-title" className="on-dark on-ember ground gloss" data-footer>
       <div className="page pt-[clamp(5rem,10vw,8rem)]">
         <div className="grid gap-12 border-b border-hair-ember pb-14 lg:grid-cols-12 lg:gap-[var(--gap)]">
           <div className="lg:col-span-4">
@@ -54,7 +54,7 @@ export function Colophon() {
             <ol className="mt-5 space-y-2.5">
               {Object.entries(pendingNotes).map(([id, text]) => (
                 <li key={id} id={`note-${id}`} className="flex gap-3 text-[0.82rem] text-dim">
-                  <span aria-hidden="true" className="text-crimson-on-ink">†</span>
+                  <span aria-hidden="true" className="text-saffron-soft">†</span>
                   <span>{text}</span>
                 </li>
               ))}

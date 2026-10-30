@@ -58,15 +58,15 @@ const firstYear = pastEditions[0].year;
 const lastYear = pastEditions[pastEditions.length - 1].year;
 
 /**
- * The archive: the secondary colour at full strength, on a glossed sheet
- * narrower than the page. Its title widens into place with the scroll; the
+ * The archive: the secondary colour at full strength, on a lit ground the
+ * full width of the page. Its title widens into place with the scroll; the
  * figures sit in a ruled ledger, count up, and are ruled off one by one. Then the
  * reader travels sideways along a decade of routes, with archival
  * photographs developing from monochrome between the years.
  */
 export function ArchiveChapter() {
   return (
-    <section id="archive" aria-labelledby="archive-title" className="on-saffron ground sheet gloss" data-archive>
+    <section id="archive" aria-labelledby="archive-title" className="on-saffron ground gloss" data-archive>
       <div className="archive-head pb-[clamp(4rem,8vw,6rem)] pt-[clamp(6rem,12vw,10rem)]">
         <div className="archive-kicker" data-archive-kicker>
           <span className="caps">The archive</span>

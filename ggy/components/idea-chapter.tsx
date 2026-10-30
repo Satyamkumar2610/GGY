@@ -1,5 +1,6 @@
 import { about, BROCHURE } from "@/content/ggy";
 import { AnnotatedPhoto } from "./annotated-photo";
+import { ImmersionStage } from "./immersion-stage";
 import { NoteRef } from "./primitives";
 import { IdeaMotion } from "./motion/idea-motion";
 
@@ -14,14 +15,14 @@ function Mark() {
 
 /**
  * The idea: the programme's own description of itself, set as a statement on
- * ember and lit from behind in saffron. Two phrases take a brush mark as the
- * reader arrives, the four words from the brochure cover are set as the
- * chapter's own marks, and the photograph is printed in two inks until it
+ * the crimson ground. Two phrases take a brush mark as the reader arrives;
+ * then the four words from the brochure cover open onto the delegates
+ * themselves, and the second photograph is printed in two inks until it
  * reaches the reader, when it comes back to colour.
  */
 export function IdeaChapter() {
   return (
-    <section id="about" aria-labelledby="about-title" className="on-dark on-ember ground sheet gloss py-[clamp(6rem,13vw,12rem)]" data-idea>
+    <section id="about" aria-labelledby="about-title" className="on-dark on-ember ground gloss py-[clamp(6rem,13vw,12rem)]" data-idea>
       <div className="page">
         <h2 id="about-title" className="sr-only">
           The idea behind the Yatra
@@ -44,16 +45,11 @@ export function IdeaChapter() {
           </blockquote>
           <figcaption className="caption mt-7">How the programme describes itself in the {BROCHURE}.</figcaption>
         </figure>
+      </div>
 
-        <ul className="idea-tagline" aria-label="The four words on the brochure cover">
-          {about.tagline.map((w) => (
-            <li key={w}>
-              <span data-idea-word>{w}</span>
-            </li>
-          ))}
-        </ul>
-        <p className="caption mt-7">The four words on the brochure cover.</p>
+      <ImmersionStage />
 
+      <div className="page">
         <div className="mt-[clamp(4rem,9vw,7rem)] grid gap-12 lg:grid-cols-12 lg:gap-[var(--gap)]">
           <AnnotatedPhoto photoKey="openLandscape" sizes="(min-width: 1024px) 58vw, 100vw" className="lg:col-span-7 lg:-ml-[var(--gutter)]" dark duotone />
 

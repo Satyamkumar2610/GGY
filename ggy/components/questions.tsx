@@ -31,7 +31,7 @@ export function Questions() {
     <section id="questions" aria-labelledby="questions-title" className="bg-paper py-[clamp(6rem,12vw,10rem)]">
       <div className="page grid gap-12 lg:grid-cols-12 lg:gap-[var(--gap)]">
         <div className="lg:sticky lg:top-[calc(var(--header-h)+2rem)] lg:col-span-4 lg:self-start">
-          <h2 id="questions-title" className="d-l">
+          <h2 id="questions-title" className="d-l" data-drift>
             Questions
           </h2>
           <label htmlFor={`${id}-q`} className="mt-10 block text-[0.9rem] text-ink-soft">

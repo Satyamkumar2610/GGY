@@ -183,7 +183,7 @@ export function HeroMotion() {
           // ScrollTrigger from creation order to page order for every trigger,
           // which matters here because the canvas hand-off below and the
           // page-wide reveals are both created after this one.
-          refreshPriority: 2,
+          refreshPriority: 3,
           onUpdate: (self) => {
             const next = self.progress > 0.5;
             if (next !== opened) {

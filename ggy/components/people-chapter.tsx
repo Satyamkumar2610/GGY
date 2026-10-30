@@ -15,7 +15,7 @@ export function PeopleChapter() {
       <div className="page">
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-[var(--gap)]">
           <div className="lg:col-span-5">
-            <h2 id="people-title" className="d-l max-w-[12ch]">
+            <h2 id="people-title" className="d-l max-w-[12ch]" data-drift>
               The people delegates met
             </h2>
             <p className="mt-7 max-w-[26rem] text-[0.95rem] text-ink-soft">

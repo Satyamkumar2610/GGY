@@ -60,7 +60,7 @@ export function EditionNotes() {
     <section id="editions" aria-labelledby="editions-title" className="bg-paper pb-[clamp(5rem,10vw,8rem)] pt-[clamp(6rem,12vw,10rem)]">
       <div className="page">
         <div className="grid gap-6 lg:grid-cols-12 lg:gap-[var(--gap)]">
-          <h2 id="editions-title" className="d-l lg:col-span-7">
+          <h2 id="editions-title" className="d-l lg:col-span-7" data-drift>
             So far, only the route is confirmed.
           </h2>
           <p className="max-w-[24rem] text-ink-soft lg:col-span-3 lg:col-start-10 lg:self-end">

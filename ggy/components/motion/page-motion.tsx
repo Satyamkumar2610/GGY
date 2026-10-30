@@ -1,15 +1,16 @@
 "use client";
 
-import { gsap, MOTION_QUERIES, useGSAP } from "@/lib/gsap";
+import { gsap, MOTION_QUERIES, SplitText, useGSAP } from "@/lib/gsap";
 
 /**
- * The only page-wide motion, owned by GSAP. Everything is visible without it.
+ * Page-wide motion, owned by GSAP. Everything is visible without it.
  * [data-reveal]   a photograph's frame opens upward once as it arrives, while the image settles from 1.2x.
  * [data-parallax] on large screens, a photograph drifts gently inside its fixed frame.
- * .gloss          the bar of reflected light crosses each glossed sheet as it passes through the window,
+ * [data-drift]    a chapter title is set in sheared lines: alternate lines enter from opposite sides,
+ *                 meet as the title reaches the upper part of the window, and part again, more
+ *                 slowly, as it leaves. Scrubbed, so the type is always exactly where the scroll is.
+ * .gloss          the bar of reflected light crosses each lit ground as it passes through the window,
  *                 as if the page were moving beneath a fixed light.
- * Headings and text blocks never fade or rise in. The one heading that moves, the archive's,
- * changes width, as the band's letters do.
  */
 export function PageMotion() {
   useGSAP(() => {
@@ -23,12 +24,34 @@ export function PageMotion() {
         if (img) tl.fromTo(img, { scale: 1.2 }, { scale: 1, duration: 1.9, ease: "land" }, 0.1);
       });
 
-      document.querySelectorAll<HTMLElement>(".gloss").forEach((sheet) => {
+      document.querySelectorAll<HTMLElement>(".gloss").forEach((ground) => {
         gsap.fromTo(
-          sheet,
+          ground,
           { "--sheen": "-24%" },
-          { "--sheen": "24%", ease: "none", scrollTrigger: { trigger: sheet, start: "top bottom", end: "bottom top", scrub: 0.6 } },
+          { "--sheen": "24%", ease: "none", scrollTrigger: { trigger: ground, start: "top bottom", end: "bottom top", scrub: 0.6 } },
         );
+      });
+
+      document.querySelectorAll<HTMLElement>("[data-drift]").forEach((title) => {
+        SplitText.create(title, {
+          type: "lines",
+          autoSplit: true,
+          onSplit: (self) => {
+            // Wider screens shear further; the first line travels furthest.
+            const reach = (i: number) => (i % 2 ? 1 : -1) * Math.min(window.innerWidth * 0.14, 220) * (1 - i * 0.18);
+            const tl = gsap.timeline({
+              scrollTrigger: { trigger: title, start: "top bottom", end: "bottom top", scrub: 0.9, invalidateOnRefresh: true },
+            });
+            self.lines.forEach((line, i) => {
+              tl.fromTo(line, { x: () => reach(i) }, { x: 0, ease: "power2.out", duration: 0.55 }, 0).to(
+                line,
+                { x: () => -reach(i) * 0.35, ease: "power1.in", duration: 0.45 },
+                0.55,
+              );
+            });
+            return tl;
+          },
+        });
       });
     });
 
