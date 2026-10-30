@@ -1,17 +1,16 @@
 "use client";
 
-import { gsap, MOTION_QUERIES, ScrollTrigger, SplitText, useGSAP } from "@/lib/gsap";
+import { gsap, MOTION_QUERIES, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { scrollToY } from "@/lib/scroll";
 
 /**
  * Archive motion, owned by GSAP.
- * - The chapter's vermilion arrives as a sheet narrower than the page, with
- *   rounded shoulders, and widens to full bleed as it reaches the top.
- * - The title rises line by line out of its own masks; the running head
- *   draws its rule and the introduction settles in after it.
- * - Figures count up from zero when they enter, while the ledger draws the
- *   rule under each one in turn.
- * - Large screens: the road pins and the track travels sideways with scroll;
+ * - The title opens from Anek's condensed width to its resting width as it
+ *   rises up the screen, and the running head draws its rule — both scrubbed.
+ * - Figures count up from zero when they enter, while the ledger is ruled
+ *   off under each one in turn, at the pace of the scroll.
+ * - Large screens: the road pins and the track travels sideways with scroll,
+ *   inside the sheet's width rather than the window's;
  *   year cards rise into place and archival photographs develop from a pale
  *   monochrome print as they cross the screen.
  */
@@ -23,56 +22,33 @@ export function ArchiveMotion() {
     const mm = gsap.matchMedia();
 
     mm.add(MOTION_QUERIES.any, () => {
+      // The title is set condensed and opens to its resting width as it
+      // comes up the screen: the same axis the band answers scroll with.
+      const title = q("[data-archive-title]")[0];
       gsap.fromTo(
-        q("[data-archive-sheet]"),
-        { clipPath: "inset(0% 7% 0% 7% round 56px 56px 0px 0px)" },
+        title,
+        { fontVariationSettings: '"wdth" 75', letterSpacing: "-0.055em" },
         {
-          clipPath: "inset(0% 0% 0% 0% round 0px 0px 0px 0px)",
-          ease: "swing",
-          scrollTrigger: { trigger: root, start: "top bottom", end: "top 12%", scrub: 1 },
+          fontVariationSettings: '"wdth" 112',
+          letterSpacing: "-0.03em",
+          ease: "none",
+          scrollTrigger: { trigger: title, start: "top 92%", end: "top 38%", scrub: 0.8 },
         },
       );
 
-      const title = q("[data-archive-title]")[0] as HTMLElement | undefined;
-      if (title) {
-        SplitText.create(title, {
-          type: "lines",
-          mask: "lines",
-          autoSplit: true,
-          onSplit: (self) =>
-            gsap.from(self.lines, {
-              yPercent: 112,
-              rotate: 2.5,
-              transformOrigin: "0% 100%",
-              duration: 1.4,
-              stagger: 0.12,
-              ease: "land",
-              scrollTrigger: { trigger: title, start: "top 85%", once: true },
-            }),
-        });
-      }
-
-      const kicker = q("[data-archive-kicker]")[0];
-      gsap
-        .timeline({ scrollTrigger: { trigger: kicker, start: "top 88%", once: true } })
-        .from(q("[data-archive-rule]"), { scaleX: 0, duration: 1.6, ease: "land" })
-        .from(q("[data-archive-kicker] .caps"), { autoAlpha: 0, y: 12, duration: 0.9, stagger: 0.1, ease: "power3.out" }, 0.1);
-
-      q("[data-archive-intro]").forEach((el) => {
-        gsap.from(el, {
-          autoAlpha: 0,
-          y: 24,
-          duration: 1.1,
-          ease: "power3.out",
-          scrollTrigger: { trigger: el, start: "top 90%", once: true },
-        });
+      gsap.from(q("[data-archive-rule]"), {
+        scaleX: 0,
+        ease: "none",
+        scrollTrigger: { trigger: q("[data-archive-kicker]")[0], start: "top 92%", end: "top 55%", scrub: 0.8 },
       });
 
-      const ledger = q(".archive-figures")[0];
-      gsap
-        .timeline({ scrollTrigger: { trigger: ledger, start: "top 85%", once: true } })
-        .from(q("[data-figure-rule]"), { scaleX: 0, duration: 1.4, stagger: 0.09, ease: "land" })
-        .from(q("[data-figure-label]"), { autoAlpha: 0, y: 14, duration: 0.9, stagger: 0.09, ease: "power3.out" }, 0.25);
+      // The ledger is ruled off column by column, at the pace of the scroll.
+      gsap.from(q("[data-figure-rule]"), {
+        scaleX: 0,
+        ease: "none",
+        stagger: 0.35,
+        scrollTrigger: { trigger: q(".archive-figures")[0], start: "top 88%", end: "top 45%", scrub: 0.8 },
+      });
 
       q("[data-count]").forEach((el) => {
         const target = Number((el as HTMLElement).dataset.count);
@@ -98,8 +74,9 @@ export function ArchiveMotion() {
       if (!card) return;
       if (travelST) {
         const track = root.querySelector<HTMLElement>("[data-track]")!;
-        const dist = track.scrollWidth - window.innerWidth;
-        const x = Math.min(dist, Math.max(0, card.offsetLeft - window.innerWidth * 0.3));
+        const w = track.parentElement!.clientWidth;
+        const dist = track.scrollWidth - w;
+        const x = Math.min(dist, Math.max(0, card.offsetLeft - w * 0.3));
         scrollToY(travelST.start + (x / dist) * (travelST.end - travelST.start));
       } else {
         scrollToY(card.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.3);
@@ -113,7 +90,7 @@ export function ArchiveMotion() {
       root.classList.add("is-sequenced");
       const road = q("[data-road]")[0] as HTMLElement;
       const track = q("[data-track]")[0] as HTMLElement;
-      const distance = () => track.scrollWidth - window.innerWidth;
+      const distance = () => track.scrollWidth - road.clientWidth;
 
       const travel = gsap.to(track, {
         x: () => -distance(),
@@ -144,7 +121,7 @@ export function ArchiveMotion() {
           scrub: 1.2,
           onUpdate: (self) => {
             // Mark the year nearest the reading line.
-            const x = self.progress * distance() + window.innerWidth * 0.35;
+            const x = self.progress * distance() + road.clientWidth * 0.35;
             let best = 0;
             cards.forEach((c, k) => {
               if (c.offsetLeft <= x) best = k;

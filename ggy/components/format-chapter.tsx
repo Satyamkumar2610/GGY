@@ -32,7 +32,7 @@ function Crop({ i, sizes, className = "" }: { i: number; sizes: string; classNam
 export function FormatChapter() {
   const hall = photos.lectureHall;
   return (
-    <section id="format" aria-labelledby="format-title" className="overflow-x-clip bg-cream pt-[clamp(6rem,12vw,11rem)]" data-format>
+    <section id="format" aria-labelledby="format-title" className="sheet gloss bg-cream pt-[clamp(6rem,12vw,11rem)]" data-format>
       <div className="page">
         <h2 id="format-title" className="d-l max-w-[14ch]">
           Four stages of a personal learning journey

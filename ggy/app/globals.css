@@ -27,9 +27,11 @@
      text. Cream and ember are grounds: the page is never black. */
   --color-cream: #f6ead6;
   --color-cream-deep: #eeddc0;
-  --color-saffron: #c2651f; /* 4.2:1 on cream: large type and marks only */
-  --color-vermilion: #e05338; /* chapter ground: ink 4.9:1, ember 4.4:1, cream 3.2:1 (large type only) */
-  --color-vermilion-deep: #c2402a; /* raised fills on vermilion */
+  /* The palette's secondary colour. As a ground: ink 4.8:1, ember 4.5:1,
+     cream 3.3:1 (large type only). As text on cream or paper it is for large
+     type and marks; small text takes the deeper saffron-ink, 5.1:1 on cream. */
+  --color-saffron: #db5627;
+  --color-saffron-ink: #a8401d;
   --color-saffron-soft: #e9a24c; /* on ember and photographs */
   --color-ember: #2a1114; /* deep warm ground, replaces ink behind content */
   --color-ember-2: #3b1a1e;
@@ -57,6 +59,9 @@
   /* Shape follows hierarchy: objects that sit on the page are rounded,
      photographs less so, controls fully. Sections themselves stay square. */
   --radius-sheet: 1.75rem;
+  --radius-sheet-lg: clamp(1.25rem, 2.4vw, 2.25rem);
+  --sheet-inset: clamp(0.625rem, 2.6vw, 2.75rem);
+  --sheet-max: 90rem;
   --radius-media: 1rem;
   --radius-thumb: 0.6rem;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -621,21 +626,16 @@ html.lenis body {
   overflow: hidden;
   max-width: 82rem;
   margin-inline: auto;
-  border-radius: var(--radius-sheet);
-  background: var(--color-vermilion);
+  background: var(--color-saffron);
   color: var(--color-cream);
   padding: clamp(1rem, 1.8vw, 1.4rem) clamp(1.1rem, 2.6vw, 2.25rem);
-  box-shadow:
-    0 1px 0 color-mix(in srgb, var(--color-cream) 22%, transparent) inset,
-    0 2.5rem 4rem -2.5rem color-mix(in srgb, var(--color-crimson-deep) 55%, transparent);
 }
 /* A hairline frame just inside the edge, like a printed border. */
-.band::before {
-  content: "";
+.band-frame {
   position: absolute;
   inset: clamp(0.45rem, 0.8vw, 0.65rem);
   border: 1px solid color-mix(in srgb, var(--color-cream) 34%, transparent);
-  border-radius: calc(var(--radius-sheet) - 0.55rem);
+  border-radius: calc(var(--radius-sheet-lg) - 0.55rem);
   pointer-events: none;
   z-index: 1;
 }
@@ -943,24 +943,24 @@ html.lenis body {
   background: var(--color-ember-2);
 }
 
-/* Vermilion at full strength, for one chapter: ink text on a flat warm
-   ground, rather than ivory on ember. Everything placed on it is solid ink
-   — no faded "dim" text — because vermilion's mid luminance does not leave
+/* The secondary colour at full strength, for one chapter: ink text on a flat
+   warm ground, rather than ivory on ember. Everything placed on it is solid
+   ink — no faded "dim" text — because its mid luminance does not leave
    enough headroom for a lighter tint to still pass contrast. */
-.on-vermilion {
+.on-saffron {
   position: relative;
   isolation: isolate;
-  background: var(--color-vermilion);
+  background: var(--color-saffron);
   color: var(--color-ink);
 }
-.on-vermilion .caption,
-.on-vermilion .tba {
+.on-saffron .caption,
+.on-saffron .tba {
   color: var(--color-ink);
 }
-.on-vermilion .note-ref {
+.on-saffron .note-ref {
   color: var(--color-ink);
 }
-.on-vermilion :focus-visible {
+.on-saffron :focus-visible {
   outline-color: var(--color-ink);
 }
 
@@ -1268,20 +1268,6 @@ html.lenis body {
    Archive: the head and the figures
    ===================================================================== */
 
-/* The vermilion is a sheet laid over the cream the format chapter ends on,
-   so while it is still narrower than the page its margins continue that
-   chapter. Motion clips the sheet, never the section or its pinned road. */
-.archive-chapter {
-  background: var(--color-cream);
-}
-.archive-sheet {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  background: var(--color-vermilion);
-  pointer-events: none;
-}
-
 /* The chapter's reading measure: narrower than the page, so the head and
    the figures sit as one composed block. */
 .archive-head {
@@ -1387,6 +1373,8 @@ html.lenis body {
 }
 @media (min-width: 64rem) {
   .is-sequenced .archive-road {
+    /* The road runs inside the sheet: the track is cut at its edges. */
+    overflow: clip;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -1737,7 +1725,7 @@ html.lenis body {
 }
 
 /* Year index chips under the archive road. Solid ink throughout: on the
-   vermilion ground a lighter tint would not clear text contrast, so emphasis
+   saffron ground a lighter tint would not clear text contrast, so emphasis
    comes from a fill rather than a colour change. */
 .year-chip {
   min-height: 2.75rem;
@@ -1893,4 +1881,69 @@ html.lenis body {
 .check-input:focus-visible + .check-box {
   outline: 2px solid var(--color-crimson);
   outline-offset: 3px;
+}
+
+/* =====================================================================
+   Sheets and gloss
+
+   After the hero, every coloured chapter is a sheet set into the paper,
+   narrower than the page, rather than a band that runs edge to edge.
+   Its finish is lacquer: light pools along the top edge, a bright lip and
+   a darker heel catch the rim, and a soft two-step shadow lifts it off the
+   paper. A bar of reflected light crosses the surface as the page scrolls
+   beneath a fixed light — the only thing about the sheet that moves.
+
+   Nothing here creates a containing block (no transform, filter or
+   contain), so pinned content inside a sheet still pins to the viewport.
+   Declared last so its background-image longhand survives the grounds'
+   background shorthand.
+   ===================================================================== */
+
+.sheet {
+  margin-inline: max(var(--sheet-inset), calc((100% - var(--sheet-max)) / 2));
+  margin-block: var(--sheet-inset);
+}
+.gloss {
+  --sheen: -8%;
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  border-radius: var(--radius-sheet-lg);
+  background-image:
+    radial-gradient(90% 14rem at 50% 0%, rgb(255 255 255 / 0.1), transparent 70%),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.06), transparent 22rem);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.3),
+    inset 0 0 0 1px rgb(255 255 255 / 0.07),
+    inset 0 -1px 0 rgb(0 0 0 / 0.16),
+    0 0 0 1px rgb(42 17 20 / 0.05),
+    0 2px 4px -1px rgb(42 17 20 / 0.08),
+    0 28px 56px -28px rgb(42 17 20 / 0.3),
+    0 72px 110px -72px rgb(42 17 20 / 0.4);
+}
+/* The reflected light: a soft bar, slightly off vertical, carried across
+   by scroll. Under the content, over the ground. The layer is three sheets
+   wide and the bar is a straight 90deg gradient skewed into its lean, so
+   its fade never depends on how tall the sheet is: both edges are always
+   clear. --sheen runs from -24% to 24%, carrying the bar from just off one
+   side of the sheet to just off the other. */
+.gloss::before {
+  content: "";
+  position: absolute;
+  inset: 0 -100%;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent 45%,
+    rgb(255 255 255 / 0.05) 47.8%,
+    rgb(255 255 255 / 0.13) 50%,
+    rgb(255 255 255 / 0.05) 52.2%,
+    transparent 55%
+  );
+  transform: translateX(var(--sheen)) skewX(-12deg);
+}
+/* On the light cream sheet a white sheen would vanish; it reads as warmth. */
+.gloss.bg-cream::before {
+  background: linear-gradient(90deg, transparent 45%, rgb(255 255 255 / 0.4) 50%, transparent 55%);
 }

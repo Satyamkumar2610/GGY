@@ -21,7 +21,7 @@ function Mark() {
  */
 export function IdeaChapter() {
   return (
-    <section id="about" aria-labelledby="about-title" className="on-dark on-ember ground relative overflow-hidden py-[clamp(6rem,13vw,12rem)]" data-idea>
+    <section id="about" aria-labelledby="about-title" className="on-dark on-ember ground sheet gloss py-[clamp(6rem,13vw,12rem)]" data-idea>
       <div className="page">
         <h2 id="about-title" className="sr-only">
           The idea behind the Yatra

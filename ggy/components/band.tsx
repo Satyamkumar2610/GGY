@@ -8,9 +8,9 @@ const pad = (n: number) => String(n).padStart(2, "0");
 /**
  * The band: the three states of the upcoming edition, each in Latin and in its
  * own script, set in Anek — one design from Mumbai that covers all three
- * scripts. It is a vermilion card set into the page rather than a full-bleed
- * stripe: framed by a hairline, with a quiet running head and foot, and its
- * edges fading the words in and out. It travels sideways, and its letters
+ * scripts. It is a glossed card in the secondary colour, set into the page
+ * rather than a full-bleed stripe: framed by a hairline, with a quiet running
+ * head and foot, and its edges fading the words in and out. It travels sideways, and its letters
  * widen and lean with the speed of the reader's scroll. Decorative: the same
  * names are read elsewhere.
  */
@@ -39,7 +39,8 @@ export function Band() {
 
   return (
     <div aria-hidden="true" className="band-wrap" data-band-wrap>
-      <div className="band ground" data-band>
+      <div className="band ground gloss" data-band>
+        <span className="band-frame" />
         <div className="band-meta" data-band-meta>
           <span className="caps">The upcoming route</span>
           <span className="band-meta-rule" data-band-rule />

@@ -77,7 +77,7 @@ export function Hero() {
       <div className="hero-paper" data-hero-paper>
         {/* Kept clear of the prints at either side. */}
         <div className="absolute left-1/2 top-1/2 w-[min(56rem,60%)] -translate-x-1/2 -translate-y-1/2 text-center">
-          <p className="label text-saffron" data-paper-line>
+          <p className="label text-saffron-ink" data-paper-line>
             The upcoming edition
           </p>
           <ol className="hero-route mt-7">

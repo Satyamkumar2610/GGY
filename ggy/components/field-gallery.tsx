@@ -53,7 +53,7 @@ export function FieldGallery() {
   const current = open === null ? null : photos[keys[open]];
 
   return (
-    <section id="gallery" aria-labelledby="gallery-title" className="on-dark on-ember ground overflow-hidden py-[clamp(6rem,12vw,10rem)]">
+    <section id="gallery" aria-labelledby="gallery-title" className="on-dark on-ember ground sheet gloss py-[clamp(6rem,12vw,10rem)]">
       <div className="page grid gap-6 lg:grid-cols-12 lg:gap-[var(--gap)]">
         <h2 id="gallery-title" className="d-l lg:col-span-7">
           Field photographs

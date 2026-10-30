@@ -58,16 +58,15 @@ const firstYear = pastEditions[0].year;
 const lastYear = pastEditions[pastEditions.length - 1].year;
 
 /**
- * The archive: vermilion at full strength. The chapter arrives as a sheet
- * that widens to the page, its title rising line by line; the figures sit in
- * a ruled ledger, count up and draw their rules as they arrive. Then the
+ * The archive: the secondary colour at full strength, on a glossed sheet
+ * narrower than the page. Its title widens into place with the scroll; the
+ * figures sit in a ruled ledger, count up, and are ruled off one by one. Then the
  * reader travels sideways along a decade of routes, with archival
  * photographs developing from monochrome between the years.
  */
 export function ArchiveChapter() {
   return (
-    <section id="archive" aria-labelledby="archive-title" className="on-vermilion archive-chapter ground relative" data-archive>
-      <div aria-hidden="true" className="archive-sheet" data-archive-sheet />
+    <section id="archive" aria-labelledby="archive-title" className="on-saffron ground sheet gloss" data-archive>
       <div className="archive-head pb-[clamp(4rem,8vw,6rem)] pt-[clamp(6rem,12vw,10rem)]">
         <div className="archive-kicker" data-archive-kicker>
           <span className="caps">The archive</span>
@@ -80,13 +79,13 @@ export function ArchiveChapter() {
           <h2 id="archive-title" className="d-xl lg:col-span-8" data-archive-title>
             A decade on the road
           </h2>
-          <p className="max-w-[22rem] lg:col-span-4 lg:justify-self-end" data-archive-intro>
+          <p className="max-w-[22rem] lg:col-span-4 lg:justify-self-end">
             Every figure and route in this chapter is reproduced from the 2025 brochure and describes past editions, not the upcoming one.
           </p>
         </div>
 
         <div className="mt-[clamp(4rem,8vw,6rem)]">
-          <p className="label" data-archive-intro>
+          <p className="label">
             Figures as printed in the brochure before the 8th edition
           </p>
           <dl className="archive-figures mt-6 grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-3 lg:grid-cols-5 lg:gap-x-0">

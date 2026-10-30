@@ -11,8 +11,7 @@ const MIN_WDTH = 75; // the narrowest Anek goes
  * Anek's narrowest width, leans them into the direction of travel and
  * speeds the loop, which then settles back. Scrolling up runs it backwards.
  * The diamonds between the names turn with the loop, faster as it races.
- * On arrival the card opens out of a smaller window while its running head
- * and foot draw their rules.
+ * Its running head and foot are ruled in with the scroll as it arrives.
  */
 export function BandMotion() {
   useGSAP(() => {
@@ -23,17 +22,12 @@ export function BandMotion() {
     const mm = gsap.matchMedia();
 
     mm.add(MOTION_QUERIES.any, () => {
-      // Arrival: the card opens from a smaller window into its frame.
-      gsap
-        .timeline({ scrollTrigger: { trigger: wrap, start: "top bottom", end: "top 40%", scrub: 1 } })
-        .fromTo(
-          band,
-          { clipPath: "inset(14% 9% 14% 9% round 3.5rem)" },
-          { clipPath: "inset(0% 0% 0% 0% round 1.75rem)", ease: "swing" },
-        )
-        .from(track, { scale: 1.08, ease: "swing" }, 0)
-        .from(band.querySelectorAll("[data-band-rule]"), { scaleX: 0, ease: "swing" }, 0.25)
-        .from(band.querySelectorAll("[data-band-meta] .caps"), { autoAlpha: 0, y: 10, stagger: 0.08, ease: "power2.out" }, 0.35);
+      // The running head and foot are ruled in as the card comes up.
+      gsap.from(band.querySelectorAll("[data-band-rule]"), {
+        scaleX: 0,
+        ease: "none",
+        scrollTrigger: { trigger: wrap, start: "top 95%", end: "top 45%", scrub: 0.8 },
+      });
 
       const marks = gsap.utils.toArray<HTMLElement>("[data-band-mark]", band);
       const setSpin = marks.map((m) => gsap.quickSetter(m, "rotation", "deg"));
