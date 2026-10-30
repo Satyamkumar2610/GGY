@@ -16,7 +16,7 @@ const crops = [
  * When a stage reaches the middle of the screen the camera moves to that
  * stage's crop, its milestone fills, its number fills from outline, the
  * readout counts over and its frame in the strip lights up. Works in both
- * directions. The heading and the component cards arrive on their own.
+ * directions. The heading arrives on its own; the cards move with the scroll.
  */
 export function JourneyMotion() {
   useGSAP(() => {
@@ -35,22 +35,17 @@ export function JourneyMotion() {
       });
       if (split) tl.from(split.lines, { yPercent: 112, duration: 1.2, stagger: 0.1 }, 0);
 
-      // Cards arrive a few at a time, scoped to their own container.
-      gsap.from(q("[data-component]"), {
-        autoAlpha: 0,
-        y: 26,
-        duration: 0.6,
-        stagger: 0.06,
-        ease: "power2.out",
-        scrollTrigger: { trigger: q("[data-component]")[0]?.parentElement ?? root, start: "top 85%", once: true },
-      });
-      gsap.from(q("[data-takeaway]"), {
-        autoAlpha: 0,
-        y: 22,
-        duration: 0.6,
-        stagger: 0.07,
-        ease: "power2.out",
-        scrollTrigger: { trigger: q("[data-takeaway]")[0]?.parentElement ?? root, start: "top 85%", once: true },
+      // The programme components and the takeaways move with the scroll, in
+      // the same language as the people and paths lists: each item slides in
+      // along its row from alternate sides and settles as it reaches reading
+      // height, rather than fading up once on its own clock.
+      // Components sit in a ruled grid, so their contents move, not the cells.
+      [...q("[data-component]"), ...q("[data-takeaway]")].forEach((el, i) => {
+        gsap.fromTo(
+          el.hasAttribute("data-component") ? el.children : el,
+          { x: i % 2 ? 56 : -56, opacity: 0.2 },
+          { x: 0, opacity: 1, ease: "none", scrollTrigger: { trigger: el, start: "top bottom", end: "top 65%", scrub: 0.6 } },
+        );
       });
 
       return () => split?.revert();

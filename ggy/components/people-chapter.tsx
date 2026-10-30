@@ -56,8 +56,7 @@ export function LifeAfterChapter() {
       <div className="page">
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-[var(--gap)]">
           <div className="lg:col-span-6">
-            <p className="caps text-saffron-soft">Life after the Yatra</p>
-            <h2 id="after-title" className="d-l mt-6" data-drift>
+            <h2 id="after-title" className="d-l" data-drift>
               Where alumni went next
             </h2>
           </div>

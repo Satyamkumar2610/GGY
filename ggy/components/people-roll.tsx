@@ -99,7 +99,7 @@ export function PeopleRoll() {
         <div aria-hidden="true" className="hidden lg:col-span-5 lg:block">
           <div className="roll-spot on-crimson" key={current?.name}>
             <div className="roll-spot-head">
-              <span className="caps">{current ? origin(current) : ""}</span>
+              <span className="meta">{current ? origin(current) : ""}</span>
               <span className="num">
                 {pad(Math.min(active, shown.length - 1) + 1)} / {pad(shown.length)}
               </span>

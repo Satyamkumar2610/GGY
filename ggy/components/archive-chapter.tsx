@@ -69,9 +69,8 @@ export function ArchiveChapter() {
     <section id="archive" aria-labelledby="archive-title" className="on-saffron ground gloss" data-archive>
       <div className="archive-head pb-[clamp(4rem,8vw,6rem)] pt-[clamp(6rem,12vw,10rem)]">
         <div className="archive-kicker" data-archive-kicker>
-          <span className="caps">The archive</span>
           <span aria-hidden="true" className="archive-kicker-rule" data-archive-rule />
-          <span className="caps num">
+          <span className="meta num">
             {firstYear}–{lastYear}
           </span>
         </div>

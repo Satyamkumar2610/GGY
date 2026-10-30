@@ -688,8 +688,7 @@ html.lenis body {
   gap: 1rem;
   color: var(--color-ink);
 }
-.band-meta .caps {
-  font-size: 0.6875rem;
+.band-meta .meta {
   white-space: nowrap;
 }
 .band-meta-rule {
@@ -701,7 +700,7 @@ html.lenis body {
   transform-origin: center;
 }
 @media (max-width: 40rem) {
-  .band-meta .caps:last-child {
+  .band-meta .meta:last-child {
     display: none;
   }
 }
@@ -1848,6 +1847,12 @@ html.lenis body {
   position: sticky;
   top: calc(var(--header-h) + 2rem);
 }
+/* Without motion the plate cannot follow the reader, so it shows only the
+   route; each day carries its own number and date. */
+html:not(.js-motion) .itin-plate-day,
+html:not(.js-motion) .itin-plate-date {
+  display: none;
+}
 .itin-plate-day {
   display: flex;
   align-items: flex-start;
@@ -1855,8 +1860,8 @@ html.lenis body {
   overflow: hidden;
   color: var(--color-crimson);
 }
-.itin-plate-day .caps {
-  padding-top: 1.2em;
+.itin-plate-day .meta {
+  padding-top: 1.6em;
   color: var(--color-muted);
 }
 .itin-plate-day .num {
@@ -2003,7 +2008,7 @@ html.lenis body {
 .itin-field summary::-webkit-details-marker {
   display: none;
 }
-.itin-field summary .caps {
+.itin-field summary .meta {
   color: var(--color-saffron-ink);
 }
 .itin-field-title {
@@ -2051,10 +2056,12 @@ html.lenis body {
     interpolate-size: allow-keywords;
   }
 }
+/* The proposed plan: set on cream, apart from the record above it. */
 .itin-next {
   margin-top: clamp(4rem, 8vw, 6rem);
   padding: clamp(2rem, 4vw, 3.5rem);
   border-radius: var(--radius-media);
+  background: var(--color-cream);
 }
 .itin-next-days {
   display: grid;
@@ -2072,7 +2079,7 @@ html.lenis body {
 }
 .itin-next-days > li {
   padding-top: 1rem;
-  border-top: 1px solid color-mix(in srgb, var(--color-cream) 26%, transparent);
+  border-top: 1px solid var(--color-hair-cream);
 }
 .itin-next-days ul {
   margin-top: 0.9rem;
@@ -2080,7 +2087,7 @@ html.lenis body {
   gap: 0.6rem;
   font-size: 0.95rem;
   line-height: 1.4;
-  color: var(--color-cream);
+  color: var(--color-ink-soft);
 }
 
 /* =====================================================================

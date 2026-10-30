@@ -3,8 +3,6 @@ import { upcoming } from "@/content/ggy";
 import { Script } from "./primitives";
 import { BandMotion } from "./motion/band-motion";
 
-const pad = (n: number) => String(n).padStart(2, "0");
-
 /**
  * The band: the three states of the upcoming edition, each in Latin and in its
  * own script, set in Anek — one design from Mumbai that covers all three
@@ -19,7 +17,8 @@ export function Band() {
     { key: s.name, text: s.name, lang: null as string | null },
     { key: s.native, text: s.native, lang: s.lang },
   ]);
-  const count = pad(upcoming.states.length);
+  const names = upcoming.states.map((s) => s.name);
+  const routeLine = `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
   const group = (copy: number) => (
     <div className="band-group" key={copy}>
       {words.map((w) => (
@@ -42,11 +41,9 @@ export function Band() {
       <div className="band ground gloss" data-band>
         <span className="band-frame" />
         <div className="band-meta" data-band-meta>
-          <span className="caps">The upcoming route</span>
+          <span className="meta">The upcoming route</span>
           <span className="band-meta-rule" data-band-rule />
-          <span className="caps">
-            {count} states · {count} scripts
-          </span>
+          <span className="meta">Three states, three scripts</span>
         </div>
         <div className="band-stage">
           <div className="band-track" data-band-track>
@@ -55,9 +52,9 @@ export function Band() {
           </div>
         </div>
         <div className="band-meta" data-band-meta>
-          <span className="caps">{upcoming.states.map((s) => s.name).join(" · ")}</span>
+          <span className="meta">{routeLine}</span>
           <span className="band-meta-rule" data-band-rule />
-          <span className="caps">One typeface</span>
+          <span className="meta">One typeface</span>
         </div>
       </div>
       <BandMotion />

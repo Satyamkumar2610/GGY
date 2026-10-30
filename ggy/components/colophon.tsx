@@ -49,10 +49,7 @@ export function Colophon() {
       <p aria-hidden="true" className="footer-mark" data-footer-mark>
         <span>Good Governance Yatra</span>
       </p>
-      <p className="page meta flex justify-between pb-6 text-[0.7rem] text-dim">
-        <span>Review draft</span>
-        <span>The field journal</span>
-      </p>
+      <div className="pb-6" />
       <FooterMotion />
     </footer>
   );

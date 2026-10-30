@@ -4,6 +4,7 @@ import { Anek_Devanagari, Anek_Gujarati, Anek_Latin } from "next/font/google";
 import "./globals.css";
 import { MotionProvider } from "@/components/motion/motion-provider";
 import { SmoothScroll } from "@/components/motion/smooth-scroll";
+import { INDEXABLE, SITE_URL } from "@/lib/site";
 
 // Gambetta (quotations and unconfirmed values) and Switzer (text) by the Indian Type Foundry, from Fontshare, under the
 // ITF Free Font License. Self-hosting for our own website is permitted.
@@ -38,16 +39,33 @@ const anekLatin = Anek_Latin({ variable: "--font-anek-latin", subsets: ["latin"]
 const anekDevanagari = Anek_Devanagari({ variable: "--font-anek-devanagari", subsets: ["devanagari"], axes: ["wdth"], display: "swap", preload: false });
 const anekGujarati = Anek_Gujarati({ variable: "--font-anek-gujarati", subsets: ["gujarati"], axes: ["wdth"], display: "swap", preload: false });
 
+const description =
+  "Good Governance Yatra is an immersive journey into governance and leadership. The upcoming edition travels through Maharashtra, Goa and Gujarat. Dates to be announced.";
+
 export const metadata: Metadata = {
-  title: "Good Governance Yatra · Maharashtra, Goa, Gujarat",
-  description:
-    "Good Governance Yatra is an immersive journey into governance and leadership. The upcoming edition travels through Maharashtra, Goa and Gujarat. Dates to be announced.",
-  // Review draft: keep out of search results until content is confirmed.
-  robots: { index: false, follow: false },
+  metadataBase: new URL(SITE_URL),
+  title: "Good Governance Yatra: Maharashtra, Goa and Gujarat",
+  description,
+  alternates: { canonical: "/" },
+  applicationName: "Good Governance Yatra",
+  openGraph: {
+    type: "website",
+    locale: "en_IN",
+    siteName: "Good Governance Yatra",
+    title: "Good Governance Yatra: Maharashtra, Goa and Gujarat",
+    description,
+  },
+  twitter: { card: "summary_large_image" },
+  // Kept out of search results until the content is confirmed: set
+  // NEXT_PUBLIC_ALLOW_INDEXING=true to publish (see lib/site.ts).
+  robots: INDEXABLE ? { index: true, follow: true } : { index: false, follow: false },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f7f6f3",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f7f6f3" },
+    { media: "(prefers-color-scheme: dark)", color: "#710017" },
+  ],
 };
 
 // Marks browsers that accept motion before first paint, so the hero's intro

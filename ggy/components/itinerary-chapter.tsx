@@ -18,8 +18,7 @@ export function ItineraryChapter() {
       <div className="page">
         <div className="grid items-end gap-10 lg:grid-cols-12 lg:gap-[var(--gap)]">
           <div className="lg:col-span-8">
-            <p className="caps text-saffron-ink">The 8th edition, day by day</p>
-            <h2 id="itinerary-title" className="d-xl mt-6" data-drift>
+            <h2 id="itinerary-title" className="d-xl" data-drift>
               Nine days on the road
             </h2>
           </div>
@@ -34,7 +33,7 @@ export function ItineraryChapter() {
           <div aria-hidden="true" className="hidden lg:col-span-4 lg:block">
             <div className="itin-plate">
               <p className="itin-plate-day">
-                <span className="caps">Day</span>
+                <span className="meta">Day</span>
                 <span className="num" data-itin-day>
                   {pad(first.day)}
                 </span>
@@ -71,7 +70,7 @@ export function ItineraryChapter() {
                 {d.field ? (
                   <details className="itin-field">
                     <summary>
-                      <span className="caps">Field note</span>
+                      <span className="meta">Field note</span>
                       <span className="itin-field-title">{d.field.title}</span>
                       <span aria-hidden="true" className="itin-field-plus" />
                     </summary>
@@ -83,10 +82,10 @@ export function ItineraryChapter() {
           </ol>
         </div>
 
-        <div className="itin-next on-dark on-ember gloss" data-itin-next>
+        <div className="itin-next" data-itin-next>
           <div className="grid gap-8 lg:grid-cols-12 lg:gap-[var(--gap)]">
             <div className="lg:col-span-4">
-              <p className="caps text-saffron-soft">Proposed · tentative</p>
+              <p className="meta text-saffron-ink">Tentative, not yet confirmed</p>
               <h3 className="d-m mt-5">Proposed for Maharashtra</h3>
               <p className="caption mt-5 max-w-[22rem]">
                 A plan for Mumbai and Nashik proposed in the {CONCEPT_NOTE}. Dates and visits are tentative and not yet confirmed.
@@ -95,7 +94,7 @@ export function ItineraryChapter() {
             <ol className="itin-next-days lg:col-span-8">
               {proposedMaharashtra.map((d) => (
                 <li key={d.date}>
-                  <p className="caps text-saffron-soft">{d.date}</p>
+                  <p className="meta text-saffron-ink">{d.date}</p>
                   <ul>
                     {d.items.map((it) => (
                       <li key={it}>{it}</li>
