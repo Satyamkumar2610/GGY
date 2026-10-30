@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { NoteId } from "@/content/ggy";
+import { pendingNotes, type NoteId } from "@/content/ggy";
 
 export const scriptClass: Record<string, string> = { mr: "script-deva", kok: "script-deva", gu: "script-guj", hi: "script-deva" };
 
@@ -11,13 +11,22 @@ export function Value({ value }: { value: ReactNode | null | undefined }) {
   return <>{value}</>;
 }
 
-/** Footnote marker linking to the colophon's notes on sources. */
+/**
+ * Footnote marker. The note sits with the figure it qualifies: it opens
+ * beside the dagger on hover or keyboard focus, and is read out with the
+ * button by assistive tech.
+ */
 export function NoteRef({ id }: { id: NoteId }) {
   return (
-    <a href={`#note-${id}`} className="note-ref">
-      <span aria-hidden="true">†</span>
-      <span className="sr-only"> (see note: awaiting confirmation)</span>
-    </a>
+    <span className="note">
+      <button type="button" className="note-ref">
+        <span aria-hidden="true">†</span>
+        <span className="sr-only"> Note: {pendingNotes[id]}</span>
+      </button>
+      <span aria-hidden="true" className="note-tip">
+        {pendingNotes[id]}
+      </span>
+    </span>
   );
 }
 

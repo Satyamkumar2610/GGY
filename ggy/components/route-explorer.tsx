@@ -205,7 +205,21 @@ export function RouteExplorer() {
                 </div>
               </dl>
               <p className="caption mt-4">
-                {photo.caption}. {photo.credit} {photo.license?.name}.
+                {photo.caption}. {photo.credit}{" "}
+                {photo.license ? (
+                  <a className="tlink tlink-static" href={photo.license.url} rel="license noopener" target="_blank">
+                    {photo.license.name}
+                  </a>
+                ) : null}
+                {photo.sourceUrl ? (
+                  <>
+                    {", "}
+                    <a className="tlink tlink-static" href={photo.sourceUrl} rel="noopener" target="_blank">
+                      source
+                    </a>
+                  </>
+                ) : null}
+                .
               </p>
             </motion.div>
           </AnimatePresence>

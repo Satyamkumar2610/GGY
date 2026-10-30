@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { journeyStats, pastEditions, photos, type PhotoKey } from "@/content/ggy";
+import { CONCEPT_NOTE, conceptFigures, pastEditions, photos, type PhotoKey } from "@/content/ggy";
 import { NoteRef } from "./primitives";
 import { ArchiveMotion } from "./motion/archive-motion";
 
@@ -80,16 +80,16 @@ export function ArchiveChapter() {
             A decade on the road
           </h2>
           <p className="max-w-[22rem] lg:col-span-4 lg:justify-self-end">
-            Every figure and route in this chapter is reproduced from the 2025 brochure and describes past editions, not the upcoming one.
+            Every figure and route in this chapter describes past editions, not the upcoming one. Routes are reproduced from the 2025 brochure.
           </p>
         </div>
 
         <div className="mt-[clamp(4rem,8vw,6rem)]">
           <p className="label">
-            Figures as printed in the brochure before the 8th edition
+            Figures from the {CONCEPT_NOTE}, ahead of the 9th edition
           </p>
-          <dl className="archive-figures mt-6 grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-3 lg:grid-cols-5 lg:gap-x-0">
-            {journeyStats.map((s) => (
+          <dl className="archive-figures mt-6 grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-4 lg:gap-x-0">
+            {conceptFigures.map((s) => (
               <Figure key={s.label} value={s.value} label={s.label} note={Boolean(s.note)} />
             ))}
           </dl>

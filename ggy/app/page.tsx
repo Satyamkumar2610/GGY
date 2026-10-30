@@ -5,6 +5,7 @@ import { RouteChapter } from "@/components/route-chapter";
 import { IdeaChapter } from "@/components/idea-chapter";
 import { FormatChapter } from "@/components/format-chapter";
 import { ArchiveChapter } from "@/components/archive-chapter";
+import { ItineraryChapter } from "@/components/itinerary-chapter";
 import { LifeAfterChapter, PeopleChapter } from "@/components/people-chapter";
 import { AdmissionsChapter } from "@/components/admissions-chapter";
 import { FieldGallery } from "@/components/field-gallery";
@@ -29,6 +30,7 @@ export default function Home() {
         <IdeaChapter />
         <FormatChapter />
         <ArchiveChapter />
+        <ItineraryChapter />
         <FieldGallery />
         <PeopleChapter />
         <LifeAfterChapter />

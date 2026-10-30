@@ -76,9 +76,11 @@ export function IdeaChapter() {
       <div className="page">
         <p className="idea-statement" data-ink>
           <InkText text={about.text[0]} />
+        </p>
+        <p className="caption mt-6">
+          From the {BROCHURE}.
           <NoteRef id="duration" />
         </p>
-        <p className="caption mt-6">From the {BROCHURE}.</p>
 
         <div className="mt-[clamp(4rem,9vw,7rem)] grid lg:grid-cols-12 lg:gap-[var(--gap)]">
           <AnnotatedPhoto photoKey="openLandscape" sizes="(min-width: 1024px) 66vw, 100vw" className="lg:col-span-8 lg:col-start-5 lg:-mr-[var(--gutter)]" dark duotone />

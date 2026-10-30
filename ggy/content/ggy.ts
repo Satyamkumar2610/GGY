@@ -12,6 +12,7 @@
  */
 
 export const BROCHURE = "GGY brochure, 8th edition (2025)";
+export const CONCEPT_NOTE = "GGY concept note";
 
 /* ------------------------------------------------------------------ */
 /* Photographs: every image on the site, with its source and licence   */
@@ -160,9 +161,11 @@ export type NoteId = keyof typeof pendingNotes;
 
 export const pendingNotes = {
   duration:
-    "The brochure describes a 10-day programme, but the dates it prints for the 8th edition are 1 to 9 March 2025. Awaiting confirmation.",
+    "The brochure describes a 10-day programme; the concept note describes a 9-day programme. Awaiting confirmation.",
   alumni:
-    "The brochure gives 400+ handpicked delegates on one page and an alumni network of 350+ on another. Awaiting confirmation.",
+    "The brochure gives 400+ handpicked delegates on one page and an alumni network of 350+ on another; the concept note gives 300+ alumni. Awaiting confirmation.",
+  dates8:
+    "The brochure prints 1 to 9 March 2025 for the 8th edition; the concept note's itinerary runs from 23 to 31 March. Awaiting confirmation.",
   workshops:
     "The brochure repeats the Conferences description for Workshops. The Workshops description is awaiting confirmation.",
   titles:
@@ -298,6 +301,68 @@ export const takeaways: { name: string; text: string; note?: NoteId }[] = [
   { name: "Impact Legacy", text: "Join an exclusive network of 350+ alumni for lifelong learning, and gain access to city meetups, networking dinners, online discussions, and exclusive annual retreats.", note: "alumni" },
 ];
 
+/* Concept note, ahead of the 9th edition */
+export const conceptFigures: { value: string; label: string; note?: NoteId }[] = [
+  { value: "8", label: "Editions completed" },
+  { value: "20+", label: "States of India visited" },
+  { value: "300+", label: "Alumni", note: "alumni" },
+  { value: "100+", label: "Governance projects visited" },
+];
+
+/* Concept note, background */
+export const saarthi = {
+  text: "The Yatra aims to create ‘Saarthis’ or the ‘Ambassadors of Governance’ to spread the word about the outstanding performance of governmental and civil society institutions.",
+};
+
+/* Concept note: itinerary of the 8th edition, agenda as printed. */
+export type ItineraryDay = { date: string; day: number; city: string; agenda: string[]; field?: { title: string; text: string } };
+export const itinerary8: ItineraryDay[] = [
+  { date: "23 March", day: 1, city: "Sonipat", agenda: ["Orientation at Rishihood University", "Meeting with Rishihood Founders", "About the GGY Framework"] },
+  {
+    date: "24 March",
+    day: 2,
+    city: "Delhi",
+    agenda: ["Meetings in Delhi, including an interaction with Dr. Anirban Ganguly, Chairman, SPMRF", "Shri Alok Kumar, Principal Secretary, Department of Planning, UP: a $1 trillion economy", "Uttar Pradesh Police Headquarters: interaction with the DGP"],
+    field: {
+      title: "UP 112 Command Centre",
+      text: "Delegates explored how policing truly works behind the walls of the control centre, from recording the caller’s message to dispatch. Police officials walked them through the calling system, smart tablets, ticketing and the strategic placement of police vehicles across the city to bring the average response time under 10 minutes. The visit ended in the war room, where top officials gather in an emergency, with a Q&A on the delegates’ observations.",
+    },
+  },
+  { date: "25 March", day: 3, city: "Lucknow", agenda: ["Uttar Pradesh Expressways Industrial Development Authority (UPEIDA)", "Interaction with Shri Pravin Singh, Editor, The Times of India"] },
+  {
+    date: "26 March",
+    day: 4,
+    city: "Lucknow",
+    agenda: ["Interaction with Shri Vinayak Nath, National President, BSIS", "Shri Amrit Abhijat IAS, Principal Secretary, Urban Development"],
+    field: {
+      title: "Inclusive urban governance",
+      text: "A dialogue with Shri Amrit Abhijat, Principal Secretary (Urban Development), and Shri Amit Jha, Secretary and Director (Urban Development), Government of Uttar Pradesh, on integrating every part of society, from large infrastructure to grassroots initiatives. The Kumbh Mela 2025 was discussed as a case study in public administration and logistics, and Shakti Kitchen as a programme that empowers women through dignified local work.",
+    },
+  },
+  {
+    date: "27 March",
+    day: 5,
+    city: "Prayagraj",
+    agenda: ["Visit to the Integrated Command Centre", "Interaction with the Mela Magistrate, Prayagraj Mela Authority Board"],
+    field: {
+      title: "The Mahakumbh control centre",
+      text: "The Integrated Command & Control Centre in Prayagraj served as the central nervous system of the Mahakumbh 2025. Delegates saw a demonstration of its AI-powered master dashboard and spoke with Shri Vijay Kiran Anand IAS, the Chief Officer who led the Mahakumbh 2025, about time management, team morale and the administrative culture an event of this scale demands.",
+    },
+  },
+  { date: "28 March", day: 6, city: "Varanasi", agenda: ["Namami Gange ghat", "Kashi Vishwanath Corridor: interaction with the CEO, Kashi Vishwanath Corridor Board", "Interaction with the Vice Chairman, Varanasi Development Authority"] },
+  { date: "29 March", day: 7, city: "Ayodhya", agenda: ["Shri Ram Janmabhoomi Teerth Kshetra and Karsevakpuram", "Interaction with Shri Champat Rai, General Secretary, Teerth Kshetra Trust"] },
+  { date: "30 March", day: 8, city: "Deoria", agenda: ["Lunch with Shri Shashank Mani Tripathi, Member of Parliament, at the Jagriti Enterprise Centre, Barpar", "Convocation"] },
+  { date: "31 March", day: 9, city: "Lucknow", agenda: ["Lunch with Shri Asim Arun, Minister of State, Social Justice, Government of Uttar Pradesh", "Closing: GGY officially ends"] },
+];
+
+/* Concept note: proposed plan for Maharashtra. Tentative and unconfirmed. */
+export const proposedMaharashtra: { date: string; items: string[] }[] = [
+  { date: "29 January", items: ["Nashik Kumbh"] },
+  { date: "30 January", items: ["Interaction with the CEO, Viksit Maharashtra Mission", "Mumbai Police HQ: integrated command room", "CM War Room"] },
+  { date: "31 January", items: ["BMC headquarters and interaction with the Commissioner", "Metro, Coastal Road and Atal Setu construction sites", "Mumbai local command room"] },
+  { date: "1 February", items: ["BharatGen, IIT Bombay", "Bhandup water treatment plant", "National Stock Exchange"] },
+];
+
 /* Brochure p.4, figures printed before the 8th edition */
 export const journeyStats: { value: string; label: string; note?: NoteId }[] = [
   { value: "7", label: "Editions" },
@@ -317,6 +382,20 @@ export const pastEditions: { year: string; route: string; season?: string }[] = 
   { year: "2019", route: "Delhi – Haryana – Rajasthan – Gujarat" },
   { year: "2021", route: "Jammu & Kashmir – Ladakh" },
   { year: "2025", route: "Delhi – Uttar Pradesh", season: "8th edition" },
+];
+
+/* Concept note: people delegates of the 8th edition met, titles as printed. */
+export const met8: { name: string; title: string; where: string }[] = [
+  { name: "Dr. Anirban Ganguly", title: "Chairman, SPMRF", where: "Delhi" },
+  { name: "Shri Alok Kumar", title: "Principal Secretary, Department of Planning, Uttar Pradesh", where: "Delhi" },
+  { name: "Shri Pravin Singh", title: "Editor, The Times of India", where: "Lucknow" },
+  { name: "Shri Vinayak Nath", title: "National President, BSIS", where: "Lucknow" },
+  { name: "Shri Amrit Abhijat IAS", title: "Principal Secretary, Urban Development, Uttar Pradesh", where: "Lucknow" },
+  { name: "Shri Amit Jha", title: "Secretary and Director, Urban Development, Uttar Pradesh", where: "Lucknow" },
+  { name: "Shri Vijay Kiran Anand IAS", title: "Chief Officer, Mahakumbh 2025", where: "Prayagraj" },
+  { name: "Shri Champat Rai", title: "General Secretary, Shri Ram Janmabhoomi Teerth Kshetra Trust", where: "Ayodhya" },
+  { name: "Shri Shashank Mani Tripathi", title: "Member of Parliament", where: "Deoria" },
+  { name: "Shri Asim Arun", title: "Minister of State, Social Justice, Uttar Pradesh", where: "Lucknow" },
 ];
 
 /* Brochure p.10, names and titles as printed */
@@ -394,7 +473,7 @@ export const annotations: Partial<Record<PhotoKey, Annotation[]>> = {
 export const faqs: { q: string; a: string }[] = [
   { q: "Where will the upcoming Yatra go?", a: "Through Maharashtra, Goa and Gujarat. The stops and the order of travel are still to be announced." },
   { q: "When is the upcoming Yatra?", a: "The dates are still to be announced. The previous edition ran from 1 to 9 March 2025." },
-  { q: "How long is the Yatra?", a: "The duration of the upcoming edition is to be announced. The 2025 brochure describes a 10-day programme; the dates it prints are 1 to 9 March." },
+  { q: "How long is the Yatra?", a: "The duration of the upcoming edition is to be announced. The 2025 brochure describes a 10-day programme; the GGY concept note describes a 9-day programme, and its itinerary for the 8th edition runs from 23 to 31 March." },
   { q: "How many delegates take part?", a: "The cohort size for the upcoming edition is to be announced. The 2025 edition had 45 handpicked delegates." },
   { q: "Who is the Yatra for?", a: "The 2025 brochure describes it as a programme for aspiring public leaders, policymakers, changemakers and impact creators." },
   { q: "How do I apply?", a: "Applications for the upcoming edition have not opened. In 2025, candidates submitted an online application, were told the outcome within 7 working days, and paid the fee within 5 working days of confirmation." },

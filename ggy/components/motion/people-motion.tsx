@@ -1,12 +1,11 @@
 "use client";
 
-import { gsap, MOTION_QUERIES, SplitText, useGSAP } from "@/lib/gsap";
+import { gsap, MOTION_QUERIES, useGSAP } from "@/lib/gsap";
 
 /**
- * The people chapter, owned by GSAP. The heading rises, the count runs up from
- * zero, and the ledger fills in a line at a time — a roll of names being read
- * out rather than a block appearing. Scoped to the section so it does not
- * re-scan the page.
+ * The people chapter's opening, owned by GSAP: the count runs up from zero as
+ * the chapter arrives. The heading drifts with the page (data-drift) and the
+ * roll animates itself.
  */
 export function PeopleMotion() {
   useGSAP(() => {
@@ -16,11 +15,7 @@ export function PeopleMotion() {
     const mm = gsap.matchMedia();
 
     mm.add(MOTION_QUERIES.any, () => {
-      const title = root.querySelector<HTMLElement>("#people-title");
-      const split = title ? SplitText.create(title, { type: "lines", mask: "lines" }) : null;
-
-      const tl = gsap.timeline({ defaults: { ease: "land" }, scrollTrigger: { trigger: root, start: "top 72%", once: true } });
-      if (split) tl.from(split.lines, { yPercent: 112, duration: 1.25, stagger: 0.1 }, 0);
+      const tl = gsap.timeline({ scrollTrigger: { trigger: root, start: "top 72%", once: true } });
 
       const count = q("[data-people-count]")[0] as HTMLElement | undefined;
       if (count) {
@@ -36,22 +31,9 @@ export function PeopleMotion() {
               count.textContent = String(Math.round(n.v));
             },
           },
-          0.5,
+          0.2,
         );
       }
-
-      // A long list: a small per-row delay keeps the whole roll brisk.
-      const rows = q("[data-people-row]");
-      gsap.from(rows, {
-        autoAlpha: 0,
-        y: 18,
-        duration: 0.5,
-        ease: "power2.out",
-        stagger: 0.03,
-        scrollTrigger: { trigger: rows[0]?.parentElement ?? root, start: "top 88%", once: true },
-      });
-
-      return () => split?.revert();
     });
 
     return () => mm.revert();
