@@ -15,6 +15,15 @@ function Mark() {
 
 // The phrases of the brochure's description that carry it, lit in saffron
 // as the statement fills.
+/* What the Yatra is for, each in the words of the 2025 brochure. */
+const MODES = [
+  { name: "First-hand exposure", quote: "witness transformative governance projects firsthand", src: "Brochure, p.2" },
+  { name: "Leaders and institutions", quote: "engage with visionary policymakers shaping India’s future", src: "Brochure, p.2" },
+  { name: "Learning in the field", quote: "Live exposure to last-mile governance institutions and interaction with stakeholders", src: "Field Visit, brochure p.10" },
+  { name: "Administration in practice", quote: "experience first-hand the complications and contradictions of the policy implementation processes", src: "Experience, brochure p.7" },
+  { name: "People and places", quote: "Deepen your understanding of Bharat through insights from grassroots leaders", src: "Bharat Insights, brochure p.3" },
+];
+
 const KEYS = ["10-day immersive travel program", "witness transformative governance projects firsthand", "visionary policymakers"];
 
 /** The brochure's text, verbatim, with its key phrases marked. */
@@ -46,12 +55,35 @@ function InkText({ text }: { text: string }) {
  */
 export function IdeaChapter() {
   return (
-    <section id="about" aria-labelledby="about-title" className="on-dark on-ember ground gloss py-[clamp(6rem,13vw,12rem)]" data-idea>
+    <section id="idea" aria-labelledby="about-title" className="on-dark on-ember ground gloss py-[clamp(6rem,13vw,12rem)]" data-idea data-ground-reveal>
       <div className="page">
-        <h2 id="about-title" className="sr-only">
-          The idea behind the Yatra
-        </h2>
+        <div className="grid gap-10 lg:grid-cols-12 lg:gap-[var(--gap)]">
+          <div className="lg:col-span-7">
+            <p className="kicker text-ivory/80">
+              <span className="num">04</span> The idea behind the Yatra
+            </p>
+            <h2 id="about-title" className="d-xl mt-6" data-drift>
+              Beyond the map lies the real learning.
+            </h2>
+          </div>
+          <ol className="idea-modes lg:col-span-5 lg:pt-4">
+            {MODES.map((m, i) => (
+              <li key={m.name} className="idea-mode" data-mode>
+                <span className="idea-mode-num num" aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span>
+                  <span className="idea-mode-name">{m.name}</span>
+                  <span className="idea-mode-quote">“{m.quote}”</span>
+                  <span className="idea-mode-src">{m.src}</span>
+                </span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
 
+      <div className="page mt-[clamp(6rem,12vw,10rem)]">
         <figure>
           <blockquote>
             <p className="idea-claim font-serif" data-idea-claim>

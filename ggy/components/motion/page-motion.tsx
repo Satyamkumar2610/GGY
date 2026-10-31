@@ -9,8 +9,9 @@ import { gsap, MOTION_QUERIES, SplitText, useGSAP } from "@/lib/gsap";
  * [data-drift]    a chapter title is set in sheared lines: alternate lines enter from opposite sides,
  *                 meet as the title reaches the upper part of the window, and part again, more
  *                 slowly, as it leaves. Scrubbed, so the type is always exactly where the scroll is.
- * .gloss          the bar of reflected light crosses each lit ground as it passes through the window,
- *                 as if the page were moving beneath a fixed light.
+ * [data-draw]     an SVG path with pathLength=1 draws itself with the scroll.
+ * [data-ground-reveal] a coloured ground opens from inset to full bleed as it arrives.
+ * [data-row]      a ruled row rises into place once as its list reaches the reader.
  */
 export function PageMotion() {
   useGSAP(() => {
@@ -20,16 +21,33 @@ export function PageMotion() {
       document.querySelectorAll<HTMLElement>("[data-reveal]").forEach((frame) => {
         const img = frame.querySelector("img");
         const tl = gsap.timeline({ scrollTrigger: { trigger: frame, start: "top 85%", once: true } });
-        tl.fromTo(frame, { clipPath: "inset(100% 0% 0% 0% round 1rem)" }, { clipPath: "inset(0% 0% 0% 0% round 1rem)", duration: 1.4, ease: "expo.inOut" });
+        tl.fromTo(frame, { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.4, ease: "expo.inOut" });
         if (img) tl.fromTo(img, { scale: 1.2 }, { scale: 1, duration: 1.9, ease: "land" }, 0.1);
       });
 
-      document.querySelectorAll<HTMLElement>(".gloss").forEach((ground) => {
+      // Linework that draws itself with the scroll.
+      document.querySelectorAll<SVGPathElement>("[data-draw]").forEach((path, i) => {
+        const svg = path.ownerSVGElement ?? path;
+        gsap.fromTo(
+          path,
+          { strokeDashoffset: 1 },
+          { strokeDashoffset: 0, ease: "none", scrollTrigger: { trigger: svg, start: `top ${85 - i * 6}%`, end: "center 45%", scrub: 0.8 } },
+        );
+      });
+
+      // Coloured grounds open out of the paper rather than cutting in: the
+      // ground starts inset from the page edges and widens to full bleed.
+      document.querySelectorAll<HTMLElement>("[data-ground-reveal]").forEach((ground) => {
         gsap.fromTo(
           ground,
-          { "--sheen": "-24%" },
-          { "--sheen": "24%", ease: "none", scrollTrigger: { trigger: ground, start: "top bottom", end: "bottom top", scrub: 0.6 } },
+          { clipPath: "inset(0% 5% 0% 5%)" },
+          { clipPath: "inset(0% 0% 0% 0%)", ease: "none", scrollTrigger: { trigger: ground, start: "top bottom", end: "top 25%", scrub: 0.6 } },
         );
+      });
+
+      // Ruled rows arrive one after another as their list reaches the reader.
+      document.querySelectorAll<HTMLElement>("[data-row]").forEach((row) => {
+        gsap.from(row, { opacity: 0, y: 28, duration: 1, ease: "land", scrollTrigger: { trigger: row, start: "top 88%", once: true } });
       });
 
       document.querySelectorAll<HTMLElement>("[data-drift]").forEach((title) => {

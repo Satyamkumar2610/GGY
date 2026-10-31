@@ -76,6 +76,11 @@ export function JourneyMotion() {
         }
       };
 
+      // The road between the stages fills as the reader travels it.
+      const road = q("[data-journey-stages]")[0] as HTMLElement | undefined;
+      if (road)
+        gsap.fromTo(road, { "--progress": 0 }, { "--progress": 1, ease: "none", scrollTrigger: { trigger: road, start: "top 55%", end: "bottom 55%", scrub: 0.5 } });
+
       stages.forEach((stage, i) => {
         ScrollTrigger.create({ trigger: stage, start: "top 55%", end: "bottom 55%", onEnter: () => go(i), onEnterBack: () => go(i) });
       });

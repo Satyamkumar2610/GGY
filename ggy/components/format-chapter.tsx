@@ -1,7 +1,6 @@
 import Image from "next/image";
 import type { CSSProperties } from "react";
-import { components, learningJourney, photos, takeaways } from "@/content/ggy";
-import { NoteRef } from "./primitives";
+import { learningJourney, photos } from "@/content/ggy";
 import { JourneyMotion } from "./motion/journey-motion";
 
 /**
@@ -32,9 +31,12 @@ function Crop({ i, sizes, className = "" }: { i: number; sizes: string; classNam
 export function FormatChapter() {
   const hall = photos.lectureHall;
   return (
-    <section id="format" aria-labelledby="format-title" className="gloss bg-cream pt-[clamp(6rem,12vw,11rem)]" data-format>
+    <section id="learning" aria-labelledby="format-title" className="bg-cream pb-[clamp(6rem,12vw,10rem)] pt-[clamp(6rem,12vw,11rem)]" data-format>
       <div className="page">
-        <h2 id="format-title" className="d-l max-w-[14ch]">
+        <p className="kicker">
+          <span className="num">04</span> The learning journey
+        </p>
+        <h2 id="format-title" className="d-l mt-6 max-w-[14ch]">
           Four stages of a personal learning journey
         </h2>
         <p className="mt-6 max-w-[30rem] text-ink-soft">
@@ -70,7 +72,7 @@ export function FormatChapter() {
           </div>
 
           {/* The stages, as milestones on a road */}
-          <ol className="journey-stages lg:col-span-4 lg:col-start-9">
+          <ol className="journey-stages lg:col-span-4 lg:col-start-9" data-journey-stages>
             {learningJourney.map((s, i) => (
               <li key={s.name} className="journey-stage py-10 lg:flex lg:min-h-[62svh] lg:flex-col lg:justify-center lg:py-0" data-journey-stage>
                 <span aria-hidden="true" className="journey-milestone" />
@@ -87,40 +89,6 @@ export function FormatChapter() {
         <p className="caption mt-4 lg:hidden">{hall.caption} Photograph from the GGY brochure; each stage is a closer crop of it.</p>
       </div>
 
-      {/* Programme components */}
-      <div className="page mt-[clamp(6rem,12vw,10rem)]">
-        <h3 className="label text-muted">Programme components, as described in 2025</h3>
-        <dl className="component-grid mt-10">
-          {components.map((c) => (
-            <div key={c.name} className="component-card" data-component>
-              <dt className="d-s">{c.name}</dt>
-              <dd className="mt-2.5 max-w-[24rem] text-[0.95rem] text-ink-soft">
-                {c.text ?? <span className="tba">Description awaiting confirmation</span>}
-                {c.note ? <NoteRef id={c.note} /> : null}
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </div>
-
-      {/* Takeaways */}
-      <div className="page mt-[clamp(5rem,10vw,8rem)] grid gap-10 pb-[clamp(6rem,12vw,10rem)] lg:grid-cols-12 lg:gap-[var(--gap)]">
-        <div className="lg:col-span-3">
-          <h3 className="label text-muted lg:pt-3">What delegates took away</h3>
-          <p className="caption mt-3 max-w-[16rem]">As listed in the 2025 brochure, which also offered a certificate of appreciation.</p>
-        </div>
-        <ul className="grid gap-x-[calc(var(--gap)*2)] gap-y-12 md:grid-cols-2 lg:col-span-9">
-          {takeaways.map((t) => (
-            <li key={t.name} data-takeaway>
-              <p className="d-s">{t.name}</p>
-              <p className="mt-3 max-w-[28rem] text-[0.95rem] text-ink-soft">
-                {t.text}
-                {t.note ? <NoteRef id={t.note} /> : null}
-              </p>
-            </li>
-          ))}
-        </ul>
-      </div>
       <JourneyMotion />
     </section>
   );

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { BROCHURE, careerPaths, CONCEPT_NOTE, met8, photos, roleModels, saarthi } from "@/content/ggy";
+import { BROCHURE, careerPaths, CONCEPT_NOTE, met8, photos, previousEdition, roleModels, saarthi } from "@/content/ggy";
 import { NoteRef } from "./primitives";
 import { PeopleRoll } from "./people-roll";
 import { PathsMotion } from "./motion/paths-motion";
@@ -17,9 +17,14 @@ export function PeopleChapter() {
     <section id="people" aria-labelledby="people-title" className="overflow-x-clip bg-paper py-[clamp(6rem,12vw,11rem)]" data-people>
       <div className="page">
         <div className="grid items-end gap-10 lg:grid-cols-12 lg:gap-[var(--gap)]">
-          <h2 id="people-title" className="d-xl lg:col-span-8" data-drift>
-            The people delegates met
-          </h2>
+          <div className="lg:col-span-8">
+            <p className="kicker">
+              <span className="num">07</span> People and institutions
+            </p>
+            <h2 id="people-title" className="d-xl mt-6" data-drift>
+              The people delegates met
+            </h2>
+          </div>
           <div className="lg:col-span-4">
             <p className="flex items-baseline gap-4">
               <span className="num text-[clamp(4rem,2.5rem+4vw,7rem)] leading-[0.85] text-saffron" data-people-count>
@@ -36,6 +41,28 @@ export function PeopleChapter() {
 
         <div className="mt-[clamp(3rem,6vw,5rem)]">
           <PeopleRoll />
+        </div>
+
+        <div className="institutions mt-[clamp(5rem,10vw,8rem)]">
+          <h3 className="d-m lg:max-w-[18ch]">The institutions behind the 2025 edition</h3>
+          <dl className="institutions-list">
+            <div data-row>
+              <dt className="caption">Organised by</dt>
+              <dd>Rashtram School of Public Leadership</dd>
+              <dd className="institutions-sub">Rishihood University, Sonipat</dd>
+            </div>
+            <div data-row>
+              <dt className="caption">An initiative of</dt>
+              <dd>{previousEdition.initiativeOf}</dd>
+              <dd className="institutions-sub">As printed on the 2025 brochure cover</dd>
+            </div>
+            <div data-row>
+              <dt className="caption">Yatra leader, 2025</dt>
+              <dd>Shri Shantanu Gupta</dd>
+              <dd className="institutions-sub">Professor of Practice, Rashtram School of Public Leadership, Rishihood University</dd>
+            </div>
+          </dl>
+          <p className="caption mt-6 max-w-[34rem]">From the {BROCHURE}. The organiser and Yatra leader of the upcoming edition are to be confirmed.</p>
         </div>
       </div>
       <PeopleMotion />
@@ -68,10 +95,12 @@ export function LifeAfterChapter() {
 
         <div className="mt-[clamp(3rem,6vw,5rem)] grid gap-10 lg:grid-cols-12 lg:gap-[var(--gap)]">
           <div className="lg:col-span-3">
-            <div className="media relative aspect-[3/4] lg:sticky lg:top-[calc(var(--header-h)+2rem)]" data-reveal>
-              <Image src={p.src} alt={p.alt} fill quality={80} sizes="(min-width: 1024px) 22vw, 100vw" className="object-cover" />
+            <div className="lg:sticky lg:top-[calc(var(--header-h)+2rem)]">
+              <div className="media relative aspect-[3/4]" data-reveal>
+                <Image src={p.src} alt={p.alt} fill quality={80} sizes="(min-width: 1024px) 22vw, 100vw" className="object-cover" />
+              </div>
+              <p className="caption mt-3">{p.caption}. Photograph from the GGY brochure.</p>
             </div>
-            <p className="caption mt-3">{p.caption}. Photograph from the GGY brochure.</p>
           </div>
           <div className="lg:col-span-9">
             <ol className="paths" aria-label="Paths alumni have taken">

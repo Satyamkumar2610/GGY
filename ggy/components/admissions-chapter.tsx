@@ -2,6 +2,7 @@ import { admissionSteps, contact, upcoming } from "@/content/ggy";
 import { Button, NoteRef, Value } from "./primitives";
 import { TicketMotion } from "./motion/ticket-motion";
 import { Readiness } from "./readiness";
+import { ClosingMap } from "./closing-map";
 
 /**
  * Admissions: a crimson page with the one action available today, and the
@@ -9,19 +10,30 @@ import { Readiness } from "./readiness";
  */
 export function AdmissionsChapter() {
   return (
-    <section id="admissions" aria-labelledby="admissions-title" className="on-crimson on-dark gloss bg-crimson-deep text-ivory">
-      <div className="page py-[clamp(6rem,12vw,10rem)]">
-        <div className="grid items-end gap-12 lg:grid-cols-12 lg:gap-[var(--gap)]">
-          <h2 id="admissions-title" className="d-l lg:col-span-7" data-drift>
-            Applications for the next Yatra have not yet opened.
-          </h2>
-          <div className="lg:col-span-4 lg:col-start-9">
-            <p className="lede text-ivory/90">Until they do, the GGY team can be reached directly.</p>
-            <Button href={`mailto:${contact.email}`} variant="cream" className="mt-8">
-              Write to the GGY team
+    <section id="connect" aria-labelledby="admissions-title" className="on-crimson on-dark gloss bg-crimson-deep text-ivory" data-ground-reveal>
+      {/* The closing composition: the three states, drawn in ivory linework */}
+      <div className="closing">
+        <ClosingMap />
+        <div className="page relative">
+          <div className="closing-copy">
+            <p className="kicker text-ivory/80">
+              <span className="num">08</span> The upcoming edition
+            </p>
+            <h2 id="admissions-title" className="closing-title mt-7" data-drift>
+              The journey changes the way you see governance.
+            </h2>
+            <p className="lede mt-8 max-w-[30rem] text-ivory/90">Explore the upcoming Good Governance Yatra across Maharashtra, Goa and Gujarat.</p>
+            <p className="mt-4 max-w-[30rem] text-[0.95rem] text-ivory/75">
+              Applications for the upcoming edition have not opened, and its dates are still to be announced. Until then, the GGY team can be reached directly.
+            </p>
+            <Button href={`mailto:${contact.email}`} variant="cream" className="mt-9">
+              Connect with the GGY team
             </Button>
           </div>
         </div>
+      </div>
+
+      <div id="admissions" className="page pb-[clamp(6rem,12vw,10rem)]">
 
         {/* The pass: issued, but with none of its details filled in yet */}
         <div className="ticket mt-[clamp(4rem,8vw,6rem)] lg:mr-[16%]" data-ticket>

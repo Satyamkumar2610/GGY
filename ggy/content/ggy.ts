@@ -80,6 +80,26 @@ const photoRegistry = {
     license: { name: "CC BY-SA 4.0", url: "https://creativecommons.org/licenses/by-sa/4.0/" },
     sourceUrl: "https://commons.wikimedia.org/wiki/File:Sabarmati_Ashram_-_Ahmedabad_-_Gujarat_-_DSC001.jpg",
   },
+  gateway: {
+    src: "/images/maharashtra-gateway-of-india.jpg",
+    width: 2400,
+    height: 1600,
+    alt: "The Gateway of India in Mumbai, a basalt arch with four turrets, seen from the harbour with ferries moored in front and the Taj Mahal Palace hotel behind.",
+    caption: "Gateway of India, Mumbai",
+    source: "unsplash",
+    credit: "Monaal Garg, Unsplash. Resized.",
+    license: { name: "Unsplash License", url: "https://unsplash.com/license" },
+  },
+  bomJesus: {
+    src: "/images/goa-basilica-bom-jesus.jpg",
+    width: 2400,
+    height: 1600,
+    alt: "The laterite façade of the Basilica of Bom Jesus in Old Goa, with visitors in the forecourt and coconut palms to the left.",
+    caption: "Basilica of Bom Jesus, Old Goa",
+    source: "unsplash",
+    credit: "Kushagra Dhall, Unsplash. Resized.",
+    license: { name: "Unsplash License", url: "https://unsplash.com/license" },
+  },
   cohort: {
     src: "/images/ggy-delegates-cohort.jpg",
     width: 1951,
@@ -233,6 +253,88 @@ export const upcoming = {
   applyUrl: null as string | null,
   organiser: null as string | null,
 };
+
+/* ------------------------------------------------------------------ */
+/* State dossiers: reference notes on the three states                 */
+/* ------------------------------------------------------------------ */
+
+/**
+ * General reference about each state, written for this page. Not from GGY
+ * sources and not a programme: nothing here says where the Yatra will go.
+ * `people` are names from the 2025 brochure whose printed titles mention the
+ * state; the brochure does not say in which edition delegates met them.
+ */
+export type StateDossier = {
+  iso: "IN-GJ" | "IN-GA" | "IN-MH";
+  name: string;
+  /** Position in the page's editorial sequence. Not the order of travel. */
+  chapter: string;
+  intro: string;
+  facts: { term: string; value: string }[];
+  /** Capital: a geographic reference point, never a confirmed stop. */
+  capital: { name: string; coords: string };
+  photos: PhotoKey[];
+  people: { name: string; title: string }[];
+  /** Earlier editions whose printed route includes the state (brochure p.6). */
+  editions: string[];
+};
+
+export const stateDossiers: StateDossier[] = [
+  {
+    iso: "IN-GJ",
+    name: "Gujarat",
+    chapter: "01",
+    intro:
+      "India’s westernmost state, where the Gulf of Kutch and the Gulf of Khambhat cut deep into the Arabian Sea coast. Gujarat was formed on 1 May 1960, when the bilingual Bombay State was divided.",
+    facts: [
+      { term: "Capital, for reference", value: "Gandhinagar" },
+      { term: "Official language", value: "Gujarati" },
+      { term: "Statehood", value: "1 May 1960" },
+    ],
+    capital: { name: "Gandhinagar", coords: "23.22° N, 72.64° E" },
+    photos: ["sabarmati"],
+    people: [
+      { name: "Shri Saurabh Bhai Patel", title: "Former Finance Minister, Gujarat State" },
+      { name: "Smt. Vasuben Trivedi", title: "Former Minister for Women and Child Welfare, Gujarat State" },
+    ],
+    editions: ["2015", "2019"],
+  },
+  {
+    iso: "IN-GA",
+    name: "Goa",
+    chapter: "02",
+    intro:
+      "India’s smallest state by area, on the Konkan coast between Maharashtra and Karnataka. Its capital, Panaji, stands on the estuary of the Mandovi. Goa became a state on 30 May 1987.",
+    facts: [
+      { term: "Capital, for reference", value: "Panaji" },
+      { term: "Official language", value: "Konkani" },
+      { term: "Statehood", value: "30 May 1987" },
+    ],
+    capital: { name: "Panaji", coords: "15.49° N, 73.83° E" },
+    photos: ["oldSecretariat", "bomJesus"],
+    people: [],
+    editions: ["2018"],
+  },
+  {
+    iso: "IN-MH",
+    name: "Maharashtra",
+    chapter: "03",
+    intro:
+      "From the Konkan coast across the Western Ghats and onto the Deccan plateau. Maharashtra was formed on the same day as Gujarat, 1 May 1960, and was India’s second most populous state at the 2011 Census.",
+    facts: [
+      { term: "Capital, for reference", value: "Mumbai" },
+      { term: "Official language", value: "Marathi" },
+      { term: "Statehood", value: "1 May 1960" },
+    ],
+    capital: { name: "Mumbai", coords: "19.08° N, 72.88° E" },
+    photos: ["gateway", "highCourt", "municipalCorporation"],
+    people: [
+      { name: "Smt. Nidhi Kamdar", title: "Former OSD, Maharashtra CM" },
+      { name: "Shri Ajoy Mehta", title: "Municipal Commissioner, Mumbai" },
+    ],
+    editions: ["2016"],
+  },
+];
 
 /* ------------------------------------------------------------------ */
 /* Previous edition: 8th edition, 2025 (brochure pp.1, 2, 6, 8)        */
