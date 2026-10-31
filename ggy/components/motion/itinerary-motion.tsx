@@ -44,11 +44,15 @@ export function ItineraryMotion() {
       });
       show(0);
 
-      gsap.fromTo(
-        q("[data-itin-progress]"),
-        { scaleY: 0 },
-        { scaleY: 1, ease: "none", scrollTrigger: { trigger: q(".itin-days")[0], start: "top 55%", end: "bottom 55%", scrub: 0.4 } },
-      );
+      // The route fills and the bead travels it, scrubbed to the days.
+      const route = { trigger: q(".itin-days")[0], start: "top 55%", end: "bottom 55%", scrub: 0.4 };
+      gsap.fromTo(q("[data-itin-progress]"), { scaleY: 0 }, { scaleY: 1, ease: "none", scrollTrigger: route });
+      gsap.fromTo(q("[data-itin-stops]"), { "--p": 0 }, { "--p": 1, ease: "none", scrollTrigger: { ...route } });
+
+      // Each day card glides up into its place as it arrives.
+      entries.forEach((entry) => {
+        gsap.fromTo(entry, { y: 70, rotate: 0.6 }, { y: 0, rotate: 0, ease: "none", scrollTrigger: { trigger: entry, start: "top bottom", end: "top 62%", scrub: 0.6 } });
+      });
     });
 
     return () => mm.revert();

@@ -61,7 +61,7 @@ export function EditionNotes() {
       <div className="page">
         <div className="grid gap-6 lg:grid-cols-12 lg:gap-[var(--gap)]">
           <h2 id="editions-title" className="d-l lg:col-span-7" data-drift>
-            So far, only the route is confirmed.
+            So far, only <em>the route</em> is confirmed.
           </h2>
           <p className="max-w-[24rem] text-ink-soft lg:col-span-3 lg:col-start-10 lg:self-end">
             Drag the line to compare the 2025 edition with the next one. Everything else will be announced with the programme.

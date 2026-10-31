@@ -6,6 +6,7 @@ import { photos, stateDossiers, upcoming, type PhotoKey } from "@/content/ggy";
 import { atlas } from "@/lib/atlas";
 import { gsap, MOTION_QUERIES, ScrollTrigger, SplitText, useGSAP } from "@/lib/gsap";
 import { Script } from "../primitives";
+import { Contours } from "../contours";
 
 type Composition = {
   iso: "IN-GJ" | "IN-GA" | "IN-MH";
@@ -74,9 +75,16 @@ export function ConnectingJourney() {
       const svg = el.querySelector<SVGSVGElement>("[data-line-svg]")!;
       const line = el.querySelector<SVGPathElement>("[data-line]")!;
       const ghost = el.querySelector<SVGPathElement>("[data-line-ghost]")!;
-      const pen = el.querySelector<SVGCircleElement>("[data-pen]")!;
+      const bed = el.querySelector<SVGPathElement>("[data-line-bed]")!;
+      const pen = el.querySelector<SVGGElement>("[data-pen]")!;
+      const traveller = el.querySelector<HTMLElement>("[data-traveller]")!;
+      const travellerText = el.querySelector<HTMLElement>("[data-traveller-text]")!;
       const nodes = Array.from(el.querySelectorAll<HTMLElement>("[data-node]"));
+      const comps = Array.from(el.querySelectorAll<HTMLElement>("[data-comp]"));
       let length = 1;
+      // Where along the line each station sits, measured once per layout.
+      let stations: number[] = [];
+      let reached = -2;
 
       // The line passes through each composition's node, curving between them.
       const build = () => {
@@ -114,8 +122,49 @@ export function ConnectingJourney() {
         }
         line.setAttribute("d", d);
         ghost.setAttribute("d", d);
+        bed.setAttribute("d", d);
         length = line.getTotalLength();
         line.style.strokeDasharray = `${length}`;
+
+        stations = nodes.map((n) => {
+          const b = n.getBoundingClientRect();
+          const x = b.left - r.left + b.width / 2;
+          const y = b.top - r.top + b.height / 2;
+          let best = 0;
+          let bestD = Infinity;
+          for (let s = 0; s <= 400; s++) {
+            const L = (length * s) / 400;
+            const p = line.getPointAtLength(L);
+            const dd = (p.x - x) ** 2 + (p.y - y) ** 2;
+            if (dd < bestD) {
+              bestD = dd;
+              best = L;
+            }
+          }
+          return best;
+        });
+      };
+
+      // A station lights when the line reaches it, and the traveller names
+      // the chapter it is in: page order, never the order of travel.
+      const reach = (L: number) => {
+        let k = -1;
+        stations.forEach((s, i) => {
+          if (L >= s - 2) k = i;
+        });
+        if (k === reached) return;
+        reached = k;
+        comps.forEach((c, i) => c.toggleAttribute("data-reached", i <= k));
+        const total = String(comps.length).padStart(2, "0");
+        const count = k >= 0 ? `${String(k + 1).padStart(2, "0")} / ${total}` : `00 / ${total}`;
+        const name = k >= 0 ? comps[k].dataset.name : "Setting out";
+        gsap
+          .timeline()
+          .to(travellerText, { yPercent: -50, autoAlpha: 0, duration: 0.16, ease: "power2.in" })
+          .add(() => {
+            travellerText.innerHTML = `<span class="journey-traveller-count">${count}</span>${name}`;
+          })
+          .fromTo(travellerText, { yPercent: 50 }, { yPercent: 0, autoAlpha: 1, duration: 0.34, ease: "power3.out" });
       };
 
       const mm = gsap.matchMedia();
@@ -130,14 +179,21 @@ export function ConnectingJourney() {
           onRefreshInit: build,
           onUpdate: (self) => {
             const p = self.progress;
-            line.style.strokeDashoffset = `${length * (1 - p)}`;
-            const pt = line.getPointAtLength(length * p);
-            pen.setAttribute("cx", pt.x.toFixed(1));
-            pen.setAttribute("cy", pt.y.toFixed(1));
-            pen.style.opacity = p > 0.002 && p < 0.998 ? "1" : "0";
+            const L = length * p;
+            line.style.strokeDashoffset = `${length - L}`;
+            const pt = line.getPointAtLength(L);
+            pen.setAttribute("transform", `translate(${pt.x.toFixed(1)} ${pt.y.toFixed(1)})`);
+            const on = p > 0.002 && p < 0.998;
+            pen.style.opacity = on ? "1" : "0";
+            // The traveller rides beside the pen, on whichever side has room.
+            const flip = pt.x > el.clientWidth - 280;
+            traveller.style.transform = `translate(${(pt.x + (flip ? -26 : 26)).toFixed(1)}px, ${pt.y.toFixed(1)}px) translate(${flip ? "-100%" : "0%"}, -50%)`;
+            traveller.style.opacity = on ? "1" : "0";
+            reach(L);
           },
         });
         line.style.strokeDashoffset = `${length}`;
+        reach(0);
 
         // Each composition arrives in its own way: the photograph opens from
         // the side the line arrives on, the outline of the state draws itself,
@@ -174,7 +230,10 @@ export function ConnectingJourney() {
           gsap.from(split.lines, { yPercent: 110, duration: 1.3, stagger: 0.1, ease: "land", scrollTrigger: { trigger: s, start: "top 78%", once: true } });
         });
 
-        return () => st.kill();
+        return () => {
+          st.kill();
+          comps.forEach((c) => c.removeAttribute("data-reached"));
+        };
       });
 
       mm.add(MOTION_QUERIES.desktop, () => {
@@ -195,19 +254,28 @@ export function ConnectingJourney() {
 
   return (
     <section ref={root} id="journey" aria-labelledby="journey-title" className="journey">
+      <Contours variant="b" />
       <svg className="journey-line" data-line-svg aria-hidden="true" preserveAspectRatio="none">
+        <path className="journey-line-bed" data-line-bed />
         <path className="journey-line-ghost" data-line-ghost />
         <path className="journey-line-ink" data-line />
-        <circle r="4.5" className="journey-pen" data-pen />
+        <g className="journey-pen" data-pen>
+          <circle r="17" className="journey-pen-halo" />
+          <circle r="7" className="journey-pen-core" />
+        </g>
       </svg>
+      <p aria-hidden="true" className="journey-traveller" data-traveller>
+        <span className="journey-traveller-dot" />
+        <span className="journey-traveller-text" data-traveller-text />
+      </p>
 
       <div className="page relative">
         <div className="journey-intro">
           <p className="kicker">
             <span className="num">03</span> The connecting journey
           </p>
-          <h2 id="journey-title" className="journey-statement mt-6" data-statement>
-            A journey is a line drawn between places. This one is still being drawn.
+          <h2 id="journey-title" className="journey-statement mt-7" data-statement>
+            A journey is a line drawn between places. This one is <em>still being drawn.</em>
           </h2>
           <p className="journey-caveat mt-8 max-w-[26rem]">
             The line on this page is an editorial graphic. It joins the chapters of this page, not confirmed stops, and it does not show the order of travel.
@@ -220,7 +288,7 @@ export function ConnectingJourney() {
           const main = photos[c.main];
           const second = c.second ? photos[c.second] : null;
           return (
-            <article key={c.iso} className={`journey-comp is-${c.side}`} data-comp data-side={c.side} aria-labelledby={`jc-${c.iso}`}>
+            <article key={c.iso} className={`journey-comp is-${c.side}`} data-comp data-side={c.side} data-name={d.name} aria-labelledby={`jc-${c.iso}`}>
               <div className="journey-media">
                 <div className="journey-main" data-main>
                   <Image src={main.src} alt={main.alt} fill quality={82} sizes="(min-width: 1024px) 55vw, 100vw" className="object-cover" />
@@ -271,7 +339,7 @@ export function ConnectingJourney() {
 
         <div className="journey-outro">
           <p className="journey-statement" data-statement>
-            Three states. One coastline. The order of travel will be announced with the programme.
+            Three states. One coastline. The order of travel <em>will be announced</em> with the programme.
           </p>
         </div>
       </div>

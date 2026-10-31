@@ -63,7 +63,7 @@ export function IdeaChapter() {
               <span className="num">04</span> The idea behind the Yatra
             </p>
             <h2 id="about-title" className="d-xl mt-6" data-drift>
-              Beyond the map lies the real learning.
+              Beyond the map lies <em>the real learning.</em>
             </h2>
           </div>
           <ol className="idea-modes lg:col-span-5 lg:pt-4">

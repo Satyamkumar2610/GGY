@@ -3,6 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import { met8, roleModels } from "@/content/ggy";
 import { gsap, MOTION_QUERIES, ScrollTrigger, useGSAP } from "@/lib/gsap";
+import { Contours } from "./contours";
 
 type Person = { name: string; title: string; from: "8th" | "brochure"; where?: string };
 
@@ -98,6 +99,7 @@ export function PeopleRoll() {
         {/* The spotlight, wide screens only; the list carries every fact. */}
         <div aria-hidden="true" className="hidden lg:col-span-5 lg:block">
           <div className="roll-spot on-crimson" key={current?.name}>
+            <Contours variant="c" />
             <div className="roll-spot-head">
               <span className="meta">{current ? origin(current) : ""}</span>
               <span className="num">

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Contours } from "./contours";
 import { components, photos, takeaways } from "@/content/ggy";
 import { NoteRef } from "./primitives";
 
@@ -13,6 +14,7 @@ export function ProgrammeChapter() {
   const hall = photos.address;
   return (
     <section id="programme" aria-labelledby="programme-title" className="programme">
+      <Contours variant="b" />
       <div className="page">
         <div className="grid gap-8 lg:grid-cols-12 lg:gap-[var(--gap)]">
           <div className="lg:col-span-7">
@@ -20,7 +22,7 @@ export function ProgrammeChapter() {
               <span className="num">05</span> The programme experience
             </p>
             <h2 id="programme-title" className="d-l mt-6" data-drift>
-              Six parts of the programme, as run in 2025.
+              Six parts of the programme, <em>as run in 2025.</em>
             </h2>
           </div>
           <p className="max-w-[24rem] text-ink-soft lg:col-span-4 lg:col-start-9 lg:self-end">
@@ -59,7 +61,9 @@ export function ProgrammeChapter() {
 
         <div className="mt-[clamp(6rem,12vw,10rem)] grid gap-10 lg:grid-cols-12 lg:gap-[var(--gap)]">
           <div className="lg:col-span-4">
-            <h3 className="d-m">What delegates took away</h3>
+            <h3 className="d-m">
+              What delegates <em>took away</em>
+            </h3>
             <p className="caption mt-4 max-w-[18rem]">As listed in the 2025 brochure, which also offered delegates a certificate of appreciation.</p>
             <figure className="mt-8 hidden lg:block">
               <div className="media relative aspect-[5/3]" data-reveal>

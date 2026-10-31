@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Contours } from "./contours";
 import type { CSSProperties } from "react";
 import { learningJourney, photos } from "@/content/ggy";
 import { JourneyMotion } from "./motion/journey-motion";
@@ -31,13 +32,14 @@ function Crop({ i, sizes, className = "" }: { i: number; sizes: string; classNam
 export function FormatChapter() {
   const hall = photos.lectureHall;
   return (
-    <section id="learning" aria-labelledby="format-title" className="bg-cream pb-[clamp(6rem,12vw,10rem)] pt-[clamp(6rem,12vw,11rem)]" data-format>
+    <section id="learning" aria-labelledby="format-title" className="relative isolate bg-cream pb-[clamp(6rem,12vw,10rem)] pt-[clamp(6rem,12vw,11rem)]" data-format>
+      <Contours variant="c" />
       <div className="page">
         <p className="kicker">
           <span className="num">04</span> The learning journey
         </p>
         <h2 id="format-title" className="d-l mt-6 max-w-[14ch]">
-          Four stages of a personal learning journey
+          Four stages of a <em>personal</em> learning journey
         </h2>
         <p className="mt-6 max-w-[30rem] text-ink-soft">
           As described for the 2025 edition. The format of the upcoming edition will be confirmed with its programme.

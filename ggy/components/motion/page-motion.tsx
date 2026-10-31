@@ -79,6 +79,19 @@ export function PageMotion() {
         if (!media) return;
         gsap.fromTo(media, { yPercent: -7 }, { yPercent: 7, ease: "none", scrollTrigger: { trigger: frame, start: "top bottom", end: "bottom top", scrub: 1.2 } });
       });
+
+      // The terrain under each chapter turns and slides slowly against the
+      // scroll, so the glass above it seems to float.
+      document.querySelectorAll<SVGGElement>("[data-contours]").forEach((g, i) => {
+        const svg = g.ownerSVGElement;
+        if (!svg) return;
+        const dir = i % 2 ? 1 : -1;
+        gsap.fromTo(
+          g,
+          { y: -70, rotation: -4 * dir, svgOrigin: "800 500" },
+          { y: 70, rotation: 4 * dir, ease: "none", scrollTrigger: { trigger: svg.parentElement, start: "top bottom", end: "bottom top", scrub: 1.5 } },
+        );
+      });
     });
 
     // ScrollRefresh already refreshes once the fonts have loaded.

@@ -25,7 +25,7 @@ export function Readiness() {
   const message = n === total ? "Ready for when applications open." : n >= 3 ? "Nearly ready." : n > 0 ? "A good start." : "Tick what applies to you.";
 
   return (
-    <div className="readiness grid gap-10 rounded-[var(--radius-sheet)] bg-light p-[clamp(1.5rem,4vw,3rem)] text-ink md:grid-cols-[auto_1fr] md:gap-14">
+    <div className="readiness glass glass-strong grid gap-10 p-[clamp(1.5rem,4vw,3rem)] text-ink md:grid-cols-[auto_1fr] md:gap-14">
       <div className="flex items-center gap-6 md:flex-col md:items-start">
         <svg width="132" height="132" viewBox="0 0 132 132" aria-hidden="true" className="shrink-0 -rotate-90">
           <circle cx="66" cy="66" r={R} fill="none" stroke="#ecebe6" strokeWidth="6" />

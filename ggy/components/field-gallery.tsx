@@ -56,7 +56,7 @@ export function FieldGallery() {
     <section id="gallery" aria-labelledby="gallery-title" className="on-dark on-ember ground gloss py-[clamp(6rem,12vw,10rem)]">
       <div className="page grid gap-6 lg:grid-cols-12 lg:gap-[var(--gap)]">
         <h2 id="gallery-title" className="d-l lg:col-span-7" data-drift>
-          Field photographs
+          Field <em>photographs</em>
         </h2>
         <p className="max-w-[24rem] text-dim lg:col-span-3 lg:col-start-10 lg:self-end">
           From past editions, as printed in the GGY brochure. Drag the strip, or open a photograph to see it full screen.

@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useId, useMemo, useState } from "react";
 import { faqs } from "@/content/ggy";
+import { Contours } from "./contours";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -28,11 +29,12 @@ export function Questions() {
   const shown = useMemo(() => faqs.map((f, i) => ({ ...f, i })).filter((f) => !t || (f.q + " " + f.a).toLowerCase().includes(t.toLowerCase())), [t]);
 
   return (
-    <section id="questions" aria-labelledby="questions-title" className="bg-paper py-[clamp(6rem,12vw,10rem)]">
+    <section id="questions" aria-labelledby="questions-title" className="relative isolate bg-paper py-[clamp(6rem,12vw,10rem)]">
+      <Contours variant="a" />
       <div className="page grid gap-12 lg:grid-cols-12 lg:gap-[var(--gap)]">
         <div className="lg:sticky lg:top-[calc(var(--header-h)+2rem)] lg:col-span-4 lg:self-start">
           <h2 id="questions-title" className="d-l" data-drift>
-            Questions
+            Questions, <em>answered</em>
           </h2>
           <label htmlFor={`${id}-q`} className="mt-10 block text-[0.9rem] text-ink-soft">
             Search the answers
@@ -47,7 +49,7 @@ export function Questions() {
                 setOpen(null);
               }}
               placeholder="dates, fee, apply…"
-              className="w-full bg-transparent py-3 font-display text-[1.6rem] outline-none placeholder:text-ink/25"
+              className="w-full bg-transparent py-3 font-display text-[1.35rem] outline-none placeholder:text-ink/35"
               autoComplete="off"
             />
           </div>
@@ -56,15 +58,15 @@ export function Questions() {
           </p>
         </div>
 
-        <ul className="lg:col-span-7 lg:col-start-6">
+        <ul className="faq-list lg:col-span-7 lg:col-start-6">
           <AnimatePresence initial={false}>
             {shown.map((f) => {
               const on = open === f.i || (t.length > 1 && shown.length <= 3);
               return (
                 <motion.li key={f.q} layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.4, ease }} className="faq-item">
                   <h3>
-                    <button type="button" aria-expanded={on} aria-controls={`${id}-a${f.i}`} onClick={() => setOpen(on ? null : f.i)} className="flex w-full items-baseline justify-between gap-6 py-6 text-left">
-                      <span className="font-display text-[clamp(1.3rem,1.05rem+0.8vw,1.85rem)] leading-tight">
+                    <button type="button" aria-expanded={on} aria-controls={`${id}-a${f.i}`} onClick={() => setOpen(on ? null : f.i)} className="faq-button">
+                      <span className="faq-q">
                         <Highlight text={f.q} term={t} />
                       </span>
                       <span aria-hidden="true" className={`faq-sign ${on ? "is-open" : ""}`} />
@@ -73,7 +75,7 @@ export function Questions() {
                   <AnimatePresence initial={false}>
                     {on ? (
                       <motion.div id={`${id}-a${f.i}`} initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.45, ease }} className="overflow-hidden">
-                        <p className="max-w-[38rem] pb-7 text-ink-soft">
+                        <p className="faq-a">
                           <Highlight text={f.a} term={t} />
                         </p>
                       </motion.div>

@@ -20,7 +20,7 @@ export function AdmissionsChapter() {
               <span className="num">08</span> The upcoming edition
             </p>
             <h2 id="admissions-title" className="closing-title mt-7" data-drift>
-              The journey changes the way you see governance.
+              The journey changes <em>the way you see</em> governance.
             </h2>
             <p className="lede mt-8 max-w-[30rem] text-ivory/90">Explore the upcoming Good Governance Yatra across Maharashtra, Goa and Gujarat.</p>
             <p className="mt-4 max-w-[30rem] text-[0.95rem] text-ivory/75">

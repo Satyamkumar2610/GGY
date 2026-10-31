@@ -17,7 +17,7 @@ export function Colophon() {
             <ul className="mt-5 space-y-1">
               {navItems.map((n) => (
                 <li key={n.href}>
-                  <a href={n.href} className="group flex items-baseline gap-4 py-1 font-display text-[1.6rem] font-light no-underline">
+                  <a href={n.href} className="group flex items-baseline gap-4 py-1 font-display text-[1.6rem] font-medium tracking-[-0.02em] no-underline">
                     <span className="transition-transform duration-500 ease-[var(--ease)] group-hover:translate-x-2">{n.label}</span>
                   </a>
                 </li>

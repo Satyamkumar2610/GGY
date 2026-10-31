@@ -2,6 +2,7 @@ import Image from "next/image";
 import { BROCHURE, careerPaths, CONCEPT_NOTE, met8, photos, previousEdition, roleModels, saarthi } from "@/content/ggy";
 import { NoteRef } from "./primitives";
 import { PeopleRoll } from "./people-roll";
+import { Contours } from "./contours";
 import { PathsMotion } from "./motion/paths-motion";
 import { PeopleMotion } from "./motion/people-motion";
 
@@ -14,7 +15,8 @@ import { PeopleMotion } from "./motion/people-motion";
 export function PeopleChapter() {
   const total = met8.length + roleModels.length;
   return (
-    <section id="people" aria-labelledby="people-title" className="overflow-x-clip bg-paper py-[clamp(6rem,12vw,11rem)]" data-people>
+    <section id="people" aria-labelledby="people-title" className="relative isolate overflow-x-clip bg-paper py-[clamp(6rem,12vw,11rem)]" data-people>
+      <Contours variant="c" />
       <div className="page">
         <div className="grid items-end gap-10 lg:grid-cols-12 lg:gap-[var(--gap)]">
           <div className="lg:col-span-8">
@@ -22,7 +24,7 @@ export function PeopleChapter() {
               <span className="num">07</span> People and institutions
             </p>
             <h2 id="people-title" className="d-xl mt-6" data-drift>
-              The people delegates met
+              The people <em>delegates met</em>
             </h2>
           </div>
           <div className="lg:col-span-4">
@@ -44,19 +46,21 @@ export function PeopleChapter() {
         </div>
 
         <div className="institutions mt-[clamp(5rem,10vw,8rem)]">
-          <h3 className="d-m lg:max-w-[18ch]">The institutions behind the 2025 edition</h3>
+          <h3 className="d-m lg:max-w-[16ch]">
+            The institutions <em>behind</em> the 2025 edition
+          </h3>
           <dl className="institutions-list">
-            <div data-row>
+            <div data-row className="glass">
               <dt className="caption">Organised by</dt>
               <dd>Rashtram School of Public Leadership</dd>
               <dd className="institutions-sub">Rishihood University, Sonipat</dd>
             </div>
-            <div data-row>
+            <div data-row className="glass">
               <dt className="caption">An initiative of</dt>
               <dd>{previousEdition.initiativeOf}</dd>
               <dd className="institutions-sub">As printed on the 2025 brochure cover</dd>
             </div>
-            <div data-row>
+            <div data-row className="glass">
               <dt className="caption">Yatra leader, 2025</dt>
               <dd>Shri Shantanu Gupta</dd>
               <dd className="institutions-sub">Professor of Practice, Rashtram School of Public Leadership, Rishihood University</dd>
@@ -80,14 +84,15 @@ export function LifeAfterChapter() {
   const p = photos.overhead;
   return (
     <section id="after" aria-labelledby="after-title" className="on-dark on-ember ground gloss py-[clamp(6rem,12vw,10rem)]" data-paths>
+      <Contours variant="b" />
       <div className="page">
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-[var(--gap)]">
           <div className="lg:col-span-6">
             <h2 id="after-title" className="d-l" data-drift>
-              Where alumni went next
+              Where alumni <em>went next</em>
             </h2>
           </div>
-          <figure className="lg:col-span-5 lg:col-start-8 lg:pt-4">
+          <figure className="glass-dark p-[clamp(1.5rem,3vw,2.5rem)] lg:col-span-5 lg:col-start-8">
             <blockquote className="paths-quote font-serif">{saarthi.text}</blockquote>
             <figcaption className="caption mt-4">From the {CONCEPT_NOTE}.</figcaption>
           </figure>

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { CONCEPT_NOTE, conceptFigures, pastEditions, photos, previousEdition } from "@/content/ggy";
 import { atlas, fit, INDIA_BOX, ROUTE_ISO, unionBox, type Box } from "@/lib/atlas";
+import { Contours } from "../contours";
 import { gsap, MOTION_QUERIES, useGSAP } from "@/lib/gsap";
 import { NoteRef } from "../primitives";
 
@@ -93,6 +94,7 @@ export function ArchiveAtlas() {
 
   return (
     <section ref={root} id="archive" aria-labelledby="archive-title" className="archive-atlas">
+      <Contours variant="a" />
       <div className="page">
         <div className="grid gap-8 lg:grid-cols-12 lg:gap-[var(--gap)]">
           <div className="lg:col-span-8">
@@ -100,7 +102,7 @@ export function ArchiveAtlas() {
               <span className="num">06</span> The GGY archive
             </p>
             <h2 id="archive-title" className="d-xl mt-6" data-drift>
-              A decade on the road
+              A <em>decade</em> on the road
             </h2>
           </div>
           <p className="max-w-[22rem] text-ink-soft lg:col-span-4 lg:self-end">

@@ -79,8 +79,8 @@ export function SiteHeader() {
             <span />
           </span>
           <span className="leading-[1.05]">
-            <span className="block font-display text-[1.05rem] tracking-[-0.01em]">Good Governance Yatra</span>
-            <span className="hidden text-[0.625rem] font-medium uppercase tracking-[0.18em] text-muted sm:block">Western India field journal</span>
+            <span className="block font-display text-[1.05rem] font-semibold tracking-[-0.02em]">Good Governance Yatra</span>
+            <span className="hidden font-serif text-[0.8rem] italic text-muted sm:block">Western India field journal</span>
           </span>
         </a>
 
@@ -109,7 +109,7 @@ export function SiteHeader() {
         <button
           ref={buttonRef}
           type="button"
-          className="flex min-h-11 items-center gap-2.5 text-[0.7rem] font-semibold uppercase tracking-[0.16em] lg:hidden"
+          className="flex min-h-11 items-center gap-2.5 rounded-full px-3 text-[0.875rem] font-medium lg:hidden"
           aria-expanded={open}
           aria-controls={panelId}
           onClick={() => setOpen((v) => !v)}
@@ -131,7 +131,7 @@ export function SiteHeader() {
             animate={{ opacity: 1, clipPath: "inset(0 0 0% 0)" }}
             exit={{ opacity: 0, transition: { duration: 0.18 } }}
             transition={{ duration: 0.45, ease }}
-            className="absolute inset-x-0 top-full h-[calc(100svh-var(--header-h))] overflow-y-auto bg-paper text-ink lg:hidden"
+            className="glass glass-strong pointer-events-auto absolute inset-x-[clamp(0.6rem,1.6vw,1.5rem)] top-[calc(100%+0.5rem)] h-[calc(100svh-var(--header-h)-1.5rem)] overflow-y-auto text-ink lg:hidden"
           >
             <nav aria-label="Primary" className="page flex h-full flex-col justify-between py-8">
               <ol>
