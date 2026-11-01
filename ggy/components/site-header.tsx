@@ -1,22 +1,28 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useId, useRef, useState } from "react";
-import { navItems } from "./nav-items";
-import { contact } from "@/content/ggy";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { connectItem, journalItem, navItems } from "./nav-items";
+import { JournalMark } from "./journal-mark";
 import { Button } from "./primitives";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
 /**
  * The masthead: a quiet running head, as on the page of a field journal.
- * Wordmark at the left, chapters in the middle, the one available action at
- * the right. It sits on the paper and takes a hairline once the page moves.
+ * Wordmark at the left, the pages in the middle, the journal and the one
+ * available action at the right. It sits on the paper and takes a hairline
+ * once the page moves.
  */
 export function SiteHeader() {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
-  const [active, setActive] = useState<string | null>(null);
-  const [open, setOpen] = useState(false);
+  // The menu is open for one page only: going to another page closes it.
+  const [openAt, setOpenAt] = useState<string | null>(null);
+  const open = openAt === pathname;
+  const setOpen = useCallback((v: boolean | ((o: boolean) => boolean)) => setOpenAt((cur) => ((typeof v === "function" ? v(cur === pathname) : v) ? pathname : null)), [pathname]);
   const panelId = useId();
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -37,26 +43,6 @@ export function SiteHeader() {
     };
   }, []);
 
-  // Chapter being read.
-  useEffect(() => {
-    const sections = navItems.map((n) => document.getElementById(n.id)).filter((el): el is HTMLElement => el !== null);
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) if (e.isIntersecting) setActive(e.target.id);
-      },
-      { rootMargin: "-45% 0px -50% 0px" },
-    );
-    sections.forEach((s) => io.observe(s));
-    const onScroll = () => {
-      if (window.scrollY < window.innerHeight * 0.6) setActive(null);
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      io.disconnect();
-      window.removeEventListener("scroll", onScroll);
-    };
-  }, []);
-
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -67,12 +53,14 @@ export function SiteHeader() {
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [open]);
+  }, [open, setOpen]);
+
+  const current = (match: string) => pathname === match || pathname.startsWith(match + "/");
 
   return (
     <header data-site-header data-scrolled={scrolled || open ? "" : undefined} className="masthead">
       <div className="page flex h-full items-center justify-between gap-6">
-        <a href="#top" className="masthead-mark" aria-label="Good Governance Yatra, back to top">
+        <Link href="/" className="masthead-mark" aria-label="Good Governance Yatra, home">
           <span aria-hidden="true" className="masthead-glyph">
             <span />
             <span />
@@ -82,27 +70,28 @@ export function SiteHeader() {
             <span className="block font-display text-[1.05rem] tracking-[-0.01em]">Good Governance Yatra</span>
             <span className="hidden text-[0.625rem] font-medium uppercase tracking-[0.18em] text-muted sm:block">Western India field journal</span>
           </span>
-        </a>
+        </Link>
 
         <nav aria-label="Primary" className="hidden lg:block">
           <ul className="flex items-center gap-1">
             {navItems.map((item) => {
-              const isActive = active === item.id;
+              const isActive = current(item.match);
               return (
                 <li key={item.href}>
-                  <a href={item.href} aria-current={isActive ? "location" : undefined} className="masthead-link">
+                  <Link href={item.href} aria-current={isActive ? "page" : undefined} className="masthead-link">
                     {item.label}
                     {isActive ? <motion.span layoutId="masthead-rule" aria-hidden="true" className="masthead-rule" transition={{ duration: 0.45, ease }} /> : null}
-                  </a>
+                  </Link>
                 </li>
               );
             })}
           </ul>
         </nav>
 
-        <div className="hidden lg:block">
-          <Button href="#connect" size="sm" variant="ghost">
-            Connect with the team
+        <div className="hidden items-center gap-5 lg:flex">
+          <JournalMark />
+          <Button href={connectItem.href} size="sm" variant="ghost">
+            {connectItem.label}
           </Button>
         </div>
 
@@ -135,7 +124,7 @@ export function SiteHeader() {
           >
             <nav aria-label="Primary" className="page flex h-full flex-col justify-between py-8">
               <ol>
-                {navItems.map((item, i) => (
+                {[...navItems, journalItem].map((item, i) => (
                   <motion.li
                     key={item.href}
                     initial={{ opacity: 0, y: 14 }}
@@ -143,17 +132,19 @@ export function SiteHeader() {
                     transition={{ delay: 0.05 * i + 0.1, duration: 0.4, ease }}
                     className="border-b border-hair"
                   >
-                    <a href={item.href} onClick={() => setOpen(false)} className="flex min-h-16 items-baseline gap-4 no-underline">
+                    <Link href={item.href} aria-current={current(item.match) ? "page" : undefined} className="flex min-h-16 items-baseline gap-4 no-underline">
                       <span className="text-[0.7rem] tabular-nums text-muted">{String(i + 1).padStart(2, "0")}</span>
                       <span className="d-m">{item.label}</span>
-                    </a>
+                    </Link>
                   </motion.li>
                 ))}
               </ol>
-              <Button href="#connect" className="mt-10 self-start" onClick={() => setOpen(false)}>
-                Connect with the team
-              </Button>
-              <p className="caption mt-4">{contact.email}</p>
+              <div className="mt-10 flex items-center justify-between gap-4">
+                <Button href={connectItem.href} onClick={() => setOpen(false)}>
+                  {connectItem.label}
+                </Button>
+                <JournalMark onNavigate={() => setOpen(false)} />
+              </div>
             </nav>
           </motion.div>
         ) : null}

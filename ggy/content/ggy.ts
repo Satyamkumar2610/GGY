@@ -194,6 +194,8 @@ export const pendingNotes = {
     "The brochure does not say which edition this flag-off belongs to.",
   process:
     "This is the admission process printed for the 2025 edition. The process for the upcoming edition is awaiting confirmation.",
+  visited:
+    "The routes printed in the brochure name 19 distinct states and union territories (counting Delhi, Jammu & Kashmir and Ladakh), while the brochure and the concept note say 20+. The printed list may be incomplete. Awaiting confirmation.",
 } as const;
 
 /* ------------------------------------------------------------------ */
@@ -406,7 +408,7 @@ export const takeaways: { name: string; text: string; note?: NoteId }[] = [
 /* Concept note, ahead of the 9th edition */
 export const conceptFigures: { value: string; label: string; note?: NoteId }[] = [
   { value: "8", label: "Editions completed" },
-  { value: "20+", label: "States of India visited" },
+  { value: "20+", label: "States of India visited", note: "visited" },
   { value: "300+", label: "Alumni", note: "alumni" },
   { value: "100+", label: "Governance projects visited" },
 ];

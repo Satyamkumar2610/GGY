@@ -1,6 +1,7 @@
 "use client";
 
 import { gsap, MOTION_QUERIES, useGSAP } from "@/lib/gsap";
+import { PageSentinel, usePageRoot } from "./page-root";
 
 /**
  * The people chapter's opening, owned by GSAP: the count runs up from zero as
@@ -8,8 +9,9 @@ import { gsap, MOTION_QUERIES, useGSAP } from "@/lib/gsap";
  * roll animates itself.
  */
 export function PeopleMotion() {
+  const page = usePageRoot();
   useGSAP(() => {
-    const root = document.querySelector<HTMLElement>("[data-people]");
+    const root = page.root().querySelector<HTMLElement>("[data-people]");
     if (!root) return;
     const q = gsap.utils.selector(root);
     const mm = gsap.matchMedia();
@@ -38,5 +40,5 @@ export function PeopleMotion() {
 
     return () => mm.revert();
   });
-  return null;
+  return <PageSentinel innerRef={page.ref} />;
 }

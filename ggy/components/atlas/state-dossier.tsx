@@ -7,7 +7,9 @@ import { pastEditions, photos, proposedMaharashtra, stateDossiers, upcoming, CON
 import { lockScroll } from "@/lib/scroll";
 import type { FocusIso } from "@/lib/atlas";
 import { NoteRef, Script, Value } from "../primitives";
+import Link from "next/link";
 import { Postmark } from "../postmark";
+import { stateHref } from "@/lib/states";
 
 const STAMP: Record<FocusIso, string> = {
   "IN-GJ": "GUJARAT ✦ GANDHINAGAR ✦ 23.22° N 72.64° E ✦ ",
@@ -153,6 +155,11 @@ export function StateDossierPanel({ dossier, onClose, onNavigate }: { dossier: S
                 <DossierBody d={dossier} />
               </motion.div>
             </AnimatePresence>
+            <p className="dossier-full">
+              <Link href={stateHref(dossier.iso)} className="tlink">
+                Read the full {dossier.name} page
+              </Link>
+            </p>
             <nav className="dossier-nav" aria-label="Other states">
               {stateDossiers
                 .filter((d) => d.iso !== dossier.iso)

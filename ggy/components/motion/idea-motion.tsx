@@ -1,6 +1,7 @@
 "use client";
 
 import { gsap, MOTION_QUERIES, ScrollTrigger, SplitText, useGSAP } from "@/lib/gsap";
+import { PageSentinel, usePageRoot } from "./page-root";
 
 /**
  * The idea chapter, owned by GSAP. One timeline carries the whole arrival:
@@ -10,8 +11,9 @@ import { gsap, MOTION_QUERIES, ScrollTrigger, SplitText, useGSAP } from "@/lib/g
  * from two inks to colour as it reaches the reader.
  */
 export function IdeaMotion() {
+  const page = usePageRoot();
   useGSAP(() => {
-    const root = document.querySelector<HTMLElement>("[data-idea]");
+    const root = page.root().querySelector<HTMLElement>("[data-idea]");
     if (!root) return;
     const q = gsap.utils.selector(root);
     const mm = gsap.matchMedia();
@@ -78,5 +80,5 @@ export function IdeaMotion() {
 
     return () => mm.revert();
   });
-  return null;
+  return <PageSentinel innerRef={page.ref} />;
 }

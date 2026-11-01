@@ -14,6 +14,8 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Local Claude skill scripts are tooling, not app code.
     ".claude/**",
+    // One-off build scripts run with node (CommonJS, using Playwright), not part of the app.
+    "scripts/**/*.cjs",
   ]),
 ]);
 

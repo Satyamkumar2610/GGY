@@ -5,7 +5,7 @@ import { photos, stateDossiers, upcoming, type StateDossier } from "@/content/gg
 import { gsap, MOTION_QUERIES, ScrollTrigger, SplitText, useGSAP } from "@/lib/gsap";
 import { formatCoords, invert, type FocusIso } from "@/lib/atlas";
 import { Button, Script, Value } from "../primitives";
-import { Pencil } from "../pencil";
+import { stamp } from "@/lib/journal";
 import { AtlasMap } from "./atlas-map";
 import {
   cameraFor,
@@ -37,6 +37,9 @@ const nativeOf = (name: string) => upcoming.states.find((s) => s.name === name)!
 export function Atlas() {
   const root = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<{ iso: FocusIso; from: HTMLElement | null } | null>(null);
+  // Becomes true once a mouse is over the map, which is when the other lights are fetched.
+  const [lit, setLit] = useState(false);
+  const litRef = useRef(false);
   // While a dossier is open the camera flies to its state; scrolling is paused.
   const forced = useRef<number | null>(null);
   useEffect(() => {
@@ -45,6 +48,8 @@ export function Atlas() {
 
   const openDossier = useCallback((iso: FocusIso, from?: HTMLElement | null) => {
     setOpen({ iso, from: from ?? (document.activeElement as HTMLElement | null) });
+    // Opening a state's dossier stamps it into the visitor's own journal.
+    stamp(iso);
   }, []);
 
   useGSAP(
@@ -209,6 +214,27 @@ export function Atlas() {
 
       /* ---- The cartographer's cursor and the loupe (fine pointers) ---- */
       const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+      /* ---- The light follows the pointer: eight baked hillshades, two blended ---- */
+      let lightTarget = 315;
+      let lightCur = 315;
+      const applyLight = () => {
+        const lower = Math.floor(lightCur / 45) * 45;
+        const frac = (lightCur - lower) / 45;
+        const a = lower % 360;
+        const b = (lower + 45) % 360;
+        el.querySelectorAll<SVGImageElement>("[data-relief-az]").forEach((img) => {
+          const az = Number(img.dataset.reliefAz);
+          img.style.opacity = az === a ? (frac < 0.001 ? "1" : (1 - frac).toFixed(3)) : az === b ? frac.toFixed(3) : "0";
+        });
+      };
+      const lightTick = (_t: number, dt: number) => {
+        const delta = ((lightTarget - lightCur + 540) % 360) - 180;
+        if (Math.abs(delta) < 0.05) return;
+        lightCur = (lightCur + delta * (1 - Math.pow(1 - 0.1, dt / 16.67)) + 360) % 360;
+        applyLight();
+      };
+      if (fine && !reduce) gsap.ticker.add(lightTick);
       const placeCursor = () => {
         pending = 0;
         if (!cursorEl || px < 0 || !cursorOn) return;
@@ -230,9 +256,74 @@ export function Atlas() {
         loupeClip.setAttribute("r", lens ? (68 / lastCam.k).toFixed(2) : "0");
         cursorEl.classList.toggle("is-lens", lens);
       };
+      /* Touch: press and hold on the opening map to lift the loupe above the finger. */
+      const LIFT = 104;
+      let pressTimer = 0;
+      let pressAt: { x: number; y: number } | null = null;
+      let touchLens = false;
+      const endTouch = () => {
+        window.clearTimeout(pressTimer);
+        pressAt = null;
+        if (!touchLens) return;
+        touchLens = false;
+        cursorOn = false;
+        cursorEl?.classList.remove("is-on", "is-lens", "is-touch");
+        loupeClip.setAttribute("r", "0");
+      };
+      const onDown = (e: PointerEvent) => {
+        if (e.pointerType !== "touch" || indiaLook < 0.5 || reduce) return;
+        pressAt = { x: e.clientX, y: e.clientY };
+        window.clearTimeout(pressTimer);
+        pressTimer = window.setTimeout(() => {
+          if (!pressAt) return;
+          touchLens = true;
+          cursorOn = true;
+          px = pressAt.x;
+          py = pressAt.y - LIFT;
+          cursorEl?.classList.add("is-on", "is-touch");
+          if (navigator.vibrate) navigator.vibrate(8);
+          placeCursor();
+        }, 480);
+      };
+      const onTouchMove = (e: PointerEvent) => {
+        if (touchLens) {
+          px = e.clientX;
+          py = e.clientY - LIFT;
+          if (!pending) pending = requestAnimationFrame(placeCursor);
+        } else if (pressAt && Math.hypot(e.clientX - pressAt.x, e.clientY - pressAt.y) > 10) {
+          // The finger is scrolling, not holding.
+          window.clearTimeout(pressTimer);
+          pressAt = null;
+        }
+      };
+      const stopScrollWhileLens = (e: TouchEvent) => {
+        if (touchLens && e.cancelable) e.preventDefault();
+      };
+      svg.addEventListener("pointerdown", onDown);
+      svg.addEventListener("pointermove", onTouchMoveGate);
+      svg.addEventListener("pointerup", endTouch);
+      svg.addEventListener("pointercancel", endTouch);
+      svg.addEventListener("touchmove", stopScrollWhileLens, { passive: false });
+
+      function onTouchMoveGate(e: PointerEvent) {
+        if (e.pointerType === "touch") onTouchMove(e);
+      }
+
       const onMove = (e: PointerEvent) => {
+        if (e.pointerType === "touch") return;
         px = e.clientX;
         py = e.clientY;
+        if (!reduce && e.pointerType === "mouse") {
+          if (!litRef.current) {
+            litRef.current = true;
+            setLit(true);
+          }
+          // Light comes from where the pointer is, around the centre of the map.
+          const r = svg.getBoundingClientRect();
+          const dx = e.clientX - (r.left + r.width * 0.72);
+          const dy = e.clientY - (r.top + r.height * 0.5);
+          if (Math.hypot(dx, dy) > 24) lightTarget = ((Math.atan2(dx, -dy) * 180) / Math.PI + 360) % 360;
+        }
         if (!pending) pending = requestAnimationFrame(placeCursor);
       };
       const onEnter = () => {
@@ -240,6 +331,7 @@ export function Atlas() {
         cursorEl?.classList.add("is-on");
       };
       const onLeave = () => {
+        lightTarget = 315;
         cursorOn = false;
         cursorEl?.classList.remove("is-on", "is-lens", "is-over-state");
         loupeClip.setAttribute("r", "0");
@@ -294,8 +386,15 @@ export function Atlas() {
           svg.removeEventListener("pointerenter", onEnter);
           svg.removeEventListener("pointerleave", onLeave);
         }
+        svg.removeEventListener("pointerdown", onDown);
+        svg.removeEventListener("pointermove", onTouchMoveGate);
+        svg.removeEventListener("pointerup", endTouch);
+        svg.removeEventListener("pointercancel", endTouch);
+        svg.removeEventListener("touchmove", stopScrollWhileLens);
+        window.clearTimeout(pressTimer);
         cancelAnimationFrame(pending);
         gsap.ticker.remove(tick);
+        gsap.ticker.remove(lightTick);
         ro.disconnect();
         mm.revert();
       };
@@ -310,7 +409,7 @@ export function Atlas() {
       {/* The stage: sticky behind the flow */}
       <div className="atlas-stage">
         <div aria-hidden="true" className="atlas-veil" data-veil />
-        <AtlasMap onState={(iso) => openDossier(iso)} />
+        <AtlasMap onState={(iso) => openDossier(iso)} lit={lit} />
         <div className="atlas-labels" aria-hidden="true" data-a-labels>
           {LABELS.map((l) => (
             <div key={l.id} data-label={l.id} className={`atlas-label atlas-label-${l.kind} align-${l.align ?? "center"}`}>
@@ -363,9 +462,7 @@ export function Atlas() {
                 <div>
                   <dt>Dates</dt>
                   <dd>
-                    <Pencil circle>
-                      <Value value={upcoming.dates} />
-                    </Pencil>
+                    <Value value={upcoming.dates} />
                   </dd>
                 </div>
               </dl>
@@ -391,12 +488,12 @@ export function Atlas() {
           </div>
         </header>
 
-        <section id="states" aria-labelledby="states-title" className="atlas-states-flow">
+        <section id="states" aria-labelledby="states-title" className="atlas-states-flow" data-thread="The states">
           <div className="atlas-block" data-stage="1">
             <div className="page">
               <div className="atlas-panel">
                 <p className="atlas-kicker">
-                  <span className="num">02</span> Three states, one journey
+                  Three states, one journey
                 </p>
                 <h2 id="states-title" className="d-l mt-5">
                   The western edge of India, read state by state.
@@ -419,7 +516,7 @@ export function Atlas() {
             <div className="page">
               <div className="atlas-panel">
                 <p className="atlas-kicker">
-                  <span className="num">04</span> The region together
+                  The region together
                 </p>
                 <h3 className="d-m mt-5">Gujarat and Maharashtra were formed on the same day in 1960. Goa became a state in 1987.</h3>
                 <dl className="atlas-status mt-8">
@@ -456,7 +553,10 @@ export function Atlas() {
           setOpen(null);
           from?.focus?.({ preventScroll: true });
         }}
-        onNavigate={(iso) => setOpen((o) => ({ iso, from: o?.from ?? null }))}
+        onNavigate={(iso) => {
+          setOpen((o) => ({ iso, from: o?.from ?? null }));
+          stamp(iso);
+        }}
       />
     </div>
   );
@@ -489,7 +589,7 @@ function StateChapter({ d, stage, onOpen }: { d: StateDossier; stage: number; on
       <div>
         <dt>Earlier editions here</dt>
         <dd>
-          <Pencil>{d.editions.join(" and ")}</Pencil>
+          {d.editions.join(" and ")}
         </dd>
       </div>
     </dl>

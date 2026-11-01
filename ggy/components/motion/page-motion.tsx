@@ -1,6 +1,7 @@
 "use client";
 
 import { gsap, MOTION_QUERIES, SplitText, useGSAP } from "@/lib/gsap";
+import { PageSentinel, usePageRoot } from "./page-root";
 
 /**
  * Page-wide motion, owned by GSAP. Everything is visible without it.
@@ -14,11 +15,26 @@ import { gsap, MOTION_QUERIES, SplitText, useGSAP } from "@/lib/gsap";
  * [data-row]      a ruled row rises into place once as its list reaches the reader.
  */
 export function PageMotion() {
+  const { ref, root } = usePageRoot();
   useGSAP(() => {
+    const page = root();
     const mm = gsap.matchMedia();
 
     mm.add(MOTION_QUERIES.any, () => {
-      document.querySelectorAll<HTMLElement>("[data-reveal]").forEach((frame) => {
+      // The page's opening: the title rises line by line, the rest follows.
+      const title = page.querySelector<HTMLElement>("[data-page-title]");
+      if (title) {
+        const split = SplitText.create(title, { type: "lines", mask: "lines" });
+        const tl = gsap.timeline({ defaults: { ease: "land" }, delay: 0.1 });
+        tl.from(split.lines, { yPercent: 112, duration: 1.3, stagger: 0.1 }, 0).fromTo(
+          page.querySelectorAll("[data-page-hero] [data-fade]"),
+          { opacity: 0, y: 16 },
+          { opacity: 1, y: 0, duration: 1, stagger: 0.12 },
+          0.35,
+        );
+      }
+
+      page.querySelectorAll<HTMLElement>("[data-reveal]").forEach((frame) => {
         const img = frame.querySelector("img");
         const tl = gsap.timeline({ scrollTrigger: { trigger: frame, start: "top 85%", once: true } });
         tl.fromTo(frame, { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.4, ease: "expo.inOut" });
@@ -26,7 +42,7 @@ export function PageMotion() {
       });
 
       // Linework that draws itself with the scroll.
-      document.querySelectorAll<SVGPathElement>("[data-draw]").forEach((path, i) => {
+      page.querySelectorAll<SVGPathElement>("[data-draw]").forEach((path, i) => {
         const svg = path.ownerSVGElement ?? path;
         gsap.fromTo(
           path,
@@ -37,7 +53,7 @@ export function PageMotion() {
 
       // Coloured grounds open out of the paper rather than cutting in: the
       // ground starts inset from the page edges and widens to full bleed.
-      document.querySelectorAll<HTMLElement>("[data-ground-reveal]").forEach((ground) => {
+      page.querySelectorAll<HTMLElement>("[data-ground-reveal]").forEach((ground) => {
         gsap.fromTo(
           ground,
           { clipPath: "inset(0% 5% 0% 5%)" },
@@ -47,7 +63,7 @@ export function PageMotion() {
 
       // Stamps press onto the page: down from a little above, slightly
       // turned, with the ink settling as it lands.
-      document.querySelectorAll<HTMLElement>("[data-stamp]").forEach((stamp) => {
+      page.querySelectorAll<HTMLElement>("[data-stamp]").forEach((stamp) => {
         gsap.fromTo(
           stamp,
           { scale: 1.6, opacity: 0, rotate: -14, filter: "blur(3px)" },
@@ -65,16 +81,16 @@ export function PageMotion() {
       });
 
       // Pencil marks under key facts, drawn as the line reaches reading height.
-      document.querySelectorAll<SVGPathElement>("[data-pencil] path").forEach((path) => {
+      page.querySelectorAll<SVGPathElement>("[data-pencil] path").forEach((path) => {
         gsap.fromTo(path, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.9, ease: "power2.inOut", scrollTrigger: { trigger: path.ownerSVGElement ?? path, start: "top 75%", once: true } });
       });
 
       // Ruled rows arrive one after another as their list reaches the reader.
-      document.querySelectorAll<HTMLElement>("[data-row]").forEach((row) => {
+      page.querySelectorAll<HTMLElement>("[data-row]").forEach((row) => {
         gsap.from(row, { opacity: 0, y: 28, duration: 1, ease: "land", scrollTrigger: { trigger: row, start: "top 88%", once: true } });
       });
 
-      document.querySelectorAll<HTMLElement>("[data-drift]").forEach((title) => {
+      page.querySelectorAll<HTMLElement>("[data-drift]").forEach((title) => {
         SplitText.create(title, {
           type: "lines",
           autoSplit: true,
@@ -99,7 +115,7 @@ export function PageMotion() {
     });
 
     mm.add(MOTION_QUERIES.desktop, () => {
-      document.querySelectorAll<HTMLElement>("[data-parallax]").forEach((frame) => {
+      page.querySelectorAll<HTMLElement>("[data-parallax]").forEach((frame) => {
         const media = frame.querySelector<HTMLElement>("[data-parallax-media]");
         if (!media) return;
         gsap.fromTo(media, { yPercent: -7 }, { yPercent: 7, ease: "none", scrollTrigger: { trigger: frame, start: "top bottom", end: "bottom top", scrub: 1.2 } });
@@ -109,5 +125,5 @@ export function PageMotion() {
     // ScrollRefresh already refreshes once the fonts have loaded.
     return () => mm.revert();
   });
-  return null;
+  return <PageSentinel innerRef={ref} />;
 }

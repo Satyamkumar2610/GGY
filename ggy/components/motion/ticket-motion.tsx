@@ -1,12 +1,14 @@
 "use client";
 
 import { gsap, MOTION_QUERIES, useGSAP } from "@/lib/gsap";
+import { PageSentinel, usePageRoot } from "./page-root";
 
 /** The registration page is laid on the desk: it rises and settles. The step line draws across. GSAP owns both. */
 export function TicketMotion() {
+  const page = usePageRoot();
   useGSAP(() => {
-    const ticket = document.querySelector<HTMLElement>("[data-register]");
-    const steps = document.querySelector<HTMLElement>(".steps");
+    const ticket = page.root().querySelector<HTMLElement>("[data-register]");
+    const steps = page.root().querySelector<HTMLElement>(".steps");
     const mm = gsap.matchMedia();
     mm.add(MOTION_QUERIES.any, () => {
       if (ticket) {
@@ -18,5 +20,5 @@ export function TicketMotion() {
     });
     return () => mm.revert();
   });
-  return null;
+  return <PageSentinel innerRef={page.ref} />;
 }

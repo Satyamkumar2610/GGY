@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { pendingNotes, type NoteId } from "@/content/ggy";
 
@@ -61,12 +62,24 @@ export function Button({
 }) {
   const v = variant === "solid" ? "" : `btn-${variant}`;
   const s = size === "sm" ? "btn-sm" : "";
+  const label = (
+    <span className="btn-label">
+      <span>{children}</span>
+      <span aria-hidden="true">{children}</span>
+    </span>
+  );
+  const cls = `btn ${v} ${s} ${className}`;
+  // Pages of this site go through the router; mailto and in-page anchors stay plain links.
+  if (href.startsWith("/")) {
+    return (
+      <Link href={href} className={cls} data-magnetic onClick={onClick}>
+        {label}
+      </Link>
+    );
+  }
   return (
-    <a href={href} className={`btn ${v} ${s} ${className}`} data-magnetic onClick={onClick}>
-      <span className="btn-label">
-        <span>{children}</span>
-        <span aria-hidden="true">{children}</span>
-      </span>
+    <a href={href} className={cls} data-magnetic onClick={onClick}>
+      {label}
     </a>
   );
 }

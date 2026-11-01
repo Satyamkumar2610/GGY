@@ -1,6 +1,7 @@
 "use client";
 
 import { gsap, MOTION_QUERIES, ScrollTrigger, SplitText, useGSAP } from "@/lib/gsap";
+import { PageSentinel, usePageRoot } from "./page-root";
 
 const crops = [
   { s: 1, x: 0, y: 0 },
@@ -19,8 +20,9 @@ const crops = [
  * directions. The heading arrives on its own; the cards move with the scroll.
  */
 export function JourneyMotion() {
+  const page = usePageRoot();
   useGSAP(() => {
-    const root = document.querySelector<HTMLElement>("[data-format]");
+    const root = page.root().querySelector<HTMLElement>("[data-format]");
     if (!root) return;
     const q = gsap.utils.selector(root);
     const mm = gsap.matchMedia();
@@ -94,5 +96,5 @@ export function JourneyMotion() {
 
     return () => mm.revert();
   });
-  return null;
+  return <PageSentinel innerRef={page.ref} />;
 }

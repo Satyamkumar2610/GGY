@@ -12,12 +12,12 @@ export function ProgrammeChapter() {
   const field = photos.fieldGroup;
   const hall = photos.address;
   return (
-    <section id="programme" aria-labelledby="programme-title" className="programme">
+    <section id="programme" aria-labelledby="programme-title" className="programme" data-thread="Programme">
       <div className="page">
         <div className="grid gap-8 lg:grid-cols-12 lg:gap-[var(--gap)]">
           <div className="lg:col-span-7">
             <p className="kicker">
-              <span className="num">05</span> The programme experience
+              The programme experience
             </p>
             <h2 id="programme-title" className="d-l mt-6" data-drift>
               Six parts of the programme, as run in 2025.

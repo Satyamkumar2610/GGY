@@ -1,5 +1,5 @@
 """
-Builds public/images/map/relief-west.jpg and content/relief.json: a hillshade
+Builds public/images/map/relief-<azimuth>.jpg (eight directions of light) and content/relief.json: a hillshade
 of western India, reprojected into the atlas's own projection so it can sit
 under the state boundaries in the same camera group.
 
@@ -8,7 +8,8 @@ from SRTM, GMTED2010 and ETOPO1 among others. See
 https://github.com/tilezen/joerd/blob/master/docs/attribution.md
 
 Usage (run isolated; tiles are passed as a directory, never imported):
-  python3 -I scripts/build-relief.py <tiles-dir> <content/india-atlas.json> <out.jpg> <out.json>
+  python3 -I scripts/build-relief.py <tiles-dir> <content/india-atlas.json> <public/images/map/any.jpg> <content/relief.json>
+  (the directory of the third argument receives relief-0.jpg … relief-315.jpg)
 
 Tiles are named 7_<x>_<y>.png.
 """
@@ -101,7 +102,9 @@ for x, y in set(zip(ix.ravel().tolist(), iy.ravel().tolist())):
     m = (ix == x) & (iy == y)
     elev[m] = tile(x, y)[py[m], px[m]]
 
-# --- Hillshade: light from the north-west, exaggerated for a printed relief ---
+# --- Hillshade, baked for eight directions of light -----------------------------
+# The page blends the two nearest as the pointer moves, so the light follows it.
+# Azimuth is the compass direction the light comes from: 0 north, 90 east.
 km_per_px = 6371 / K / PX
 cell = km_per_px * 1000
 dzdx = np.gradient(elev, axis=1) / cell
@@ -109,14 +112,17 @@ dzdy = np.gradient(elev, axis=0) / cell
 EXAG = 7.0
 slope = np.arctan(EXAG * np.hypot(dzdx, dzdy))
 aspect = np.arctan2(-dzdx, dzdy)
-az, alt = math.radians(315), math.radians(42)
-shade = np.sin(alt) * np.cos(slope) + np.cos(alt) * np.sin(slope) * np.cos(az - aspect)
+alt = math.radians(42)
 flat = math.sin(alt)
-# Only shadows: the image is multiplied over the map, so flat ground is white.
-out = 1 - np.clip((flat - shade) * 1.25, 0, 1) * 0.9
-out[elev <= 0] = 1
-img = Image.fromarray((np.clip(out, 0, 1) * 255).astype(np.uint8), mode="L")
-img.save(out_img, quality=72, optimize=True, progressive=True)
+out_dir = out_img.rsplit("/", 1)[0]
+for deg in range(0, 360, 45):
+    az = math.radians(deg)
+    shade = np.sin(alt) * np.cos(slope) + np.cos(alt) * np.sin(slope) * np.cos(az - aspect)
+    # Only shadows: the image is multiplied over the map, so flat ground is white.
+    out = 1 - np.clip((flat - shade) * 1.25, 0, 1) * 0.9
+    out[elev <= 0] = 1
+    img = Image.fromarray((np.clip(out, 0, 1) * 255).astype(np.uint8), mode="L")
+    img.save(f"{out_dir}/relief-{deg}.jpg", quality=58, optimize=True, progressive=True)
 json.dump(
     {
         "x": X0,
@@ -127,4 +133,4 @@ json.dump(
     },
     open(out_json, "w"),
 )
-print("wrote", out_img, W, "x", H)
+print("wrote 8 hillshades to", out_dir, W, "x", H)

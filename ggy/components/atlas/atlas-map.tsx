@@ -10,7 +10,11 @@ export const STATE_TEXTURE: Record<FocusIso, string> = {
 export const INDIA_TEXTURE = "/images/map/ggy-delegates-field-group-duo.jpg";
 /** The same photograph in colour, seen through the loupe. */
 export const INDIA_TEXTURE_COLOUR = "/images/map/ggy-delegates-field-group.jpg";
-export const RELIEF = "/images/map/relief-west.jpg";
+/** The relief is baked for eight directions of light; the page blends the two nearest to the pointer. */
+export const RELIEF_AZIMUTHS = [0, 45, 90, 135, 180, 225, 270, 315] as const;
+export const RELIEF_DEFAULT = 315;
+export const reliefSrc = (az: number) => `/images/map/relief-${az}.jpg`;
+export const RELIEF = reliefSrc(RELIEF_DEFAULT);
 
 export const STATE_NAME: Record<FocusIso, string> = { "IN-GJ": "Gujarat", "IN-GA": "Goa", "IN-MH": "Maharashtra" };
 
@@ -29,7 +33,7 @@ export const GOA_LABEL_AT = [goa.cx + 17, goa.cy - 3] as const;
  * western India sits under the boundaries once the photograph of India gives
  * way to the states.
  */
-export function AtlasMap({ onState, idPrefix = "atlas" }: { onState?: (iso: FocusIso) => void; idPrefix?: string }) {
+export function AtlasMap({ onState, idPrefix = "atlas", lit = false }: { onState?: (iso: FocusIso) => void; idPrefix?: string; lit?: boolean }) {
   const id = (s: string) => `${idPrefix}-${s}`;
   const r = relief;
   return (
@@ -91,7 +95,10 @@ export function AtlasMap({ onState, idPrefix = "atlas" }: { onState?: (iso: Focu
         <g data-layer="relief" className="atlas-relief" clipPath={`url(#${id("india")})`}>
           <g mask={`url(#${id("relief-mx")})`}>
             <g mask={`url(#${id("relief-my")})`}>
-              <image href={RELIEF} x={r.x} y={r.y} width={r.width} height={r.height} preserveAspectRatio="none" />
+              {/* The default light is always there; the other seven load once the pointer is over the map. */}
+              {(lit ? RELIEF_AZIMUTHS : [RELIEF_DEFAULT]).map((az) => (
+                <image key={az} data-relief-az={az} href={reliefSrc(az)} x={r.x} y={r.y} width={r.width} height={r.height} preserveAspectRatio="none" style={{ opacity: az === RELIEF_DEFAULT ? 1 : 0 }} />
+              ))}
             </g>
           </g>
         </g>

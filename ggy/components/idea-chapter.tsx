@@ -54,12 +54,12 @@ function InkText({ text }: { text: string }) {
  */
 export function IdeaChapter() {
   return (
-    <section id="idea" aria-labelledby="about-title" className="on-dark on-ember ground gloss py-[clamp(6rem,13vw,12rem)]" data-idea data-ground-reveal>
+    <section id="idea" aria-labelledby="about-title" className="on-dark on-ember ground gloss py-[clamp(6rem,13vw,12rem)]" data-idea data-ground-reveal data-thread="The idea">
       <div className="page">
         <div className="grid gap-10 lg:grid-cols-12 lg:gap-[var(--gap)]">
           <div className="lg:col-span-7">
             <p className="kicker text-ivory/80">
-              <span className="num">04</span> The idea behind the Yatra
+              The idea behind the Yatra
             </p>
             <h2 id="about-title" className="d-xl mt-6" data-drift>
               Beyond the map lies the real learning.

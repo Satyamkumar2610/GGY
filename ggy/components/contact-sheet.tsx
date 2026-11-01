@@ -64,7 +64,7 @@ export function ContactSheet() {
           {keys.map((k, i) => {
             const p = photos[k];
             return (
-              <li key={k} className={`sheet-frame ${i === 0 ? "is-ringed" : ""}`}>
+              <li key={k} className="sheet-frame">
                 <button
                   type="button"
                   onClick={(e) => {
@@ -83,11 +83,6 @@ export function ContactSheet() {
                     <span>{String(i + 1).padStart(2, "0")}A</span>
                   </span>
                 </button>
-                {i === 0 ? (
-                  <svg aria-hidden="true" className="sheet-ring" viewBox="0 0 200 140" preserveAspectRatio="none">
-                    <path d="M18 74 C 14 30, 70 10, 112 12 C 162 14, 192 40, 186 76 C 180 116, 128 132, 88 128 C 44 124, 10 106, 22 64 C 26 52, 36 40, 48 34" pathLength={1} data-draw />
-                  </svg>
-                ) : null}
               </li>
             );
           })}

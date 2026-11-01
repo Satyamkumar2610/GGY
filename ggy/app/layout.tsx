@@ -4,6 +4,11 @@ import { Anek_Devanagari, Anek_Gujarati, Anek_Latin } from "next/font/google";
 import "./globals.css";
 import { MotionProvider } from "@/components/motion/motion-provider";
 import { SmoothScroll } from "@/components/motion/smooth-scroll";
+import { SiteHeader } from "@/components/site-header";
+import { Colophon } from "@/components/colophon";
+import { Interactions } from "@/components/motion/interactions";
+import { ScrollProgress } from "@/components/motion/scroll-progress";
+import { JournalToast } from "@/components/journal-toast";
 import { INDEXABLE, SITE_URL } from "@/lib/site";
 
 // Gambetta (quotations and unconfirmed values) and Switzer (text) by the Indian Type Foundry, from Fontshare, under the
@@ -44,7 +49,7 @@ const description =
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Good Governance Yatra: Maharashtra, Goa and Gujarat",
+  title: { default: "Good Governance Yatra: Maharashtra, Goa and Gujarat", template: "%s | Good Governance Yatra" },
   description,
   alternates: { canonical: "/" },
   applicationName: "Good Governance Yatra",
@@ -95,7 +100,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </a>
         <MotionProvider>
           <SmoothScroll />
-          {children}
+          <ScrollProgress />
+          <SiteHeader />
+          <main id="main" tabIndex={-1} className="overflow-x-clip outline-none">
+            {children}
+          </main>
+          <Colophon />
+          <JournalToast />
+          <Interactions />
         </MotionProvider>
       </body>
     </html>

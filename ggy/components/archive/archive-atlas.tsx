@@ -22,6 +22,9 @@ const editionLabel = (e: (typeof pastEditions)[number]) => (e.season && e.season
  */
 export function ArchiveAtlas() {
   const [active, setActive] = useState(pastEditions.length - 1);
+  // "edition": one route at a time. "all": every state the printed routes name, up to an edition.
+  const [mode, setMode] = useState<"edition" | "all">("edition");
+  const [upTo, setUpTo] = useState(pastEditions.length - 1);
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   const root = useRef<HTMLElement>(null);
   const routeRef = useRef<SVGPathElement>(null);
@@ -31,8 +34,28 @@ export function ArchiveAtlas() {
   const stops = useMemo(() => edition.route.split(" – ").map((n) => ({ name: n, iso: ROUTE_ISO[n] })), [edition]);
   const isos = stops.map((s) => s.iso).filter(Boolean);
 
+  // How many editions have named each state, up to the chosen one.
+  const visits = useMemo(() => {
+    const seen: Record<string, number> = {};
+    const added: Record<number, string[]> = {};
+    pastEditions.slice(0, upTo + 1).forEach((e, i) => {
+      added[i] = [];
+      for (const name of e.route.split(" – ")) {
+        const iso = ROUTE_ISO[name];
+        if (!iso) continue;
+        if (!seen[iso]) added[i].push(name);
+        seen[iso] = (seen[iso] ?? 0) + 1;
+      }
+    });
+    return { seen, added, total: Object.keys(seen).length };
+  }, [upTo]);
+
   // Frame the edition's states, never closer than a third of India.
   const camera = useMemo(() => {
+    if (mode === "all") {
+      const full = fit(INDIA_BOX, [0, 0, W, H]);
+      return full;
+    }
     const b = unionBox(isos);
     const cx = (b[0] + b[2]) / 2;
     const cy = (b[1] + b[3]) / 2;
@@ -42,7 +65,7 @@ export function ArchiveAtlas() {
     const full = fit(INDIA_BOX, [0, 0, W, H]);
     const kk = Math.max(full.k, k);
     return { k: kk, x: W / 2 - cx * kk, y: H / 2 - cy * kk };
-  }, [isos]);
+  }, [isos, mode]);
 
   // The camera is the SVG's viewBox, eased by GSAP between editions. The
   // first value is rendered on the server; later ones are animated in place.
@@ -59,7 +82,7 @@ export function ArchiveAtlas() {
     .map((s) => atlas.states.find((x) => x.iso === s.iso))
     .filter((s): s is (typeof atlas.states)[number] => Boolean(s))
     .map((s) => [s.cx, s.cy] as const);
-  const routeD = centroids.length > 1 ? centroids.map((p, i) => `${i ? "L" : "M"}${p[0]},${p[1]}`).join(" ") : "";
+  const routeD = mode === "edition" && centroids.length > 1 ? centroids.map((p, i) => `${i ? "L" : "M"}${p[0]},${p[1]}`).join(" ") : "";
 
   useGSAP(
     () => {
@@ -91,25 +114,12 @@ export function ArchiveAtlas() {
   };
 
   const is2025 = edition.year === "2025";
+  const through = pastEditions[upTo];
 
   return (
-    <section ref={root} id="archive" aria-labelledby="archive-title" className="archive-atlas">
+    <section ref={root} id="routes" aria-label="Routes of past editions" className="archive-atlas" data-thread="Routes">
       <div className="page">
-        <div className="grid gap-8 lg:grid-cols-12 lg:gap-[var(--gap)]">
-          <div className="lg:col-span-8">
-            <p className="kicker">
-              <span className="num">06</span> The GGY archive
-            </p>
-            <h2 id="archive-title" className="d-xl mt-6" data-drift>
-              A decade on the road
-            </h2>
-          </div>
-          <p className="max-w-[22rem] text-ink-soft lg:col-span-4 lg:self-end">
-            Every route and figure in this chapter belongs to a past edition, not the upcoming one. Routes are reproduced from the 2025 brochure.
-          </p>
-        </div>
-
-        <div className="mt-[clamp(3rem,6vw,5rem)]">
+        <div className="mt-0">
           <p className="caption">Figures from the {CONCEPT_NOTE}, ahead of the next edition</p>
           <dl className="archive-figs mt-5" data-arch-figs>
             {conceptFigures.map((f) => (
@@ -124,10 +134,36 @@ export function ArchiveAtlas() {
           </dl>
         </div>
 
-        <div className="archive-grid mt-[clamp(4rem,8vw,6rem)]">
-          {/* Edition selector */}
+        <div className="archive-modes mt-[clamp(4rem,8vw,6rem)]" role="group" aria-label="How to read the map">
+          <button type="button" aria-pressed={mode === "edition"} onClick={() => setMode("edition")} className="archive-mode">
+            One edition at a time
+          </button>
+          <button type="button" aria-pressed={mode === "all"} onClick={() => setMode("all")} className="archive-mode">
+            Every edition so far
+          </button>
+        </div>
+
+        <div className="archive-grid mt-8">
+          {/* Edition selector, or the scrubber */}
           <div className="archive-select">
-            <p className="caption mb-3">Choose an edition</p>
+            {mode === "all" ? (
+              <div className="archive-scrub">
+                <label htmlFor="arch-upto" className="caption mb-3 block">
+                  Show editions up to
+                </label>
+                <input id="arch-upto" type="range" min={0} max={pastEditions.length - 1} step={1} value={upTo} onChange={(e) => setUpTo(Number(e.target.value))} className="archive-range" aria-valuetext={editionLabel(through)} />
+                <p className="num mt-3 text-[2.4rem] leading-none text-crimson">{editionLabel(through)}</p>
+                <ol className="archive-scrub-ticks" aria-hidden="true">
+                  {pastEditions.map((e, i) => (
+                    <li key={e.year + e.route} className={i <= upTo ? "is-on" : ""}>
+                      {e.year.slice(2)}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            ) : null}
+            {mode === "edition" ? <p className="caption mb-3">Choose an edition</p> : null}
+            {mode === "edition" ? (
             <div role="tablist" aria-label="Past editions" aria-orientation="vertical" className="archive-tabs">
               {pastEditions.map((e, i) => (
                 <button
@@ -152,11 +188,12 @@ export function ArchiveAtlas() {
                 </button>
               ))}
             </div>
+            ) : null}
           </div>
 
           {/* The map */}
           <figure className="archive-map">
-            <svg ref={svgRef} viewBox={firstViewBox.current} preserveAspectRatio="xMidYMid slice" role="img" aria-label={`Map of India with the states of the ${editionLabel(edition)} route highlighted: ${edition.route}.`}>
+            <svg ref={svgRef} viewBox={firstViewBox.current} preserveAspectRatio="xMidYMid slice" role="img" aria-label={mode === "all" ? `Map of India with the ${visits.total} states and union territories named in the printed routes up to ${editionLabel(through)} highlighted.` : `Map of India with the states of the ${editionLabel(edition)} route highlighted: ${edition.route}.`}>
               <g>
                 <g className="atlas-grat">
                   {atlas.graticule.map((g, i) => (
@@ -165,7 +202,7 @@ export function ArchiveAtlas() {
                 </g>
                 <path className="archive-land" d={atlas.outline} />
                 {atlas.states.map((s) => (
-                  <path key={s.iso} d={s.d} className={`archive-state ${isos.includes(s.iso) ? "is-on" : ""}`} />
+                  <path key={s.iso} d={s.d} className={`archive-state ${mode === "edition" ? (isos.includes(s.iso) ? "is-on" : "") : visits.seen[s.iso] ? `is-v${Math.min(3, visits.seen[s.iso])}` : ""}`} />
                 ))}
                 <path className="archive-outline" d={atlas.outline} />
                 {routeD ? <path ref={routeRef} key={routeD} className="archive-route" d={routeD} /> : null}
@@ -180,11 +217,34 @@ export function ArchiveAtlas() {
               </g>
             </svg>
             <figcaption className="caption mt-3">
-              Lines join the states in the order the brochure prints each route; they are not the roads taken. Boundaries: Natural Earth, India point of view.
+              {mode === "all"
+                ? "Darker states appear in more printed routes. Counted from the routes in the brochure; the printed list may be incomplete. Boundaries: Natural Earth, India point of view."
+                : "Lines join the states in the order the brochure prints each route; they are not the roads taken. Boundaries: Natural Earth, India point of view."}
             </figcaption>
           </figure>
 
-          {/* The edition */}
+          {/* The edition, or the count so far */}
+          {mode === "all" ? (
+            <div id="arch-panel" className="archive-panel" key={`all-${upTo}`} aria-live="polite">
+              <p className="archive-panel-year num">{visits.total}</p>
+              <p className="mt-2 max-w-[16rem] text-[0.95rem] text-ink-soft">
+                states and union territories named in the printed routes, through {editionLabel(through)}.
+                {upTo === pastEditions.length - 1 ? <NoteRef id="visited" /> : null}
+              </p>
+              <p className="kicker mt-8">New in {editionLabel(through)}</p>
+              {visits.added[upTo]?.length ? (
+                <ul className="mt-3 space-y-1.5">
+                  {visits.added[upTo].map((n) => (
+                    <li key={n} className="font-display text-[1.35rem] leading-tight">
+                      {n}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="caption mt-3">No state appears for the first time in this edition.</p>
+              )}
+            </div>
+          ) : (
           <div id="arch-panel" role="tabpanel" aria-labelledby={`arch-tab-${active}`} className="archive-panel" key={active}>
             <p className="archive-panel-year num">{edition.year}</p>
             {edition.season ? <p className="kicker mt-2">{edition.season}</p> : null}
@@ -230,6 +290,7 @@ export function ArchiveAtlas() {
               </a>
             ) : null}
           </div>
+          )}
         </div>
 
         <div className="mt-[clamp(5rem,10vw,8rem)]">

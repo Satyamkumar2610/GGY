@@ -245,7 +245,7 @@ export function ConnectingJourney() {
   );
 
   return (
-    <section ref={root} id="journey" aria-labelledby="journey-title" className="journey">
+    <section ref={root} id="journey" aria-labelledby="journey-title" className="journey" data-thread="The journey">
       <svg className="journey-line" data-line-svg aria-hidden="true" preserveAspectRatio="none">
         <path className="journey-line-ghost" data-line-ghost />
         <path className="journey-line-ink" data-line />
@@ -256,7 +256,7 @@ export function ConnectingJourney() {
         <div className="journey-intro">
           <Handover />
           <p className="kicker">
-            <span className="num">03</span> The connecting journey
+            The connecting journey
           </p>
           <h2 id="journey-title" className="journey-statement mt-6" data-statement>
             A journey is a line drawn between places. This one is still being drawn.

@@ -31,10 +31,10 @@ function Crop({ i, sizes, className = "" }: { i: number; sizes: string; classNam
 export function FormatChapter() {
   const hall = photos.lectureHall;
   return (
-    <section id="learning" aria-labelledby="format-title" className="bg-cream pb-[clamp(6rem,12vw,10rem)] pt-[clamp(6rem,12vw,11rem)]" data-format>
+    <section id="learning" aria-labelledby="format-title" className="bg-cream pb-[clamp(6rem,12vw,10rem)] pt-[clamp(6rem,12vw,11rem)]" data-format data-thread="Learning">
       <div className="page">
         <p className="kicker">
-          <span className="num">04</span> The learning journey
+          The learning journey
         </p>
         <h2 id="format-title" className="d-l mt-6 max-w-[14ch]">
           Four stages of a personal learning journey

@@ -1554,10 +1554,10 @@ html:not(.js-motion) .itin-plate-date {
     height: 1px;
   }
   .steps::before {
-    background: rgb(245 241 234 / 0.25);
+    background: var(--color-hair);
   }
   .steps::after {
-    background: var(--color-ivory);
+    background: var(--color-crimson);
     transform-origin: left;
     transform: scaleX(var(--line));
   }
@@ -1577,7 +1577,7 @@ html:not(.js-motion) .itin-plate-date {
     width: 0.6rem;
     height: 0.6rem;
     border-radius: 999px;
-    background: var(--color-ivory);
+    background: var(--color-crimson);
   }
 }
 
@@ -1854,8 +1854,16 @@ body {
 .atlas-flow a,
 .atlas-flow button,
 .atlas-panel,
-.atlas-hero-copy {
+.atlas-title,
+.atlas-sub,
+.atlas-lede,
+.atlas-meta {
   pointer-events: auto;
+}
+/* The hero's column spans the whole opening on small screens, over the map:
+   only its words and links take the pointer. */
+.atlas-hero-copy {
+  pointer-events: none;
 }
 
 /* Map layers. Strokes keep their weight at every zoom. */
@@ -3202,7 +3210,7 @@ body {
 }
 @media (max-width: 63.99rem) {
   .closing-map {
-    opacity: 0.55;
+    opacity: 0.28;
     width: 100%;
     right: -20%;
   }
@@ -3365,23 +3373,6 @@ body {
   letter-spacing: 0.18em;
   color: #e0a383;
 }
-.sheet-ring {
-  position: absolute;
-  inset: -9% -7% 4% -7%;
-  width: 114%;
-  height: 105%;
-  overflow: visible;
-  pointer-events: none;
-}
-.sheet-ring path {
-  fill: none;
-  stroke: #f2c94c;
-  stroke-width: 3;
-  stroke-linecap: round;
-  stroke-dasharray: 1;
-  vector-effect: non-scaling-stroke;
-}
-
 /* =====================================================================
    Admissions: the registration page
    ===================================================================== */
@@ -3768,5 +3759,752 @@ body {
     top: -3.2rem;
     right: 0.75rem;
     width: 5.6rem;
+  }
+}
+
+/* =====================================================================
+   Pages: the opening of every page after the first
+   ===================================================================== */
+
+.page-hero {
+  padding: calc(var(--header-h) + clamp(2.5rem, 6vw, 5rem)) 0 clamp(3rem, 6vw, 5rem);
+}
+.page-hero-grid {
+  display: grid;
+  gap: 2.5rem var(--gap);
+  align-items: center;
+}
+@media (min-width: 64rem) {
+  .page-hero-grid {
+    grid-template-columns: minmax(0, 6.2fr) minmax(0, 5.8fr);
+    min-height: min(76svh, 46rem);
+  }
+}
+.page-title {
+  margin-top: 1.4rem;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(2.8rem, 1.2rem + 5.2vw, 6.8rem);
+  line-height: 0.96;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+.page-title-native {
+  font-size: 0.5em;
+  letter-spacing: 0;
+  color: var(--color-crimson);
+}
+.page-standfirst {
+  max-width: 33rem;
+  margin-top: 1.6rem;
+  font-size: clamp(1.02rem, 0.96rem + 0.3vw, 1.18rem);
+  line-height: 1.6;
+  color: var(--color-ink-soft);
+}
+.page-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem 2.4rem;
+  max-width: 36rem;
+  margin-top: 2rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--color-hair);
+}
+.page-meta dt {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+.page-meta dd {
+  margin-top: 0.25rem;
+  font-size: 0.9rem;
+}
+.page-hero-plate .plate {
+  max-height: min(72svh, 44rem);
+  margin-inline: auto;
+}
+
+/* The plate: a still of the atlas */
+.plate {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+.plate path {
+  vector-effect: non-scaling-stroke;
+}
+.plate-grat path {
+  fill: none;
+  stroke: #d9d0c1;
+  stroke-width: 0.7;
+}
+.plate-land {
+  fill: var(--color-sand);
+}
+.plate-relief {
+  mix-blend-mode: multiply;
+  opacity: 0.72;
+}
+.plate-states path {
+  fill: transparent;
+  stroke: #b8ad9c;
+  stroke-width: 0.6;
+}
+.plate-states path.is-focus {
+  stroke: #8c8378;
+}
+.plate-edge {
+  fill: none;
+  stroke: var(--color-ink);
+  stroke-width: 1;
+}
+.plate-line {
+  fill: none;
+  stroke: var(--color-crimson);
+  stroke-width: 1.7;
+  stroke-dasharray: 1;
+}
+.plate-link path {
+  fill: transparent;
+  cursor: pointer;
+  transition: fill 300ms var(--ease);
+}
+.plate-link:hover path,
+.plate-link:focus-visible path {
+  fill: rgb(135 27 56 / 0.14);
+  stroke: var(--color-crimson);
+  stroke-width: 2.4;
+}
+.plate-link {
+  outline: none;
+}
+.plate-name {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  fill: var(--color-ivory);
+  paint-order: stroke;
+  stroke: rgb(25 10 14 / 0.55);
+  stroke-width: 3px;
+  pointer-events: none;
+}
+.plate-dot circle {
+  fill: var(--color-crimson);
+}
+.plate-dot .plate-dot-ring {
+  fill: none;
+  stroke: var(--color-crimson);
+  stroke-width: 1;
+  opacity: 0.5;
+}
+.plate-dot text {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  fill: var(--color-ink);
+  paint-order: stroke;
+  stroke: var(--color-paper);
+  stroke-width: 3px;
+}
+
+/* =====================================================================
+   The margin thread
+   ===================================================================== */
+
+.thread {
+  position: fixed;
+  right: clamp(0.5rem, 1.2vw, 1.4rem);
+  top: calc(var(--header-h) + 2.5rem);
+  bottom: 2.5rem;
+  z-index: 40;
+  display: none;
+  width: 1.6rem;
+}
+@media (min-width: 80rem) {
+  .thread {
+    display: block;
+  }
+  .scroll-progress {
+    display: none;
+  }
+}
+.thread-line {
+  position: absolute;
+  right: 0.55rem;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--color-hair-strong);
+  opacity: 0.45;
+}
+.thread-fill {
+  position: absolute;
+  inset: 0;
+  display: block;
+  background: var(--color-crimson);
+  transform-origin: top;
+  transform: scaleY(var(--p, 0));
+}
+.thread ol {
+  position: absolute;
+  inset: 0;
+  list-style: none;
+}
+.thread li {
+  position: absolute;
+  right: 0;
+  transform: translateY(-50%);
+}
+.thread-node {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 1.6rem;
+  height: 1.6rem;
+}
+.thread-dot {
+  display: block;
+  width: 0.55rem;
+  height: 0.55rem;
+  margin-right: 0.275rem;
+  border: 1px solid var(--color-crimson);
+  background: var(--color-paper);
+  rotate: 45deg;
+  transition: background-color 300ms var(--ease), scale 300ms var(--ease);
+}
+.thread-node.is-read .thread-dot {
+  background: var(--color-crimson);
+}
+.thread-node:hover .thread-dot,
+.thread-node:focus-visible .thread-dot {
+  scale: 1.35;
+}
+.thread-label {
+  position: absolute;
+  right: 1.7rem;
+  padding: 0.15rem 0.5rem;
+  white-space: nowrap;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  background: var(--color-paper);
+  border: 1px solid var(--color-hair);
+  opacity: 0;
+  transform: translateX(6px);
+  pointer-events: none;
+  transition: opacity 250ms var(--ease), transform 300ms var(--ease);
+}
+.thread-node:hover .thread-label,
+.thread-node:focus-visible .thread-label,
+.thread-node[aria-current] .thread-label {
+  opacity: 1;
+  transform: none;
+}
+.thread-node[aria-current]:not(:hover):not(:focus-visible) .thread-label {
+  opacity: 0.0;
+}
+
+/* =====================================================================
+   Masthead: the journal mark, and the journal toast
+   ===================================================================== */
+
+.journal-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 2.75rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-ink-soft);
+  text-decoration: none;
+}
+.journal-mark:hover {
+  color: var(--color-ink);
+}
+.journal-mark-slots {
+  display: flex;
+  gap: 3px;
+}
+.journal-mark-slots span {
+  display: block;
+  width: 0.6rem;
+  height: 0.6rem;
+  border: 1px solid var(--color-ink-soft);
+  transition: background-color 500ms var(--ease), border-color 500ms var(--ease);
+}
+.journal-mark-slots span.is-on {
+  background: var(--color-crimson);
+  border-color: var(--color-crimson);
+}
+
+.toast-region {
+  position: fixed;
+  left: var(--gutter);
+  bottom: 1.25rem;
+  z-index: 70;
+  pointer-events: none;
+}
+.toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: min(24rem, calc(100vw - 2 * var(--gutter)));
+  padding: 0.9rem 1.2rem 0.9rem 0.9rem;
+  background: var(--color-light);
+  border: 1px solid var(--color-hair);
+  border-top: 2px solid var(--color-crimson);
+  box-shadow: 0 24px 50px -28px rgb(25 24 23 / 0.55);
+  animation: toast-in 600ms var(--ease);
+}
+.toast-stamp {
+  width: 3.8rem;
+  flex-shrink: 0;
+  rotate: -8deg;
+}
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+/* =====================================================================
+   Home: where next
+   ===================================================================== */
+
+.next-list {
+  border-bottom: 1px solid var(--color-hair);
+}
+.next-list > li,
+.state-others-list > li {
+  border-top: 1px solid var(--color-ink);
+}
+.next-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.9rem var(--gap);
+  align-items: center;
+  padding: clamp(1.5rem, 3vw, 2.4rem) 0;
+  text-decoration: none;
+}
+@media (min-width: 64rem) {
+  .next-row {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 5fr) auto;
+  }
+}
+.next-title {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(2.2rem, 1.2rem + 3.2vw, 4.6rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  transition: transform 600ms var(--ease), color 400ms var(--ease);
+}
+.next-text {
+  grid-column: 1;
+  max-width: 28rem;
+  font-size: 0.98rem;
+  color: var(--color-ink-soft);
+}
+@media (min-width: 64rem) {
+  .next-text {
+    grid-column: auto;
+  }
+}
+.next-go {
+  position: relative;
+  grid-row: 1;
+  grid-column: 2;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid currentColor;
+  transition: background-color 350ms var(--ease), color 350ms var(--ease), border-color 350ms var(--ease);
+}
+@media (min-width: 64rem) {
+  .next-go {
+    grid-row: auto;
+    grid-column: 3;
+  }
+}
+.next-go::before,
+.next-go::after {
+  content: "";
+  position: absolute;
+}
+.next-go::before {
+  left: 28%;
+  right: 28%;
+  top: 50%;
+  height: 1px;
+  background: currentColor;
+}
+.next-go::after {
+  right: 28%;
+  top: 50%;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-top: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+  transform: translateY(-50%) rotate(45deg);
+}
+.next-row:hover .next-title,
+.next-row:focus-visible .next-title {
+  transform: translateX(0.6rem);
+  color: var(--color-crimson);
+}
+.next-row:hover .next-go,
+.next-row:focus-visible .next-go {
+  background: var(--color-crimson);
+  border-color: var(--color-crimson);
+  color: var(--color-ivory);
+}
+
+/* =====================================================================
+   The states, and a state's page
+   ===================================================================== */
+
+.states-list,
+.state-history,
+.state-status,
+.state-others {
+  padding: clamp(3rem, 7vw, 6rem) 0;
+}
+.states-list > .page > ul > li {
+  border-top: 1px solid var(--color-ink);
+}
+.states-row {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr) auto;
+  gap: 1rem var(--gap);
+  align-items: center;
+  padding: clamp(1.6rem, 3vw, 2.6rem) 0;
+  text-decoration: none;
+}
+@media (min-width: 64rem) {
+  .states-row {
+    grid-template-columns: 8rem minmax(0, 4fr) minmax(0, 5fr) auto;
+  }
+}
+.states-sil {
+  width: 100%;
+  height: 5.5rem;
+  overflow: visible;
+}
+@media (min-width: 64rem) {
+  .states-sil {
+    height: 7rem;
+  }
+}
+.states-sil path {
+  fill: rgb(135 27 56 / 0.08);
+  stroke: var(--color-crimson);
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+  transition: fill 400ms var(--ease);
+}
+.states-row:hover .states-sil path {
+  fill: rgb(135 27 56 / 0.4);
+}
+.states-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.1em 0.5em;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(2.2rem, 1.2rem + 3.2vw, 4.4rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
+}
+.states-native {
+  font-size: 0.42em;
+  letter-spacing: 0;
+  color: var(--color-crimson);
+}
+.states-text {
+  grid-column: 1 / -1;
+  max-width: 34rem;
+  font-size: 0.98rem;
+  color: var(--color-ink-soft);
+}
+@media (min-width: 64rem) {
+  .states-text {
+    grid-column: auto;
+  }
+}
+.states-meta {
+  display: block;
+  margin-top: 0.7rem;
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+}
+.states-row .next-go {
+  grid-row: 1;
+  grid-column: 3;
+}
+@media (min-width: 64rem) {
+  .states-row .next-go {
+    grid-row: auto;
+    grid-column: 4;
+  }
+}
+.states-row:hover .next-go {
+  background: var(--color-crimson);
+  border-color: var(--color-crimson);
+  color: var(--color-ivory);
+}
+
+.state-photos {
+  padding: clamp(1rem, 3vw, 2rem) 0 clamp(3rem, 7vw, 6rem);
+}
+.state-photos-grid {
+  display: grid;
+  gap: 2.5rem var(--gap);
+}
+@media (min-width: 64rem) {
+  .state-photos-grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: start;
+  }
+  .state-photo-main {
+    grid-column: 1 / span 8;
+    grid-row: 1 / span 3;
+  }
+  .state-photo-aside,
+  .state-reference {
+    grid-column: 9 / span 4;
+  }
+}
+.state-reference {
+  position: relative;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--color-ink);
+}
+.postmark.state-stamp {
+  position: absolute;
+  top: -2.6rem;
+  right: 0;
+  width: 5.6rem;
+  rotate: 9deg;
+}
+.state-routes > li {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: baseline;
+  padding: 1rem 0;
+  border-top: 1px solid var(--color-hair);
+}
+.state-routes .num {
+  font-size: 1.35rem;
+  color: var(--color-crimson);
+}
+.state-route-season {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+.state-status {
+  background: var(--color-cream);
+}
+.state-tentative {
+  padding: 1.2rem 1.3rem 1.4rem;
+  background: var(--color-cream);
+  border-left: 2px solid var(--color-saffron-ink);
+}
+.state-others-list {
+  margin-top: 1.5rem;
+  border-bottom: 1px solid var(--color-hair);
+}
+
+/* =====================================================================
+   Journal page
+   ===================================================================== */
+
+.journal-board {
+  padding: clamp(3rem, 6vw, 5rem) 0 clamp(6rem, 12vw, 10rem);
+}
+.journal-paper {
+  background: var(--color-paper);
+  border: 1px solid var(--color-hair);
+  box-shadow: 0 40px 80px -50px rgb(25 24 23 / 0.5);
+}
+@media (min-width: 64rem) {
+  .journal-paper {
+    position: sticky;
+    top: calc(var(--header-h) + 1.5rem);
+  }
+}
+.journal-paper canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.journal-slots {
+  border-top: 1px solid var(--color-ink);
+}
+.journal-slots li {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--color-hair);
+}
+.journal-slot-stamp {
+  width: 5rem;
+  flex-shrink: 0;
+}
+.journal-slot-empty {
+  display: block;
+  width: 5rem;
+  aspect-ratio: 1;
+  flex-shrink: 0;
+  border: 1.5px dashed var(--color-hair-strong);
+  border-radius: 50%;
+}
+.journal-label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+.journal-input {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--color-ink);
+  background: transparent;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  line-height: 1.4;
+  color: var(--color-ink);
+  resize: vertical;
+}
+.journal-input::placeholder {
+  color: var(--color-muted);
+  font-style: italic;
+}
+.journal-stages {
+  display: grid;
+  gap: 1rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--color-hair);
+}
+.journal-stages li {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+.journal-stage-dot {
+  display: block;
+  flex-shrink: 0;
+  width: 0.7rem;
+  height: 0.7rem;
+  margin-top: 0.5rem;
+  border: 1px solid var(--color-saffron-ink);
+  rotate: 45deg;
+  transition: background-color 400ms var(--ease);
+}
+.journal-stages li.is-done .journal-stage-dot {
+  background: var(--color-saffron-ink);
+}
+.dossier-full {
+  margin-top: 1.8rem;
+  font-size: 0.9rem;
+}
+
+/* =====================================================================
+   Archive: the decade, all editions at once
+   ===================================================================== */
+
+.archive-modes {
+  display: inline-flex;
+  border: 1px solid var(--color-ink);
+}
+.archive-mode {
+  min-height: 2.75rem;
+  padding: 0 1.25rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 300ms var(--ease), color 300ms var(--ease);
+}
+.archive-mode + .archive-mode {
+  border-left: 1px solid var(--color-ink);
+}
+.archive-mode[aria-pressed="true"] {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+.archive-state.is-v1 {
+  fill: rgb(182 108 76 / 0.4);
+}
+.archive-state.is-v2 {
+  fill: rgb(182 108 76 / 0.68);
+}
+.archive-state.is-v3 {
+  fill: rgb(182 108 76 / 0.95);
+}
+.archive-range {
+  width: 100%;
+  min-height: 2.75rem;
+  accent-color: var(--color-crimson);
+}
+.archive-scrub-ticks {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.4rem;
+  font-size: 0.6875rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-muted);
+}
+.archive-scrub-ticks li.is-on {
+  color: var(--color-crimson);
+  font-weight: 600;
+}
+
+/* Touch loupe: lifted above the finger, with the coordinates beneath it. */
+.atlas-svg {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.atlas-cursor.is-touch .atlas-cursor-cross::before,
+.atlas-cursor.is-touch .atlas-cursor-cross::after {
+  background: var(--color-ivory);
+}
+.atlas-cursor.is-touch .atlas-cursor-read {
+  left: -60px;
+  top: 76px;
+  text-align: center;
+  padding: 0.15rem 0.45rem;
+  background: var(--color-paper);
+  border: 1px solid var(--color-hair);
+  text-shadow: none;
+}
+
+/* On a phone the opening map is small: names only, no native script, no Goa tag. */
+@media (max-width: 63.99rem) {
+  .atlas[data-active="india"] .atlas-label-native,
+  .atlas[data-active="india"] [data-label="l-ga"] {
+    display: none;
+  }
+  .atlas[data-active="india"] .atlas-label-state .atlas-label-name {
+    font-size: 0.5625rem;
+    letter-spacing: 0.18em;
   }
 }

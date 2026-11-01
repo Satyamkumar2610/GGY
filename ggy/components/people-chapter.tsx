@@ -13,18 +13,10 @@ import { PeopleMotion } from "./motion/people-motion";
 export function PeopleChapter() {
   const total = met8.length + roleModels.length;
   return (
-    <section id="people" aria-labelledby="people-title" className="overflow-x-clip bg-paper py-[clamp(6rem,12vw,11rem)]" data-people>
+    <section id="roll" aria-label="The people delegates met" className="overflow-x-clip bg-paper pb-[clamp(6rem,12vw,11rem)] pt-[clamp(3rem,6vw,5rem)]" data-people data-thread="People">
       <div className="page">
         <div className="grid items-end gap-10 lg:grid-cols-12 lg:gap-[var(--gap)]">
-          <div className="lg:col-span-8">
-            <p className="kicker">
-              <span className="num">07</span> People and institutions
-            </p>
-            <h2 id="people-title" className="d-xl mt-6" data-drift>
-              The people delegates met
-            </h2>
-          </div>
-          <div className="lg:col-span-4">
+          <div className="lg:col-span-4 lg:col-start-1">
             <p className="flex items-baseline gap-4">
               <span className="num text-[clamp(4rem,2.5rem+4vw,7rem)] leading-[0.85] text-saffron" data-people-count>
                 {total}
@@ -80,7 +72,7 @@ export function LifeAfterChapter() {
   // The brochure's list, set as one sentence. Acronyms keep their capitals.
   const inSentence = (c: string) => (/^[A-Z]{2,}/.test(c) ? c : c[0].toLowerCase() + c.slice(1));
   return (
-    <section id="after" aria-labelledby="after-title" className="bg-cream py-[clamp(6rem,12vw,10rem)]">
+    <section id="after" aria-labelledby="after-title" className="bg-cream py-[clamp(6rem,12vw,10rem)]" data-thread="Alumni">
       <div className="page">
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-[var(--gap)]">
           <div className="lg:col-span-3">
