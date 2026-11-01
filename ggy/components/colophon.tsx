@@ -9,7 +9,7 @@ import { FooterMotion } from "./motion/footer-motion";
  */
 export function Colophon() {
   return (
-    <footer id="notes" aria-label="Contents and contact" className="on-dark on-ember ground gloss" data-footer>
+    <footer id="notes" aria-label="Contents and contact" className="on-dark ground bg-ink text-ivory" data-footer>
       <div className="page pt-[clamp(5rem,10vw,8rem)]">
         <div className="grid gap-12 pb-14 lg:grid-cols-12 lg:gap-[var(--gap)]">
           <div className="lg:col-span-4">

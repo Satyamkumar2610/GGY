@@ -1,11 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { photos, stateDossiers, upcoming, type StateDossier } from "@/content/ggy";
 import { gsap, MOTION_QUERIES, ScrollTrigger, SplitText, useGSAP } from "@/lib/gsap";
-import { formatCoords, type FocusIso } from "@/lib/atlas";
+import { formatCoords, invert, type FocusIso } from "@/lib/atlas";
 import { Button, Script, Value } from "../primitives";
+import { Pencil } from "../pencil";
 import { AtlasMap } from "./atlas-map";
 import {
   cameraFor,
@@ -55,6 +55,19 @@ export function Atlas() {
       const svg = el.querySelector<SVGSVGElement>("[data-atlas-svg]")!;
       const camera = el.querySelector<SVGGElement>("[data-camera]")!;
       const indiaPhoto = el.querySelector<SVGGElement>('[data-layer="india-photo"]')!;
+      const reliefLayer = el.querySelector<SVGGElement>('[data-layer="relief"]')!;
+      const veil = el.querySelector<HTMLElement>("[data-veil]");
+      const loupeClip = el.querySelector<SVGCircleElement>("[data-loupe-clip]")!;
+      const cursorEl = el.querySelector<HTMLElement>("[data-cursor-el]");
+      const cursorRead = el.querySelector<HTMLElement>("[data-cursor-read]");
+      const cursorNote = el.querySelector<HTMLElement>("[data-cursor-note]");
+      let lastCam = { k: 1, x: 0, y: 0 };
+      let indiaLook = 1;
+      // Pointer state for the cartographer's cursor (set up below).
+      let px = -1;
+      let py = -1;
+      let pending = 0;
+      let cursorOn = false;
       const statePhotos = Object.fromEntries(Array.from(el.querySelectorAll<SVGGElement>("[data-state-photo]")).map((g) => [g.dataset.statePhoto, g])) as Record<FocusIso, SVGGElement>;
       const labelEls = LABELS.map((l) => el.querySelector<HTMLElement>(`[data-label="${l.id}"]`));
       const readout = q("[data-readout]")[0] as HTMLElement;
@@ -112,8 +125,13 @@ export function Atlas() {
         const cam = t === 0 ? a : lerpCamera(a, cams[j], t, cx, cy);
         camera.setAttribute("transform", `translate(${cam.x.toFixed(2)} ${cam.y.toFixed(2)}) scale(${cam.k.toFixed(4)})`);
 
+        lastCam = cam;
+        if (cursorOn && !pending) pending = requestAnimationFrame(placeCursor);
         const look = lookAt(s);
+        indiaLook = look.india;
         indiaPhoto.style.opacity = look.india.toFixed(3);
+        reliefLayer.style.opacity = (1 - look.india).toFixed(3);
+        if (veil) veil.style.opacity = layout.wide ? clamp01((1 - look.india) * 1.4).toFixed(3) : "0";
         indiaPhoto.style.display = look.india < 0.005 ? "none" : "";
         statePhotos["IN-GJ"].style.opacity = look.GJ.toFixed(3);
         statePhotos["IN-GA"].style.opacity = look.GA.toFixed(3);
@@ -189,6 +207,50 @@ export function Atlas() {
       const ro = new ResizeObserver(() => ScrollTrigger.refresh());
       ro.observe(svg);
 
+      /* ---- The cartographer's cursor and the loupe (fine pointers) ---- */
+      const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+      const placeCursor = () => {
+        pending = 0;
+        if (!cursorEl || px < 0 || !cursorOn) return;
+        // What is under the pointer changes as the map moves beneath it.
+        const under = document.elementFromPoint(px, py);
+        const hit = under?.closest?.("[data-hit]") as SVGElement | null;
+        if (cursorNote) cursorNote.textContent = hit ? (hit.getAttribute("aria-label") ?? "") : "";
+        cursorEl.classList.toggle("is-over-state", !!hit);
+        const r = svg.getBoundingClientRect();
+        const ax = (px - r.left - lastCam.x) / lastCam.k;
+        const ay = (py - r.top - lastCam.y) / lastCam.k;
+        cursorEl.style.transform = `translate3d(${px - r.left}px, ${py - r.top}px, 0)`;
+        const ll = invert(ax, ay);
+        if (cursorRead && ll) cursorRead.textContent = formatCoords(ll[0], ll[1]);
+        // The loupe opens only over the photograph of India, in the opening.
+        const lens = indiaLook > 0.5;
+        loupeClip.setAttribute("cx", ax.toFixed(1));
+        loupeClip.setAttribute("cy", ay.toFixed(1));
+        loupeClip.setAttribute("r", lens ? (68 / lastCam.k).toFixed(2) : "0");
+        cursorEl.classList.toggle("is-lens", lens);
+      };
+      const onMove = (e: PointerEvent) => {
+        px = e.clientX;
+        py = e.clientY;
+        if (!pending) pending = requestAnimationFrame(placeCursor);
+      };
+      const onEnter = () => {
+        cursorOn = true;
+        cursorEl?.classList.add("is-on");
+      };
+      const onLeave = () => {
+        cursorOn = false;
+        cursorEl?.classList.remove("is-on", "is-lens", "is-over-state");
+        loupeClip.setAttribute("r", "0");
+      };
+      if (fine) {
+        svg.addEventListener("pointermove", onMove);
+        svg.addEventListener("pointerenter", onEnter);
+        svg.addEventListener("pointerleave", onLeave);
+        el.classList.add("has-cursor");
+      }
+
       /* ---- The opening ---- */
       const mm = gsap.matchMedia();
       mm.add(MOTION_QUERIES.any, () => {
@@ -227,6 +289,12 @@ export function Atlas() {
 
       return () => {
         st.kill();
+        if (fine) {
+          svg.removeEventListener("pointermove", onMove);
+          svg.removeEventListener("pointerenter", onEnter);
+          svg.removeEventListener("pointerleave", onLeave);
+        }
+        cancelAnimationFrame(pending);
         gsap.ticker.remove(tick);
         ro.disconnect();
         mm.revert();
@@ -241,6 +309,7 @@ export function Atlas() {
     <div ref={root} className="atlas" data-atlas-root data-active="india">
       {/* The stage: sticky behind the flow */}
       <div className="atlas-stage">
+        <div aria-hidden="true" className="atlas-veil" data-veil />
         <AtlasMap onState={(iso) => openDossier(iso)} />
         <div className="atlas-labels" aria-hidden="true" data-a-labels>
           {LABELS.map((l) => (
@@ -267,7 +336,13 @@ export function Atlas() {
             <span className="atlas-scale-bar" data-scale />
             <span data-scale-text>500 km</span>
           </span>
-          <span className="atlas-credit">Boundaries: Natural Earth, India point of view. Lambert conformal conic.</span>
+          <span className="atlas-credit">Boundaries: Natural Earth, India point of view. Relief: Terrain Tiles (SRTM and others). India printed with a GGY brochure photograph.</span>
+        </div>
+        <div aria-hidden="true" className="atlas-cursor" data-cursor-el>
+          <span className="atlas-cursor-ring" />
+          <span className="atlas-cursor-cross" />
+          <span className="atlas-cursor-read" data-cursor-read />
+          <span className="atlas-cursor-note" data-cursor-note />
         </div>
       </div>
 
@@ -288,7 +363,9 @@ export function Atlas() {
                 <div>
                   <dt>Dates</dt>
                   <dd>
-                    <Value value={upcoming.dates} />
+                    <Pencil circle>
+                      <Value value={upcoming.dates} />
+                    </Pencil>
                   </dd>
                 </div>
               </dl>
@@ -385,45 +462,78 @@ export function Atlas() {
   );
 }
 
+/* The photograph printed inside each state on the map, credited in its chapter. */
+const MAP_PHOTO = { "IN-GJ": "sabarmati", "IN-GA": "bomJesus", "IN-MH": "gateway" } as const;
+const DESCRIPTOR = { "IN-GJ": "The westernmost state", "IN-GA": "The Konkan coast", "IN-MH": "Coast, Ghats and Deccan" } as const;
+const VARIANT = { "IN-GJ": "is-lead", "IN-GA": "is-quote", "IN-MH": "is-columns" } as const;
+
+/**
+ * A state's chapter. The photograph is on the map, inside the state's own
+ * outline, so the chapter is typographic, and each of the three is set
+ * differently: Gujarat leads with its name in Gujarati, Goa with its
+ * introduction as a quotation, Maharashtra in two columns.
+ */
 function StateChapter({ d, stage, onOpen }: { d: StateDossier; stage: number; onOpen: (el: HTMLElement) => void }) {
-  const photo = photos[d.photos[0]];
+  const photo = photos[MAP_PHOTO[d.iso]];
   const native = nativeOf(d.name);
+  const variant = VARIANT[d.iso];
+  const facts = (
+    <dl className="atlas-facts">
+      <div>
+        <dt>Capital, for reference</dt>
+        <dd>
+          {d.capital.name}
+          <span className="block text-[0.8rem] text-muted">{d.capital.coords}</span>
+        </dd>
+      </div>
+      <div>
+        <dt>Earlier editions here</dt>
+        <dd>
+          <Pencil>{d.editions.join(" and ")}</Pencil>
+        </dd>
+      </div>
+    </dl>
+  );
   return (
-    <article className="atlas-block atlas-chapter" data-stage={stage} aria-labelledby={`chapter-${d.iso}`}>
+    <article className={`atlas-block atlas-chapter ${variant}`} data-stage={stage} aria-labelledby={`chapter-${d.iso}`}>
       <div className="page">
         <div className="atlas-panel">
           <p className="atlas-kicker">
-            <span className="num">{d.chapter}</span> State {Number(d.chapter)} of 3 in this reading
+            <span className="num">{d.chapter}</span> {DESCRIPTOR[d.iso]}
           </p>
-          <h3 id={`chapter-${d.iso}`} className="atlas-state-name mt-4">
-            {d.name}
-            <Script lang={native.lang} className="atlas-state-native">
-              {native.native}
-            </Script>
-          </h3>
-          <div className="media atlas-chapter-photo mt-7" data-reveal>
-            <Image src={photo.src} alt={photo.alt} fill quality={80} sizes="(min-width: 1024px) 34vw, 92vw" className="object-cover" />
-          </div>
-          <p className="caption mt-2.5">
-            {photo.caption}. {photo.credit}
-          </p>
-          <p className="mt-6 max-w-[32rem] text-ink-soft">{d.intro}</p>
-          <dl className="atlas-facts mt-6">
-            <div>
-              <dt>Capital, for reference</dt>
-              <dd>
-                {d.capital.name} <span className="text-muted">{d.capital.coords}</span>
-              </dd>
+          {variant === "is-lead" ? (
+            <h3 id={`chapter-${d.iso}`} className="atlas-lead mt-5">
+              <Script lang={native.lang} className="atlas-lead-native">
+                {native.native}
+              </Script>
+              <span className="atlas-lead-name">{d.name}</span>
+            </h3>
+          ) : (
+            <h3 id={`chapter-${d.iso}`} className="atlas-state-name mt-5">
+              {d.name}
+              <Script lang={native.lang} className="atlas-state-native">
+                {native.native}
+              </Script>
+            </h3>
+          )}
+          {variant === "is-columns" ? (
+            <div className="atlas-columns mt-7">
+              <p className="text-ink-soft">{d.intro}</p>
+              {facts}
             </div>
-            <div>
-              <dt>Earlier editions here</dt>
-              <dd>{d.editions.join(" and ")}</dd>
-            </div>
-          </dl>
-          <button type="button" className="atlas-open mt-7" onClick={(e) => onOpen(e.currentTarget)}>
+          ) : (
+            <>
+              <p className={variant === "is-quote" ? "atlas-quote mt-7" : "mt-6 max-w-[32rem] text-ink-soft"}>{d.intro}</p>
+              <div className="mt-7">{facts}</div>
+            </>
+          )}
+          <button type="button" className="atlas-open mt-8" onClick={(e) => onOpen(e.currentTarget)}>
             <span>Open the {d.name} dossier</span>
             <span aria-hidden="true" className="atlas-open-plus" />
           </button>
+          <p className="caption mt-6">
+            On the map: {photo.caption}. {photo.credit}
+          </p>
         </div>
       </div>
     </article>

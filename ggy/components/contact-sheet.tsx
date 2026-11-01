@@ -5,23 +5,22 @@ import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { photos, type PhotoKey } from "@/content/ggy";
 import { lockScroll } from "@/lib/scroll";
+import { NoteRef } from "./primitives";
 
-const keys: PhotoKey[] = ["cohort", "openLandscape", "lectureHall", "fieldGroup", "legislatureSteps", "overhead", "flagOff", "address"];
-// Varied frame heights and offsets so the strip reads as a hand-laid contact sheet.
-const layout = ["h-[26rem] mt-0", "h-[19rem] mt-24", "h-[23rem] mt-10", "h-[17rem] mt-40", "h-[28rem] mt-4", "h-[18rem] mt-28", "h-[22rem] mt-8", "h-[16rem] mt-36"];
+const keys: PhotoKey[] = ["flagOff", "cohort", "address", "fieldGroup", "openLandscape", "legislatureSteps", "lectureHall", "overhead"];
 const ease = [0.22, 1, 0.36, 1] as const;
 
 /**
- * Field photographs from past editions. The strip can be dragged or scrolled
- * sideways; each photograph opens in a full-screen viewer with its caption.
- * Photographs are never shown larger than their original size.
+ * The archive's photographs, printed as a contact sheet: frames on a strip of
+ * film, edge-numbered, with one frame ringed in grease pencil. The brochure
+ * does not say which editions they belong to, so they are not placed on the
+ * timeline. Each frame opens in a full-screen viewer with its caption;
+ * photographs are never shown larger than their original size.
  */
-export function FieldGallery() {
-  const strip = useRef<HTMLDivElement>(null);
+export function ContactSheet() {
   const [open, setOpen] = useState<number | null>(null);
   const lastFocus = useRef<HTMLElement | null>(null);
   const closeBtn = useRef<HTMLButtonElement>(null);
-  const drag = useRef({ on: false, x: 0, left: 0, moved: 0 });
 
   const close = useCallback(() => setOpen(null), []);
   const step = useCallback((d: number) => setOpen((i) => (i === null ? i : (i + d + keys.length) % keys.length)), []);
@@ -53,62 +52,47 @@ export function FieldGallery() {
   const current = open === null ? null : photos[keys[open]];
 
   return (
-    <section id="gallery" aria-labelledby="gallery-title" className="on-dark on-ember ground gloss py-[clamp(6rem,12vw,10rem)]">
-      <div className="page grid gap-6 lg:grid-cols-12 lg:gap-[var(--gap)]">
-        <h2 id="gallery-title" className="d-l lg:col-span-7" data-drift>
-          Field photographs
-        </h2>
-        <p className="max-w-[24rem] text-dim lg:col-span-3 lg:col-start-10 lg:self-end">
-          From past editions, as printed in the GGY brochure. Drag the strip, or open a photograph to see it full screen.
-        </p>
+    <div className="sheet" aria-labelledby="sheet-title">
+      <div className="flex flex-wrap items-end justify-between gap-6">
+        <h3 id="sheet-title" className="d-m">
+          From the archive
+        </h3>
+        <p className="caption max-w-[26rem]">Photographs printed in the GGY brochure. It does not say which editions they belong to, so they are not placed on the timeline. Open a frame to see it full screen.</p>
       </div>
-
-      <div
-        ref={strip}
-        className="gallery-strip mt-[clamp(3rem,6vw,5rem)] flex cursor-grab gap-[clamp(1rem,2vw,2rem)] overflow-x-auto px-[var(--gutter)] pb-8 active:cursor-grabbing"
-        data-lenis-prevent-wheel
-        data-cursor="Drag"
-        onPointerDown={(e) => {
-          if (e.pointerType !== "mouse" || !strip.current) return;
-          drag.current = { on: true, x: e.clientX, left: strip.current.scrollLeft, moved: 0 };
-        }}
-        onPointerMove={(e) => {
-          if (!drag.current.on || !strip.current) return;
-          const dx = e.clientX - drag.current.x;
-          drag.current.moved = Math.abs(dx);
-          strip.current.scrollLeft = drag.current.left - dx;
-        }}
-        onPointerUp={() => (drag.current.on = false)}
-        onPointerLeave={() => (drag.current.on = false)}
-      >
-        {keys.map((k, i) => {
-          const p = photos[k];
-          return (
-            <figure key={k} className={`group relative shrink-0 ${layout[i]}`} style={{ aspectRatio: `${p.width} / ${p.height}` }}>
-              <button
-                type="button"
-                onClick={(e) => {
-                  if (drag.current.moved > 6) return;
-                  lastFocus.current = e.currentTarget;
-                  setOpen(i);
-                }}
-                className="relative block h-full w-full overflow-hidden rounded-[var(--radius-media)]"
-                aria-label={`Open photograph: ${p.caption}`}
-                data-cursor="Open"
-              >
-                <Image src={p.src} alt={p.alt} fill quality={80} sizes="40vw" draggable={false} className="object-cover transition-transform duration-[1200ms] ease-[var(--ease)] group-hover:scale-[1.06]" />
-                <span
-                  aria-hidden="true"
-                  className="absolute bottom-3 left-3 right-3 translate-y-[calc(100%+1rem)] rounded-[var(--radius-thumb)] bg-cream px-3.5 py-2.5 text-left text-[0.8rem] leading-snug text-ember transition-transform duration-500 ease-[var(--ease)] group-hover:translate-y-0 group-focus-visible:translate-y-0"
+      <div className="sheet-film mt-8">
+        <ol className="sheet-grid">
+          {keys.map((k, i) => {
+            const p = photos[k];
+            return (
+              <li key={k} className={`sheet-frame ${i === 0 ? "is-ringed" : ""}`}>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    lastFocus.current = e.currentTarget;
+                    setOpen(i);
+                  }}
+                  className="sheet-button"
+                  aria-label={`Open photograph: ${p.caption}`}
                 >
-                  {p.caption}
-                </span>
-              </button>
-            </figure>
-          );
-        })}
+                  <span className="sheet-image">
+                    <Image src={p.src} alt={p.alt} fill quality={80} sizes="(min-width: 1024px) 24vw, 46vw" className="object-cover" />
+                  </span>
+                  <span aria-hidden="true" className="sheet-edge">
+                    <span>GGY</span>
+                    <span>{String(i + 1).padStart(2, "0")}</span>
+                    <span>{String(i + 1).padStart(2, "0")}A</span>
+                  </span>
+                </button>
+                {i === 0 ? (
+                  <svg aria-hidden="true" className="sheet-ring" viewBox="0 0 200 140" preserveAspectRatio="none">
+                    <path d="M18 74 C 14 30, 70 10, 112 12 C 162 14, 192 40, 186 76 C 180 116, 128 132, 88 128 C 44 124, 10 106, 22 64 C 26 52, 36 40, 48 34" pathLength={1} data-draw />
+                  </svg>
+                ) : null}
+              </li>
+            );
+          })}
+        </ol>
       </div>
-
       <AnimatePresence>
         {current && open !== null ? (
           <motion.div
@@ -116,7 +100,7 @@ export function FieldGallery() {
             role="dialog"
             aria-modal="true"
             aria-label={`Photograph ${open + 1} of ${keys.length}`}
-            className="fixed inset-0 z-[80] flex flex-col bg-ember/95 text-ivory backdrop-blur-sm"
+            className="on-dark fixed inset-0 z-[80] flex flex-col bg-ink/[0.97] text-ivory"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -147,7 +131,10 @@ export function FieldGallery() {
               </AnimatePresence>
             </div>
             <div className="page flex flex-wrap items-center justify-between gap-4 py-5">
-              <p className="max-w-[40rem] text-[0.9rem] text-ivory/85">{current.caption} Photograph from the GGY brochure.</p>
+              <p className="max-w-[40rem] text-[0.9rem] text-ivory/85">
+                {current.caption}
+                {keys[open] === "flagOff" ? <NoteRef id="flagoff" /> : null} Photograph from the GGY brochure.
+              </p>
               <div className="flex gap-6 text-[0.95rem]">
                 <button type="button" onClick={() => step(-1)} className="tlink">
                   Previous
@@ -160,6 +147,6 @@ export function FieldGallery() {
           </motion.div>
         ) : null}
       </AnimatePresence>
-    </section>
+    </div>
   );
 }

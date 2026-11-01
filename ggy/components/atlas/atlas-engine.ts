@@ -1,4 +1,5 @@
 import { atlas, atLeast, fit, INDIA_BOX, invert, lerpCamera, project, unionBox, type Box, type Camera, type FocusIso } from "@/lib/atlas";
+import { GOA_LABEL_AT } from "./atlas-map";
 
 /**
  * The camera over the atlas, driven by the reading position.
@@ -44,8 +45,8 @@ export function frameFor(stage: StageId, l: Layout): Box {
     if (stage === "india") return [l.w * 0.4, l.header + 6, l.w * 0.985, l.h - 6];
     return [l.w * 0.47, l.header + 48, l.w * 0.955, l.h - 64];
   }
-  if (stage === "india") return [14, l.header + 8, l.w - 14, Math.min(l.h * 0.5, l.h - 400)];
-  return [18, l.header + 12, l.w - 18, l.h * 0.5];
+  if (stage === "india") return [14, l.header + 8, l.w - 14, Math.min(l.h * 0.46, l.h - 420)];
+  return [18, l.header + 10, l.w - 18, l.h * 0.42];
 }
 
 export function cameraFor(stage: StageId, l: Layout): Camera {
@@ -97,7 +98,7 @@ const P = atlas.points;
 export const LABELS: Label[] = [
   { id: "l-gj", x: c("IN-GJ")[0] + 14, y: c("IN-GJ")[1] - 10, kind: "state", text: "Gujarat", native: { text: "ગુજરાત", lang: "gu" }, on: [0, 1, 5], align: "center" },
   { id: "l-mh", x: c("IN-MH")[0] + 6, y: c("IN-MH")[1] + 4, kind: "state", text: "Maharashtra", native: { text: "महाराष्ट्र", lang: "mr" }, on: [0, 1, 5], align: "center" },
-  { id: "l-ga", x: c("IN-GA")[0] + 5, y: c("IN-GA")[1], kind: "state", text: "Goa", native: { text: "गोंय", lang: "kok" }, on: [0, 1, 3, 5], align: "left" },
+  { id: "l-ga", x: GOA_LABEL_AT[0], y: GOA_LABEL_AT[1], kind: "state", text: "Goa", native: { text: "गोंय", lang: "kok" }, on: [0, 1, 3, 5], align: "left" },
   { id: "c-gn", x: P.Gandhinagar[0], y: P.Gandhinagar[1], kind: "capital", text: "Gandhinagar", sub: "23.22° N  72.64° E", on: [2], align: "left" },
   { id: "c-pj", x: P.Panaji[0], y: P.Panaji[1], kind: "capital", text: "Panaji", sub: "15.49° N  73.83° E", on: [3], align: "right" },
   { id: "c-mb", x: P.Mumbai[0], y: P.Mumbai[1], kind: "capital", text: "Mumbai", sub: "19.08° N  72.88° E", on: [4], align: "right" },

@@ -45,6 +45,30 @@ export function PageMotion() {
         );
       });
 
+      // Stamps press onto the page: down from a little above, slightly
+      // turned, with the ink settling as it lands.
+      document.querySelectorAll<HTMLElement>("[data-stamp]").forEach((stamp) => {
+        gsap.fromTo(
+          stamp,
+          { scale: 1.6, opacity: 0, rotate: -14, filter: "blur(3px)" },
+          {
+            scale: 1,
+            opacity: 0.88,
+            rotate: 0,
+            filter: "blur(0px)",
+            duration: 0.55,
+            ease: "back.out(2.2)",
+            clearProps: "filter",
+            scrollTrigger: { trigger: stamp, start: "top 82%", once: true },
+          },
+        );
+      });
+
+      // Pencil marks under key facts, drawn as the line reaches reading height.
+      document.querySelectorAll<SVGPathElement>("[data-pencil] path").forEach((path) => {
+        gsap.fromTo(path, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.9, ease: "power2.inOut", scrollTrigger: { trigger: path.ownerSVGElement ?? path, start: "top 75%", once: true } });
+      });
+
       // Ruled rows arrive one after another as their list reaches the reader.
       document.querySelectorAll<HTMLElement>("[data-row]").forEach((row) => {
         gsap.from(row, { opacity: 0, y: 28, duration: 1, ease: "land", scrollTrigger: { trigger: row, start: "top 88%", once: true } });
@@ -56,7 +80,8 @@ export function PageMotion() {
           autoSplit: true,
           onSplit: (self) => {
             // Wider screens shear further; the first line travels furthest.
-            const reach = (i: number) => (i % 2 ? 1 : -1) * Math.min(window.innerWidth * 0.14, 220) * (1 - i * 0.18);
+            // Kept short so a title never reads as cropped at the page edge.
+            const reach = (i: number) => (i % 2 ? 1 : -1) * Math.min(window.innerWidth * 0.05, 84) * (1 - i * 0.18);
             const tl = gsap.timeline({
               scrollTrigger: { trigger: title, start: "top bottom", end: "bottom top", scrub: 0.9, invalidateOnRefresh: true },
             });

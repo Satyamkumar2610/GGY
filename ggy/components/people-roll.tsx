@@ -3,6 +3,17 @@
 import { useMemo, useRef, useState } from "react";
 import { met8, roleModels } from "@/content/ggy";
 import { gsap, MOTION_QUERIES, ScrollTrigger, useGSAP } from "@/lib/gsap";
+import { atlas, project } from "@/lib/atlas";
+
+/* Where 8th-edition delegates met each person, as printed in the concept note. Reference coordinates of the cities. */
+const CITY: Record<string, [number, number]> = {
+  Delhi: [77.21, 28.61],
+  Lucknow: [80.95, 26.85],
+  Prayagraj: [81.85, 25.44],
+  Ayodhya: [82.2, 26.8],
+  Deoria: [83.78, 26.5],
+};
+const PREVIEW = 6;
 
 type Person = { name: string; title: string; from: "8th" | "brochure"; where?: string };
 
@@ -18,11 +29,21 @@ const FILTERS = [
 ] as const;
 type FilterId = (typeof FILTERS)[number]["id"];
 
-const HONORIFICS = new Set(["late", "shri", "smt.", "smt", "dr", "dr.", "sh.", "ms.", "ias"]);
-/** Two initials from a name, skipping honorifics. */
-function initials(name: string) {
-  const parts = name.split(/\s+/).filter((w) => !HONORIFICS.has(w.toLowerCase()));
-  return (parts[0]?.[0] ?? "") + (parts.length > 1 ? parts[parts.length - 1][0] : "");
+/** A small map of India locating where delegates met the person, when the source records it. */
+function Locator({ where }: { where?: string }) {
+  const at = where && CITY[where] ? project(...CITY[where]) : null;
+  const [x0, y0, x1, y1] = atlas.outlineBounds;
+  return (
+    <svg viewBox={`${x0 - 10} ${y0 - 10} ${x1 - x0 + 20} ${y1 - y0 + 20}`} className="roll-locator" aria-hidden="true">
+      <path d={atlas.outline} className="roll-locator-land" />
+      {at ? (
+        <g transform={`translate(${at[0]} ${at[1]})`}>
+          <circle r="34" className="roll-locator-ring" />
+          <circle r="11" className="roll-locator-dot" />
+        </g>
+      ) : null}
+    </svg>
+  );
 }
 const pad = (n: number) => String(n).padStart(2, "0");
 const origin = (p: Person) => (p.from === "8th" ? `Met on the 8th edition${p.where ? `, ${p.where}` : ""}` : "Listed in the 2025 brochure");
@@ -36,8 +57,10 @@ const origin = (p: Person) => (p.from === "8th" ? `Met on the 8th edition${p.whe
 export function PeopleRoll() {
   const [filter, setFilter] = useState<FilterId>("all");
   const [active, setActive] = useState(0);
+  const [all, setAll] = useState(false);
   const listRef = useRef<HTMLOListElement>(null);
-  const shown = useMemo(() => people.filter((p) => filter === "all" || p.from === filter), [filter]);
+  const matching = useMemo(() => people.filter((p) => filter === "all" || p.from === filter), [filter]);
+  const shown = all ? matching : matching.slice(0, PREVIEW);
   const current = shown[Math.min(active, shown.length - 1)];
 
   useGSAP(
@@ -68,7 +91,7 @@ export function PeopleRoll() {
       ScrollTrigger.refresh();
       return () => mm.revert();
     },
-    { dependencies: [filter], revertOnUpdate: true },
+    { dependencies: [filter, all], revertOnUpdate: true },
   );
 
   return (
@@ -85,6 +108,7 @@ export function PeopleRoll() {
               onClick={() => {
                 setFilter(f.id);
                 setActive(0);
+                setAll(false);
               }}
             >
               {f.label}
@@ -97,17 +121,20 @@ export function PeopleRoll() {
       <div className="mt-10 grid gap-[var(--gap)] lg:grid-cols-12">
         {/* The spotlight, wide screens only; the list carries every fact. */}
         <div aria-hidden="true" className="hidden lg:col-span-5 lg:block">
-          <div className="roll-spot on-crimson" key={current?.name}>
+          <div className="roll-spot" key={current?.name}>
             <div className="roll-spot-head">
-              <span className="meta">{current ? origin(current) : ""}</span>
-              <span className="num">
-                {pad(Math.min(active, shown.length - 1) + 1)} / {pad(shown.length)}
+              <span className="caption">{current ? origin(current) : ""}</span>
+              <span className="num text-[0.95rem] text-muted">
+                {pad(Math.min(active, shown.length - 1) + 1)} / {pad(matching.length)}
               </span>
             </div>
-            <p className="roll-spot-mono">{current ? initials(current.name) : ""}</p>
             <div>
               <p className="roll-spot-name">{current?.name}</p>
               <p className="roll-spot-title">{current?.title}</p>
+            </div>
+            <div className="roll-spot-foot">
+              <Locator where={current?.where} />
+              <p className="caption max-w-[12rem]">{current?.where ? `${current.where}, where delegates of the 8th edition met them.` : "The brochure does not record where delegates met them."}</p>
             </div>
           </div>
         </div>
@@ -139,6 +166,13 @@ export function PeopleRoll() {
           ))}
         </ol>
       </div>
+      {matching.length > PREVIEW ? (
+        <div className="mt-8 lg:ml-[calc(5/12*100%+var(--gap))]">
+          <button type="button" className="atlas-chip" aria-expanded={all} onClick={() => setAll((v) => !v)}>
+            {all ? `Show the first ${PREVIEW}` : `Show all ${matching.length}`}
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 }

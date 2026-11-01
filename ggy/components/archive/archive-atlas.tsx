@@ -1,11 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
-import { CONCEPT_NOTE, conceptFigures, pastEditions, photos, previousEdition } from "@/content/ggy";
+import { CONCEPT_NOTE, conceptFigures, pastEditions, previousEdition } from "@/content/ggy";
 import { atlas, fit, INDIA_BOX, ROUTE_ISO, unionBox, type Box } from "@/lib/atlas";
 import { gsap, MOTION_QUERIES, useGSAP } from "@/lib/gsap";
 import { NoteRef } from "../primitives";
+import { ContactSheet } from "../contact-sheet";
+import { DayStrip } from "./day-strip";
 
 const W = 1000;
 const H = 1120;
@@ -231,23 +232,12 @@ export function ArchiveAtlas() {
           </div>
         </div>
 
-        {/* From the archive: photographs not tied to a year */}
-        <div className="archive-photos mt-[clamp(5rem,10vw,8rem)]">
-          {(["flagOff", "address", "cohort"] as const).map((k, i) => {
-            const p = photos[k];
-            return (
-              <figure key={k} className={`archive-photo-${i}`}>
-                <div className="media relative" style={{ aspectRatio: `${p.width} / ${p.height}` }} data-reveal>
-                  <Image src={p.src} alt={p.alt} fill quality={80} sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
-                </div>
-                <figcaption className="caption mt-2.5 max-w-[24rem]">
-                  {p.caption}
-                  {k === "flagOff" ? <NoteRef id="flagoff" /> : null} Photograph from the GGY brochure.
-                </figcaption>
-              </figure>
-            );
-          })}
-          <p className="archive-photos-note caption">From the archive. The brochure does not say which editions these photographs belong to, so they are not placed on the timeline.</p>
+        <div className="mt-[clamp(5rem,10vw,8rem)]">
+          <DayStrip />
+        </div>
+
+        <div className="mt-[clamp(5rem,10vw,8rem)]">
+          <ContactSheet />
         </div>
       </div>
     </section>

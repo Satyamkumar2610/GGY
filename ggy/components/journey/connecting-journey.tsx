@@ -1,11 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { useRef } from "react";
+import { useRef, type ReactNode } from "react";
 import { photos, stateDossiers, upcoming, type PhotoKey } from "@/content/ggy";
 import { atlas } from "@/lib/atlas";
 import { gsap, MOTION_QUERIES, ScrollTrigger, SplitText, useGSAP } from "@/lib/gsap";
 import { Script } from "../primitives";
+import { Pencil } from "../pencil";
+import { Postmark } from "../postmark";
 
 type Composition = {
   iso: "IN-GJ" | "IN-GA" | "IN-MH";
@@ -13,7 +15,8 @@ type Composition = {
   second?: PhotoKey;
   place: string;
   coords: string;
-  note: string;
+  note: ReactNode;
+  stamp: string;
   side: "left" | "right";
 };
 
@@ -24,7 +27,12 @@ const COMPOSITIONS: Composition[] = [
     main: "sabarmati",
     place: "Sabarmati Ashram, Ahmedabad",
     coords: "23.06° N  72.58° E",
-    note: "Gandhi lived at the ashram on the Sabarmati from 1917 to 1930. The Salt March set out from here on 12 March 1930.",
+    note: (
+      <>
+        Gandhi lived at the ashram on the Sabarmati from 1917 to 1930. The Salt March set out from here on <Pencil>12 March 1930</Pencil>.
+      </>
+    ),
+    stamp: "GUJARAT ✦ 23.06° N 72.58° E ✦ SABARMATI ✦ ",
     side: "left",
   },
   {
@@ -33,7 +41,12 @@ const COMPOSITIONS: Composition[] = [
     second: "oldSecretariat",
     place: "Old Goa and Panaji",
     coords: "15.50° N  73.91° E",
-    note: "The Basilica of Bom Jesus is part of the Churches and Convents of Goa, a UNESCO World Heritage Site since 1986. Upriver in Panaji, the Old Secretariat was once the palace of Adil Shah.",
+    note: (
+      <>
+        The Basilica of Bom Jesus is part of the Churches and Convents of Goa, a UNESCO World Heritage Site since <Pencil>1986</Pencil>. Upriver in Panaji, the Old Secretariat was once the palace of Adil Shah.
+      </>
+    ),
+    stamp: "GOA ✦ 15.50° N 73.91° E ✦ OLD GOA ✦ PANAJI ✦ ",
     side: "right",
   },
   {
@@ -42,10 +55,38 @@ const COMPOSITIONS: Composition[] = [
     second: "municipalCorporation",
     place: "Fort, Mumbai",
     coords: "18.93° N  72.83° E",
-    note: "The Bombay High Court has sat in its Gothic Revival building since 1878. A short walk north, the Municipal Corporation Building houses the city’s municipal headquarters.",
+    note: (
+      <>
+        The Bombay High Court has sat in its Gothic Revival building since <Pencil>1878</Pencil>. A short walk north, the Municipal Corporation Building houses the city’s municipal headquarters.
+      </>
+    ),
+    stamp: "MAHARASHTRA ✦ 18.93° N 72.83° E ✦ MUMBAI ✦ ",
     side: "left",
   },
 ];
+
+/**
+ * The three states as the map last showed them, in their true positions. As
+ * the section arrives they shrink out of the full window into this small
+ * cluster, and the line begins at its foot: the map becomes the journey.
+ */
+function Handover() {
+  const states = ["IN-GJ", "IN-MH", "IN-GA"].map((iso) => atlas.states.find((x) => x.iso === iso)!);
+  const b = states.reduce((a, s) => [Math.min(a[0], s.bounds[0]), Math.min(a[1], s.bounds[1]), Math.max(a[2], s.bounds[2]), Math.max(a[3], s.bounds[3])], [Infinity, Infinity, -Infinity, -Infinity]);
+  const pad = 8;
+  return (
+    <div className="journey-handover" aria-hidden="true">
+      <div className="journey-handover-inner" data-handover>
+        <svg viewBox={`${b[0] - pad} ${b[1] - pad} ${b[2] - b[0] + pad * 2} ${b[3] - b[1] + pad * 2}`}>
+          {states.map((s) => (
+            <path key={s.iso} d={s.d} />
+          ))}
+        </svg>
+      </div>
+      <span className="journey-handover-foot" data-line-start />
+    </div>
+  );
+}
 
 function Silhouette({ iso }: { iso: string }) {
   const s = atlas.states.find((x) => x.iso === iso)!;
@@ -98,9 +139,10 @@ export function ConnectingJourney() {
             [x, exit],
           ];
         });
-        const start = [w < 1024 ? 10 : w * 0.5, 0];
+        const foot = el.querySelector<HTMLElement>("[data-line-start]")?.getBoundingClientRect();
+        const start = foot ? [foot.left - r.left, foot.top - r.top] : [w < 1024 ? 10 : w * 0.5, 0];
         const end = [w < 1024 ? 10 : w * 0.5, h];
-        const all = [start, ...pts, end];
+        const all = [start, [start[0], start[1] + 1], ...pts, end];
         let d = `M${all[0][0].toFixed(1)},${all[0][1].toFixed(1)}`;
         for (let i = 1; i < all.length; i++) {
           const [ax, ay] = all[i - 1];
@@ -165,9 +207,18 @@ export function ConnectingJourney() {
           const sil = comp.querySelector<SVGPathElement>("[data-sil]");
           if (sil)
             gsap.fromTo(sil, { strokeDashoffset: 1 }, { strokeDashoffset: 0, ease: "none", scrollTrigger: { trigger: comp, start: "top 80%", end: "center 45%", scrub: 0.6 } });
-          const num = comp.querySelector<HTMLElement>("[data-num]");
-          if (num) gsap.fromTo(num, { yPercent: 30 }, { yPercent: -30, ease: "none", scrollTrigger: { trigger: comp, start: "top bottom", end: "bottom top", scrub: 1 } });
+
         });
+
+        // The handover: the three states arrive from the size the map showed
+        // them at and settle into the cluster where the line begins.
+        const hand = el.querySelector<HTMLElement>("[data-handover]");
+        if (hand)
+          gsap.fromTo(
+            hand,
+            { scale: () => Math.min(4.2, window.innerHeight / Math.max(hand.offsetHeight, 1) * 0.8), yPercent: -60, opacity: 0.35 },
+            { scale: 1, yPercent: 0, opacity: 1, ease: "power2.out", scrollTrigger: { trigger: el, start: "top bottom", end: "top 30%", scrub: 0.7, invalidateOnRefresh: true } },
+          );
 
         el.querySelectorAll<HTMLElement>("[data-statement]").forEach((s) => {
           const split = SplitText.create(s, { type: "lines", mask: "lines" });
@@ -203,6 +254,7 @@ export function ConnectingJourney() {
 
       <div className="page relative">
         <div className="journey-intro">
+          <Handover />
           <p className="kicker">
             <span className="num">03</span> The connecting journey
           </p>
@@ -214,7 +266,7 @@ export function ConnectingJourney() {
           </p>
         </div>
 
-        {COMPOSITIONS.map((c, i) => {
+        {COMPOSITIONS.map((c) => {
           const d = stateDossiers.find((x) => x.iso === c.iso)!;
           const st = upcoming.states.find((s) => s.name === d.name)!;
           const main = photos[c.main];
@@ -240,9 +292,7 @@ export function ConnectingJourney() {
               </div>
 
               <div className="journey-text" data-text>
-                <span aria-hidden="true" className="journey-num" data-num>
-                  {String(i + 1).padStart(2, "0")}
-                </span>
+                <Postmark ring={c.stamp} centre={st.native} lang={st.lang} className="journey-stamp" />
                 <span aria-hidden="true" className="journey-node" data-node />
                 <Silhouette iso={c.iso} />
                 <h3 id={`jc-${c.iso}`} className="journey-name" data-words>

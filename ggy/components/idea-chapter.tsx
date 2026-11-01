@@ -1,6 +1,5 @@
 import { about, BROCHURE } from "@/content/ggy";
 import { AnnotatedPhoto } from "./annotated-photo";
-import { ImmersionStage } from "./immersion-stage";
 import { NoteRef } from "./primitives";
 import { IdeaMotion } from "./motion/idea-motion";
 
@@ -103,7 +102,18 @@ export function IdeaChapter() {
         </figure>
       </div>
 
-      <ImmersionStage />
+      {/* The four words on the brochure cover, set as one line. */}
+      <div className="page mt-[clamp(4rem,8vw,6.5rem)]">
+        <p className="idea-words" aria-label={`The four words on the brochure cover: ${about.tagline.join(", ")}`}>
+          {about.tagline.map((w, i) => (
+            <span key={w} aria-hidden="true" className="idea-word" data-row>
+              <span className="idea-word-num num">{String(i + 1).padStart(2, "0")}</span>
+              {w}
+            </span>
+          ))}
+        </p>
+        <p className="caption mt-4">The four words on the cover of the {BROCHURE}.</p>
+      </div>
 
       <div className="page">
         <p className="idea-statement" data-ink>

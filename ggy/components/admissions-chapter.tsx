@@ -3,6 +3,7 @@ import { Button, NoteRef, Value } from "./primitives";
 import { TicketMotion } from "./motion/ticket-motion";
 import { Readiness } from "./readiness";
 import { ClosingMap } from "./closing-map";
+import { Postmark } from "./postmark";
 
 /**
  * Admissions: a crimson page with the one action available today, and the
@@ -35,46 +36,29 @@ export function AdmissionsChapter() {
 
       <div id="admissions" className="page pb-[clamp(6rem,12vw,10rem)]">
 
-        {/* The pass: issued, but with none of its details filled in yet */}
-        <div className="ticket mt-[clamp(4rem,8vw,6rem)] lg:mr-[16%]" data-ticket>
-          <div className="ticket-main">
-            <span aria-hidden="true" className="ticket-band" />
-            <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-              <p className="caps text-crimson">Good Governance Yatra</p>
-              <p className="caps text-muted">Upcoming edition</p>
-            </div>
-            <p className="d-m mt-5 text-ink">Maharashtra, Goa and Gujarat</p>
-            <p className="caption mt-1">The order of travel is to be announced.</p>
-            <dl className="mt-8 grid grid-cols-1 gap-x-8 gap-y-6 text-ink sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                ["Applications open", upcoming.applyUrl],
-                ["Deadline", upcoming.applicationDeadline],
-                ["Programme fee", upcoming.fee],
-                ["Dates", upcoming.dates],
-              ].map(([term, value]) => (
-                <div key={term} className="ticket-field">
-                  <dt className="caps text-muted">{term}</dt>
-                  <dd className="mt-1.5 whitespace-nowrap font-display text-[1.25rem]">
-                    <Value value={value} />
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-
-          <div className="ticket-stub">
-            <p className="caps text-muted">Yatra</p>
-            <p className="mt-2 font-display text-[1.6rem] leading-none text-ink">GGY</p>
-            <dl className="mt-6">
-              <dt className="caps text-muted">States</dt>
-              <dd className="mt-1 font-display text-[1.1rem] text-ink">Three</dd>
-              <dt className="caps mt-4 text-muted">Dates</dt>
-              <dd className="mt-1 text-[0.95rem]">
-                <Value value={upcoming.dates} />
-              </dd>
-            </dl>
-            <span aria-hidden="true" className="ticket-code" />
-          </div>
+        {/* The registration page: a field-journal page, its entries still blank */}
+        <div className="register mt-[clamp(4rem,8vw,6rem)] lg:mr-[16%]" data-register>
+          <Postmark ring="GOOD GOVERNANCE YATRA ✦ UPCOMING EDITION ✦ WESTERN INDIA ✦ " centre="GGY" sub="To be announced" className="register-stamp" />
+          <p className="kicker text-crimson">Registration, upcoming edition</p>
+          <p className="register-title mt-4">Maharashtra, Goa and Gujarat</p>
+          <p className="caption mt-1">The order of travel is to be announced.</p>
+          <dl className="register-lines mt-8">
+            {[
+              ["Applications open", upcoming.applyUrl],
+              ["Deadline", upcoming.applicationDeadline],
+              ["Programme fee", upcoming.fee],
+              ["Dates", upcoming.dates],
+              ["Duration", upcoming.duration],
+              ["Cohort", upcoming.cohortSize],
+            ].map(([term, value]) => (
+              <div key={term} className="register-line">
+                <dt>{term}</dt>
+                <dd>
+                  <Value value={value} />
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
 
         <div className="mt-[clamp(3rem,6vw,4rem)] lg:ml-[16%]">

@@ -6,10 +6,8 @@ import { IdeaChapter } from "@/components/idea-chapter";
 import { FormatChapter } from "@/components/format-chapter";
 import { ProgrammeChapter } from "@/components/programme-chapter";
 import { ArchiveAtlas } from "@/components/archive/archive-atlas";
-import { ItineraryChapter } from "@/components/itinerary-chapter";
 import { LifeAfterChapter, PeopleChapter } from "@/components/people-chapter";
 import { AdmissionsChapter } from "@/components/admissions-chapter";
-import { FieldGallery } from "@/components/field-gallery";
 import { Questions } from "@/components/questions";
 import { Colophon } from "@/components/colophon";
 import { ScrollRefresh } from "@/components/motion/scroll-refresh";
@@ -27,7 +25,7 @@ import { ScrollProgress } from "@/components/motion/scroll-progress";
  *       What is confirmed so far
  * 04    The idea, and the learning journey
  * 05    The programme experience
- * 06    The archive, and the 2025 itinerary and field photographs
+ * 06    The archive: past routes, the 2025 days, the contact sheet
  * 07    People and institutions, and where alumni went
  *       Questions
  * 08    The upcoming edition: connect with the team
@@ -45,8 +43,6 @@ export default function Home() {
         <FormatChapter />
         <ProgrammeChapter />
         <ArchiveAtlas />
-        <ItineraryChapter />
-        <FieldGallery />
         <PeopleChapter />
         <LifeAfterChapter />
         <Questions />

@@ -2,7 +2,6 @@ import Image from "next/image";
 import { BROCHURE, careerPaths, CONCEPT_NOTE, met8, photos, previousEdition, roleModels, saarthi } from "@/content/ggy";
 import { NoteRef } from "./primitives";
 import { PeopleRoll } from "./people-roll";
-import { PathsMotion } from "./motion/paths-motion";
 import { PeopleMotion } from "./motion/people-motion";
 
 /**
@@ -78,52 +77,39 @@ export function PeopleChapter() {
  */
 export function LifeAfterChapter() {
   const p = photos.overhead;
+  // The brochure's list, set as one sentence. Acronyms keep their capitals.
+  const inSentence = (c: string) => (/^[A-Z]{2,}/.test(c) ? c : c[0].toLowerCase() + c.slice(1));
   return (
-    <section id="after" aria-labelledby="after-title" className="on-dark on-ember ground gloss py-[clamp(6rem,12vw,10rem)]" data-paths>
+    <section id="after" aria-labelledby="after-title" className="bg-cream py-[clamp(6rem,12vw,10rem)]">
       <div className="page">
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-[var(--gap)]">
-          <div className="lg:col-span-6">
-            <h2 id="after-title" className="d-l" data-drift>
+          <div className="lg:col-span-3">
+            <div className="media relative aspect-[3/4]" data-reveal>
+              <Image src={p.src} alt={p.alt} fill quality={80} sizes="(min-width: 1024px) 22vw, 100vw" className="object-cover" />
+            </div>
+            <p className="caption mt-3">{p.caption}. Photograph from the GGY brochure.</p>
+          </div>
+          <div className="lg:col-span-8 lg:col-start-5">
+            <h2 id="after-title" className="kicker">
               Where alumni went next
             </h2>
-          </div>
-          <figure className="lg:col-span-5 lg:col-start-8 lg:pt-4">
-            <blockquote className="paths-quote font-serif">{saarthi.text}</blockquote>
-            <figcaption className="caption mt-4">From the {CONCEPT_NOTE}.</figcaption>
-          </figure>
-        </div>
-
-        <div className="mt-[clamp(3rem,6vw,5rem)] grid gap-10 lg:grid-cols-12 lg:gap-[var(--gap)]">
-          <div className="lg:col-span-3">
-            <div className="lg:sticky lg:top-[calc(var(--header-h)+2rem)]">
-              <div className="media relative aspect-[3/4]" data-reveal>
-                <Image src={p.src} alt={p.alt} fill quality={80} sizes="(min-width: 1024px) 22vw, 100vw" className="object-cover" />
-              </div>
-              <p className="caption mt-3">{p.caption}. Photograph from the GGY brochure.</p>
-            </div>
-          </div>
-          <div className="lg:col-span-9">
-            <ol className="paths" aria-label="Paths alumni have taken">
+            <p className="paths-sentence mt-6">
+              Alumni have gone on to{" "}
               {careerPaths.map((c, i) => (
-                <li key={c} className="paths-row" data-path>
-                  <span aria-hidden="true" className="paths-rule" data-path-rule />
-                  <span aria-hidden="true" className="paths-index num">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="paths-name" data-path-name>
-                    {c}
-                  </span>
-                  <span aria-hidden="true" className="paths-arrow">
-                    ↗
-                  </span>
-                </li>
+                <span key={c}>
+                  <span className="paths-term">{inSentence(c)}</span>
+                  {i < careerPaths.length - 2 ? ", " : i === careerPaths.length - 2 ? ", and " : "."}
+                </span>
               ))}
-            </ol>
-            <p className="caption mt-6">As listed in the {BROCHURE} under “Life after Good Governance Yatra”.</p>
+            </p>
+            <p className="caption mt-5">As listed in the {BROCHURE} under “Life after Good Governance Yatra”.</p>
+            <figure className="paths-saarthi mt-12">
+              <blockquote className="font-display text-[clamp(1.3rem,1.1rem+0.6vw,1.7rem)] italic leading-snug">“{saarthi.text}”</blockquote>
+              <figcaption className="caption mt-3">From the {CONCEPT_NOTE}.</figcaption>
+            </figure>
           </div>
         </div>
       </div>
-      <PathsMotion />
     </section>
   );
 }

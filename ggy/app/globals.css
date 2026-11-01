@@ -33,13 +33,13 @@
   --color-cream-deep: #e5d9c4;
   --color-saffron: #b66c4c;
   --color-saffron-ink: #8c4a2f;
-  --color-saffron-soft: #e0a383; /* on maroon and ink */
+  --color-saffron-soft: #e9b496; /* on maroon 5.0:1, on ink */
   --color-ember: #2a1a1c; /* deep warm charcoal ground */
   --color-ember-2: #3a2527;
 
   /* Cartography */
   --color-sage: #73817c;
-  --color-coast: #5c7a86;
+  --color-coast: #4e6b76; /* 5:1 on paper */
   --color-sea: #e6e4dc;
 
   --color-hair: #d6cdbe;
@@ -710,7 +710,7 @@ html.lenis body {
 }
 .on-ember .caption,
 .on-ember .tba {
-  color: color-mix(in srgb, var(--color-cream) 62%, transparent);
+  color: color-mix(in srgb, var(--color-cream) 82%, transparent);
 }
 .on-ember .media {
   background: var(--color-ember-2);
@@ -909,148 +909,35 @@ html.lenis body {
    (.js-motion is set before first paint) the stage is one screen tall, the
    photograph fills it behind a clip that GSAP opens, and the words are
    placed around the window, off a common grid but never on the same line. */
-.immersion {
-  margin-block: clamp(4rem, 9vw, 7rem);
-}
-.immersion-stage {
-  position: relative;
-}
-.immersion-frame {
-  position: relative;
-  margin: 0;
-}
-.immersion-media {
-  position: relative;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  background: var(--color-crimson-deep);
-}
-.immersion .is-tall {
-  display: none;
-}
-.immersion-media.is-tall {
-  aspect-ratio: 3 / 4;
-}
-@media (max-width: 47.99rem) {
-  .immersion .is-wide {
-    display: none;
-  }
-  .immersion .is-tall {
-    display: initial;
-  }
-  .immersion-media.is-tall {
-    display: block;
-  }
-}
-.immersion-scrim {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgb(40 0 8 / 0.78), rgb(40 0 8 / 0.15) 45%, transparent 70%);
-  opacity: 0;
-  pointer-events: none;
-}
-.immersion-caption {
-  max-width: 28rem;
-  padding: 1rem var(--gutter) 0;
-}
-.immersion-words {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 2rem;
-  padding: clamp(2rem, 4vw, 3rem) var(--gutter) 0;
-}
-.immersion-word {
-  font-family: var(--font-display);
-  font-weight: 300;
-  font-size: clamp(2.25rem, 1rem + 4vw, 4rem);
-  line-height: 1;
-  letter-spacing: -0.03em;
-  font-variation-settings: "wdth" 112;
-  color: var(--color-ivory);
-}
-.immersion-index {
-  display: block;
-  margin-bottom: 0.6em;
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  color: var(--color-saffron-soft);
-}
-.immersion-note {
-  padding: 1rem var(--gutter) 0;
-}
-.js-motion .immersion {
-  margin-block: clamp(3rem, 6vw, 5rem);
-}
-.js-motion .immersion-stage {
-  height: 100svh;
-  overflow: hidden;
-}
-.js-motion .immersion-frame {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  background: var(--color-crimson-deep);
-  clip-path: inset(26% 33% 26% 33%);
-}
-.js-motion .immersion-media {
-  position: absolute;
-  inset: 0;
-  aspect-ratio: auto;
-  will-change: transform;
-}
-.js-motion .immersion-caption {
-  position: absolute;
-  left: var(--gutter);
-  bottom: clamp(1.25rem, 3vw, 2.5rem);
-  padding: 0;
-  color: var(--color-cream);
-}
-.js-motion .immersion-scrim,
-.js-motion .immersion-caption {
-  opacity: 0;
-}
-.js-motion .immersion-words {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  display: block;
-  padding: 0;
-  pointer-events: none;
-}
-.immersion-word-inner {
-  display: inline-block;
-  will-change: transform;
-}
-.js-motion .immersion-word {
-  position: absolute;
-  font-size: clamp(2.6rem, 0.6rem + 7.4vw, 9.5rem);
-  line-height: 0.9;
-  letter-spacing: -0.045em;
-  will-change: transform;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* Around the window: high left, higher right, low left, lowest right. */
-.js-motion .immersion-word:nth-child(1) { left: var(--gutter); top: 13%; }
-.js-motion .immersion-word:nth-child(2) { right: var(--gutter); top: 27%; text-align: right; }
-.js-motion .immersion-word:nth-child(3) { left: calc(var(--gutter) + 6vw); bottom: 25%; }
-.js-motion .immersion-word:nth-child(4) { right: calc(var(--gutter) + 9vw); bottom: 9%; text-align: right; }
-.js-motion .immersion-note {
-  position: absolute;
-  right: var(--gutter);
-  top: calc(var(--header-h) + 1.5rem);
-  padding: 0;
-  max-width: 14rem;
-  text-align: right;
-}
-@media (max-width: 47.99rem) {
-  .js-motion .immersion-frame {
-    clip-path: inset(30% 10% 30% 10%);
-  }
-  .js-motion .immersion-word:nth-child(1) { top: 16%; }
-  .js-motion .immersion-word:nth-child(2) { top: 24%; }
-  .js-motion .immersion-word:nth-child(3) { left: var(--gutter); bottom: 22%; }
-  .js-motion .immersion-word:nth-child(4) { right: var(--gutter); bottom: 14%; }
-}
+
+
+
+
+
+
 
 /* The road: a dotted line with milestones, the site's journey motif. */
 .route-rule {
@@ -1186,92 +1073,33 @@ html.lenis body {
 }
 
 /* =====================================================================
-   Life after: the paths alumni have taken
+   Life after: the paths alumni have taken, as one sentence
    ===================================================================== */
 
-.paths-quote {
-  font-size: clamp(1.3rem, 1rem + 1vw, 1.9rem);
-  line-height: 1.3;
-  font-style: italic;
-  color: var(--color-cream);
-}
-.paths-quote::before {
-  content: "“";
-  display: block;
-  height: 0.55em;
-  font-size: 3em;
-  line-height: 1;
-  color: var(--color-saffron-soft);
-}
-.paths {
-  counter-reset: none;
-}
-.paths-row {
-  position: relative;
-  isolation: isolate;
-  display: grid;
-  grid-template-columns: 3rem minmax(0, 1fr) auto;
-  align-items: baseline;
-  gap: 1rem;
-  padding: clamp(1rem, 1.8vw, 1.5rem) 0;
-  overflow: hidden;
-}
-.paths-rule {
-  position: absolute;
-  inset: auto 0 0 0;
-  height: 1px;
-  background: color-mix(in srgb, var(--color-cream) 26%, transparent);
-  transform-origin: left center;
-}
-/* Under the pointer the row fills with cream from the left. */
-.paths-row::before {
-  content: "";
-  position: absolute;
-  inset: 0 calc(var(--gutter) * -0.5);
-  z-index: -1;
-  background: var(--color-cream);
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 650ms var(--ease);
-}
-.paths-index {
-  font-family: var(--font-sans);
-  font-size: 0.8rem;
-  color: var(--color-saffron-soft);
-  transition: color 400ms var(--ease);
-}
-.paths-name {
+.paths-sentence {
+  max-width: 34ch;
   font-family: var(--font-display);
   font-weight: 300;
-  font-size: clamp(1.7rem, 0.9rem + 3vw, 4.4rem);
-  line-height: 1;
-  letter-spacing: -0.03em;
-  font-variation-settings: "wdth" 112;
-  transition: color 400ms var(--ease), font-variation-settings 700ms var(--ease);
+  font-size: clamp(1.9rem, 1.2rem + 2.4vw, 3.6rem);
+  line-height: 1.16;
+  letter-spacing: -0.02em;
+  text-wrap: pretty;
 }
-.paths-arrow {
-  font-size: clamp(1.2rem, 1rem + 1vw, 2rem);
-  color: var(--color-saffron-soft);
-  transform: translate(-0.5rem, 0.5rem);
-  opacity: 0;
-  transition: opacity 400ms var(--ease), transform 600ms var(--ease), color 400ms var(--ease);
+.paths-term {
+  background-image: linear-gradient(var(--color-saffron), var(--color-saffron));
+  background-repeat: no-repeat;
+  background-position: 0 92%;
+  background-size: 100% 1px;
+  transition: background-size 500ms var(--ease), color 300ms var(--ease);
 }
-@media (hover: hover) {
-  .paths-row:hover::before {
-    transform: scaleX(1);
-  }
-  .paths-row:hover .paths-name {
-    color: var(--color-crimson);
-    font-variation-settings: "wdth" 88;
-  }
-  .paths-row:hover .paths-index,
-  .paths-row:hover .paths-arrow {
-    color: var(--color-crimson);
-  }
-  .paths-row:hover .paths-arrow {
-    opacity: 1;
-    transform: none;
-  }
+.paths-term:hover {
+  color: var(--color-crimson);
+  background-size: 100% 2px;
+}
+.paths-saarthi {
+  max-width: 40rem;
+  padding-left: 1.25rem;
+  border-left: 2px solid var(--color-crimson);
 }
 
 /* =====================================================================
@@ -1290,8 +1118,8 @@ html.lenis body {
   min-height: 2.75rem;
   padding: 0 1.1rem;
   border: 1px solid var(--color-hair-strong);
-  border-radius: 999px;
-  font-size: 0.9rem;
+  border-radius: 0;
+  font-size: 0.875rem;
   color: var(--color-ink);
   transition: background-color 300ms var(--ease), color 300ms var(--ease), border-color 300ms var(--ease);
 }
@@ -1313,50 +1141,66 @@ html.lenis body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: min(34rem, 70svh);
+  gap: 2.5rem;
+  min-height: min(32rem, 66svh);
   padding: clamp(1.5rem, 2.4vw, 2.25rem);
-  border-radius: var(--radius-media);
-  background: var(--color-crimson);
-  color: var(--color-ivory);
+  border: 1px solid var(--color-hair);
+  border-top: 2px solid var(--color-crimson);
+  background: var(--color-light);
   animation: roll-spot-in 600ms var(--ease);
 }
 .roll-spot-head {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
-  font-size: 0.8rem;
-  color: var(--color-saffron-soft);
-}
-.roll-spot-mono {
-  font-family: var(--font-display);
-  font-weight: 300;
-  font-size: clamp(7rem, 4rem + 8vw, 13rem);
-  line-height: 0.85;
-  letter-spacing: -0.05em;
-  color: transparent;
-  -webkit-text-stroke: 1px color-mix(in srgb, var(--color-cream) 70%, transparent);
-  animation: roll-mono-in 800ms var(--ease);
 }
 .roll-spot-name {
   font-family: var(--font-display);
-  font-weight: 400;
-  font-size: clamp(1.6rem, 1.1rem + 1.4vw, 2.6rem);
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  font-variation-settings: "wdth" 112;
+  font-weight: 300;
+  font-size: clamp(2.2rem, 1.4rem + 2.2vw, 3.6rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+  animation: roll-name-in 700ms var(--ease);
 }
 .roll-spot-title {
-  margin-top: 0.7rem;
+  margin-top: 0.9rem;
   max-width: 26rem;
-  font-size: 0.95rem;
-  line-height: 1.45;
-  color: color-mix(in srgb, var(--color-cream) 80%, transparent);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.1rem;
+  line-height: 1.4;
+  color: var(--color-ink-soft);
+}
+.roll-spot-foot {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.25rem;
+}
+.roll-locator {
+  width: 5.5rem;
+  height: auto;
+  flex-shrink: 0;
+}
+.roll-locator-land {
+  fill: var(--color-sand);
+  stroke: var(--color-hair-strong);
+  stroke-width: 3;
+}
+.roll-locator-dot {
+  fill: var(--color-crimson);
+}
+.roll-locator-ring {
+  fill: none;
+  stroke: var(--color-crimson);
+  stroke-width: 4;
+  opacity: 0.5;
 }
 @keyframes roll-spot-in {
   from { opacity: 0.6; }
 }
-@keyframes roll-mono-in {
-  from { opacity: 0; transform: translateY(12%); }
+@keyframes roll-name-in {
+  from { opacity: 0; transform: translateY(10px); }
 }
 .roll-list {
   border-top: 1px solid var(--color-hair);
@@ -1679,111 +1523,14 @@ html:not(.js-motion) .itin-plate-date {
 
 /* A pass that has been issued but not yet filled in: a main leaf and a stub,
    torn apart along a perforation punched out of the crimson page behind. */
-.ticket {
-  border-radius: var(--radius-sheet);
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr;
-  background: var(--color-light);
-  color: var(--color-ink);
-  box-shadow: 0 50px 90px -50px rgb(20 18 16 / 0.7);
-}
-.ticket-main {
-  overflow: hidden;
-  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
-  position: relative;
-  padding: clamp(1.75rem, 3vw, 2.75rem);
-}
+
+
 /* The saffron band along the head of the pass. Saffron, not crimson: the
    pass sits on a crimson page, where a crimson band would vanish. */
-.ticket-band {
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 6px;
-  background: var(--color-saffron);
-}
+
 /* Each field waits on its own ruled line, as on a real pass. */
-.ticket-field dd {
-  position: relative;
-  padding-bottom: 0.5rem;
-}
-.ticket-field dd::after {
-  content: "";
-  position: absolute;
-  inset: auto 0 0 0;
-  height: 1px;
-  background-image: linear-gradient(to right, var(--color-hair) 0 5px, transparent 5px 10px);
-  background-size: 10px 1px;
-}
-.ticket-stub {
-  border-radius: 0 0 var(--radius-sheet) var(--radius-sheet);
-  position: relative;
-  padding: clamp(1.75rem, 3vw, 2.75rem);
-  border-top: 1px dashed var(--color-hair-strong);
-  background: var(--color-light);
-}
-/* The punched holes at each end of the perforation. */
-.ticket-stub::before,
-.ticket-stub::after {
-  content: "";
-  position: absolute;
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: 999px;
-  background: var(--color-crimson-deep);
-  top: 0;
-  translate: 0 -50%;
-}
-.ticket-stub::before {
-  left: 0;
-  translate: -50% -50%;
-}
-.ticket-stub::after {
-  right: 0;
-  translate: 50% -50%;
-}
-.ticket-code {
-  display: block;
-  margin-top: 1.75rem;
-  height: 3rem;
-  background-image: repeating-linear-gradient(
-    to right,
-    var(--color-ink) 0 2px,
-    transparent 2px 5px,
-    var(--color-ink) 5px 6px,
-    transparent 6px 10px,
-    var(--color-ink) 10px 13px,
-    transparent 13px 15px
-  );
-  opacity: 0.85;
-}
-@media (min-width: 48rem) {
-  .ticket {
-    grid-template-columns: 1fr 15rem;
-  }
-  .ticket-main {
-    border-radius: var(--radius-sheet) 0 0 var(--radius-sheet);
-  }
-  .ticket-stub {
-    border-radius: 0 var(--radius-sheet) var(--radius-sheet) 0;
-    border-top: 0;
-    border-left: 1px dashed var(--color-hair-strong);
-  }
-  .ticket-stub::before,
-  .ticket-stub::after {
-    top: auto;
-    left: 0;
-    right: auto;
-  }
-  .ticket-stub::before {
-    top: 0;
-    translate: -50% -50%;
-  }
-  .ticket-stub::after {
-    bottom: 0;
-    translate: -50% 50%;
-  }
-}
+
+
 
 .steps {
   --line: 1;
@@ -2134,8 +1881,50 @@ body {
   stroke-width: 0.7;
   transition: stroke 900ms var(--ease);
 }
+/* Over the photograph, the inner boundaries step back so faces read. */
 .atlas[data-active="india"] .atlas-states path {
-  stroke: rgb(244 240 232 / 0.55);
+  stroke: rgb(244 240 232 / 0);
+}
+.atlas-relief {
+  mix-blend-mode: multiply;
+}
+.atlas-leader {
+  fill: none;
+  stroke: var(--color-ink);
+  stroke-width: 0.8;
+  transition: stroke 600ms var(--ease);
+}
+.atlas[data-active="india"] .atlas-leader {
+  stroke: var(--color-ivory);
+}
+/* When a state's chapter arrives, its outline sends out two soft rings. */
+.atlas-focus-pulse {
+  fill: none;
+  stroke: var(--color-crimson);
+  stroke-width: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.atlas[data-active="IN-GJ"] [data-focus-iso="IN-GJ"] .atlas-focus-pulse,
+.atlas[data-active="IN-GA"] [data-focus-iso="IN-GA"] .atlas-focus-pulse,
+.atlas[data-active="IN-MH"] [data-focus-iso="IN-MH"] .atlas-focus-pulse {
+  animation: state-pulse 1.8s cubic-bezier(0.22, 1, 0.36, 1) 0.6s 2;
+}
+@keyframes state-pulse {
+  0% { stroke-width: 2; opacity: 0.55; }
+  100% { stroke-width: 22; opacity: 0; }
+}
+.atlas-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(to right, var(--color-paper) 0%, rgb(244 240 232 / 0.92) 30%, rgb(244 240 232 / 0) 50%);
+}
+.atlas-labels,
+.atlas-furniture {
+  z-index: 2;
 }
 .atlas-focus-fill {
   fill: #e6dacd;
@@ -2236,18 +2025,21 @@ body {
   line-height: 1.2;
   color: var(--color-crimson);
 }
-/* Over the photographs, state names sit on small paper plates. */
+/* Over the photographs, state names are engraved in ivory: no plates. */
 .atlas[data-active="india"] .atlas-label-state,
-.atlas[data-active="west"] .atlas-label-state,
-.atlas[data-active="all"] .atlas-label-state {
-  text-shadow: none;
+.atlas[data-active="west"] [data-label="l-gj"],
+.atlas[data-active="west"] [data-label="l-mh"],
+.atlas[data-active="all"] [data-label="l-gj"],
+.atlas[data-active="all"] [data-label="l-mh"] {
+  text-shadow: 0 1px 2px rgb(25 10 14 / 0.65), 0 0 12px rgb(25 10 14 / 0.35);
 }
-.atlas[data-active="india"] .atlas-label-state .atlas-label-text,
-.atlas[data-active="west"] .atlas-label-state .atlas-label-text,
-.atlas[data-active="all"] .atlas-label-state .atlas-label-text {
-  padding: 0.3rem 0.5rem 0.25rem;
-  background: var(--color-paper);
-  box-shadow: 0 0 0 1px var(--color-hair);
+.atlas[data-active="india"] .atlas-label-state .atlas-label-name,
+.atlas[data-active="india"] .atlas-label-state .atlas-label-native,
+.atlas[data-active="west"] [data-label="l-gj"] *,
+.atlas[data-active="west"] [data-label="l-mh"] *,
+.atlas[data-active="all"] [data-label="l-gj"] *,
+.atlas[data-active="all"] [data-label="l-mh"] * {
+  color: var(--color-ivory);
 }
 .atlas-label-capital .atlas-label-name {
   font-size: 0.8rem;
@@ -2344,18 +2136,21 @@ body {
   min-height: 100svh;
 }
 .atlas-chapter {
-  min-height: 140svh;
+  min-height: 118svh;
 }
 .atlas-panel {
   position: relative;
+  z-index: 3;
   width: 100%;
-  padding: clamp(1.4rem, 2.4vw, 2.4rem);
-  background: color-mix(in srgb, var(--color-paper) 95%, transparent);
-  border: 1px solid var(--color-hair);
+  padding: 1.4rem 1.25rem 1.6rem;
+  background: var(--color-paper);
+  border-top: 1px solid var(--color-ink);
 }
 @media (min-width: 64rem) {
   .atlas-panel {
-    width: min(35rem, 39vw);
+    width: min(34rem, 38vw);
+    padding: 1.4rem 0 0;
+    background: none;
   }
 }
 @media (max-width: 63.99rem) {
@@ -2561,7 +2356,7 @@ body {
 .atlas-chip {
   display: inline-flex;
   align-items: center;
-  min-height: 2.5rem;
+  min-height: 2.75rem;
   padding: 0 0.95rem;
   border: 1px solid var(--color-hair-strong);
   font-size: 0.8125rem;
@@ -2797,6 +2592,43 @@ body {
   z-index: 1;
   max-width: 62rem;
 }
+.journey-handover {
+  position: absolute;
+  top: -4rem;
+  right: calc(-1 * min(28vw, 22rem));
+  width: clamp(7rem, 12vw, 11rem);
+}
+@media (max-width: 63.99rem) {
+  .journey-handover {
+    position: relative;
+    top: auto;
+    right: auto;
+    margin: 0 0 2.5rem -1.75rem;
+    width: 6.5rem;
+  }
+}
+.journey-handover-inner {
+  transform-origin: 50% 100%;
+}
+.journey-handover svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.journey-handover path {
+  fill: rgb(135 27 56 / 0.08);
+  stroke: var(--color-crimson);
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+}
+.journey-handover-foot {
+  position: absolute;
+  left: 34%;
+  bottom: 6%;
+  width: 1px;
+  height: 1px;
+}
 .journey-statement {
   font-family: var(--font-display);
   font-weight: 300;
@@ -2817,7 +2649,7 @@ body {
   z-index: 1;
   display: grid;
   gap: 2.5rem var(--gap);
-  margin-top: clamp(7rem, 16vw, 13rem);
+  margin-top: clamp(6rem, 12vw, 10rem);
 }
 @media (min-width: 64rem) {
   .journey-comp {
@@ -2895,17 +2727,18 @@ body {
   position: relative;
   padding-left: clamp(1.5rem, 3vw, 2.5rem);
 }
-.journey-num {
+.postmark.journey-stamp {
   position: absolute;
-  top: -0.55em;
-  right: 0;
-  font-family: var(--font-display);
-  font-weight: 300;
-  font-size: clamp(6rem, 4rem + 6vw, 11rem);
-  line-height: 1;
-  color: transparent;
-  -webkit-text-stroke: 1px var(--color-saffron);
-  pointer-events: none;
+  top: -2.6rem;
+  right: -0.5rem;
+  width: clamp(6.5rem, 9vw, 8.5rem);
+  rotate: 8deg;
+}
+.is-right .postmark.journey-stamp {
+  rotate: -7deg;
+}
+.journey-stamp .postmark-centre {
+  font-size: clamp(0.95rem, 1.6vw, 1.35rem);
 }
 .journey-node {
   position: absolute;
@@ -3022,7 +2855,7 @@ body {
   margin-top: 0.35rem;
   font-size: 0.6875rem;
   letter-spacing: 0.08em;
-  color: color-mix(in srgb, var(--color-ivory) 58%, transparent);
+  color: color-mix(in srgb, var(--color-ivory) 80%, transparent);
 }
 
 /* The learning road fills as it is travelled. */
@@ -3354,13 +3187,16 @@ body {
 }
 .closing-copy {
   position: relative;
-  max-width: 44rem;
+  max-width: 72rem;
+}
+.closing-copy > :not(.closing-title) {
+  max-width: 34rem;
 }
 .closing-title {
   font-family: var(--font-display);
   font-weight: 300;
-  font-size: clamp(2.8rem, 1.2rem + 5.4vw, 7rem);
-  line-height: 0.95;
+  font-size: clamp(3rem, 0.6rem + 8.4vw, 11.5rem);
+  line-height: 0.92;
   letter-spacing: -0.03em;
   text-wrap: balance;
 }
@@ -3369,5 +3205,568 @@ body {
     opacity: 0.55;
     width: 100%;
     right: -20%;
+  }
+}
+
+
+/* =====================================================================
+   Archive: the 2025 days, the contact sheet
+   ===================================================================== */
+
+.days-strip {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(17rem, 21rem);
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  padding-bottom: 1rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-hair-strong) transparent;
+}
+.days-card {
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  padding: 1.4rem 1.4rem 1.5rem;
+  background: var(--color-paper);
+  border: 1px solid var(--color-hair);
+  border-top: 2px solid var(--color-ink);
+}
+.days-num {
+  font-size: 2.6rem;
+  line-height: 1;
+  color: var(--color-crimson);
+}
+.days-city {
+  margin-top: 1rem;
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  line-height: 1.1;
+}
+.days-agenda {
+  margin-top: 0.9rem;
+  display: grid;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--color-ink-soft);
+}
+.days-agenda li {
+  padding-left: 0.9rem;
+  position: relative;
+}
+.days-agenda li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 0.35rem;
+  height: 1px;
+  background: var(--color-saffron-ink);
+}
+.days-field {
+  margin-top: auto;
+  padding-top: 1.1rem;
+}
+.days-field summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-height: 2.75rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--color-hair);
+  cursor: pointer;
+  list-style: none;
+}
+.days-field summary::-webkit-details-marker {
+  display: none;
+}
+.days-field-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: var(--color-crimson);
+}
+.days-field[open] .days-field-title {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.days-field p {
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--color-ink-soft);
+}
+.days-nav {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--color-hair-strong);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 300ms var(--ease), color 300ms var(--ease), border-color 300ms var(--ease);
+}
+.days-nav:hover,
+.days-nav:focus-visible {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+  color: var(--color-ivory);
+}
+
+/* A contact sheet: frames printed on a strip of film. */
+.sheet-film {
+  padding: clamp(1rem, 2vw, 1.75rem);
+  background: #1d1a18;
+  box-shadow: 0 30px 60px -40px rgb(25 24 23 / 0.6);
+}
+.sheet-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.6rem, 1.4vw, 1.1rem);
+}
+@media (min-width: 64rem) {
+  .sheet-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.sheet-frame {
+  position: relative;
+}
+.sheet-button {
+  display: block;
+  width: 100%;
+  cursor: zoom-in;
+  text-align: left;
+}
+.sheet-image {
+  position: relative;
+  display: block;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  background: #2a2522;
+}
+.sheet-image img {
+  filter: grayscale(0.85) contrast(1.05);
+  transition: filter 700ms var(--ease), transform 1200ms var(--ease);
+}
+.sheet-button:hover .sheet-image img,
+.sheet-button:focus-visible .sheet-image img {
+  filter: none;
+  transform: scale(1.04);
+}
+.sheet-edge {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.45rem 0.1rem 0;
+  font-family: var(--font-sans);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: #e0a383;
+}
+.sheet-ring {
+  position: absolute;
+  inset: -9% -7% 4% -7%;
+  width: 114%;
+  height: 105%;
+  overflow: visible;
+  pointer-events: none;
+}
+.sheet-ring path {
+  fill: none;
+  stroke: #f2c94c;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+/* =====================================================================
+   Admissions: the registration page
+   ===================================================================== */
+
+.register {
+  position: relative;
+  padding: clamp(1.75rem, 4vw, 3.25rem) clamp(1.5rem, 4vw, 3.25rem) clamp(2rem, 4vw, 3rem) clamp(2.5rem, 6vw, 5rem);
+  background-color: var(--color-light);
+  background-image:
+    linear-gradient(to right, transparent calc(clamp(2.5rem, 6vw, 5rem) - 1.1rem), rgb(135 27 56 / 0.35) calc(clamp(2.5rem, 6vw, 5rem) - 1.1rem), rgb(135 27 56 / 0.35) calc(clamp(2.5rem, 6vw, 5rem) - 1rem), transparent calc(clamp(2.5rem, 6vw, 5rem) - 1rem)),
+    url("/paper-grain.svg");
+  color: var(--color-ink);
+  box-shadow: 0 40px 80px -50px rgb(0 0 0 / 0.7);
+}
+.register-title {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(2rem, 1.4rem + 2vw, 3.2rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+.postmark.register-stamp {
+  position: absolute;
+  top: clamp(-2.5rem, -3vw, -1.5rem);
+  right: clamp(1rem, 4vw, 3rem);
+  width: clamp(7rem, 12vw, 9.5rem);
+  rotate: -9deg;
+}
+.register-lines {
+  display: grid;
+  column-gap: 3rem;
+}
+@media (min-width: 48rem) {
+  .register-lines {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.register-line {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.85rem 0 0.55rem;
+  border-bottom: 1px solid #c9d3d8;
+}
+.register-line dt {
+  flex-shrink: 0;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+.register-line dd {
+  margin-left: auto;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+}
+
+/* A tally in the margin of the self-check. */
+.tally {
+  display: flex;
+  gap: 0.45rem;
+  height: 3.5rem;
+  align-items: flex-end;
+}
+.tally span {
+  display: block;
+  width: 2px;
+  height: 100%;
+  background: var(--color-hair);
+  transform-origin: bottom;
+  transition: background-color 400ms var(--ease), transform 500ms var(--ease);
+}
+.tally span.is-on {
+  background: var(--color-crimson);
+  transform: rotate(-8deg);
+}
+
+/* =====================================================================
+   Postmark: a rubber stamp
+   ===================================================================== */
+
+.postmark {
+  position: relative;
+  display: inline-block;
+  aspect-ratio: 1;
+  color: var(--color-crimson);
+  mix-blend-mode: multiply;
+  opacity: 0.88;
+}
+.postmark svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.postmark-ivory {
+  color: var(--color-ivory);
+  mix-blend-mode: normal;
+}
+.postmark-terracotta {
+  color: var(--color-saffron-ink);
+}
+.postmark-line {
+  fill: none;
+  stroke: currentColor;
+}
+.postmark-ring {
+  fill: currentColor;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+.postmark-sub {
+  fill: currentColor;
+  font-family: var(--font-gambetta), Georgia, serif;
+  font-style: italic;
+  font-size: 13px;
+}
+.postmark-centre {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding-bottom: 6%;
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2.4vw, 1.7rem);
+  line-height: 1;
+  color: currentColor;
+}
+.postmark-centre.script-deva {
+  font-family: var(--font-deva);
+}
+.postmark-centre.script-guj {
+  font-family: var(--font-guj);
+}
+
+/* Pencil marks */
+.pencil {
+  position: relative;
+  white-space: nowrap;
+}
+.pencil svg {
+  position: absolute;
+  left: -2%;
+  bottom: -0.32em;
+  width: 104%;
+  height: 0.5em;
+  overflow: visible;
+  pointer-events: none;
+}
+.pencil.is-circle svg {
+  left: -10%;
+  bottom: -0.35em;
+  width: 120%;
+  height: 1.6em;
+}
+.pencil path {
+  fill: none;
+  stroke: var(--color-saffron);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  vector-effect: non-scaling-stroke;
+}
+.on-dark .pencil path {
+  stroke: var(--color-saffron-soft);
+}
+
+
+/* =====================================================================
+   Atlas: state chapter compositions
+   ===================================================================== */
+
+.atlas-lead {
+  display: flex;
+  flex-direction: column;
+}
+.atlas-lead-native {
+  font-size: clamp(4.2rem, 2.4rem + 5vw, 8.4rem);
+  line-height: 1.05;
+  color: var(--color-crimson);
+}
+.atlas-lead-name {
+  margin-top: 0.2rem;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(1.8rem, 1.4rem + 1.2vw, 2.6rem);
+  line-height: 1;
+  letter-spacing: -0.015em;
+}
+.is-quote .atlas-state-name {
+  font-size: clamp(3.6rem, 2rem + 5vw, 7.4rem);
+}
+.atlas-quote {
+  max-width: 30rem;
+  padding-left: 1.1rem;
+  border-left: 2px solid var(--color-crimson);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.2rem, 1rem + 0.6vw, 1.55rem);
+  line-height: 1.4;
+  color: var(--color-ink);
+}
+.atlas-columns {
+  display: grid;
+  gap: 1.5rem;
+}
+@media (min-width: 64rem) {
+  .atlas-columns {
+    grid-template-columns: 1.4fr 1fr;
+    gap: 2rem;
+  }
+  .atlas-columns .atlas-facts {
+    grid-template-columns: 1fr;
+    padding-left: 1.25rem;
+    border-left: 1px solid var(--color-hair);
+  }
+}
+
+/* =====================================================================
+   Atlas: the cartographer's cursor and the loupe
+   ===================================================================== */
+
+.atlas.has-cursor .atlas-svg {
+  cursor: none;
+}
+.atlas-cursor {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 4;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 250ms linear;
+  will-change: transform;
+}
+.atlas-cursor.is-on {
+  opacity: 1;
+}
+.atlas-cursor-cross::before,
+.atlas-cursor-cross::after {
+  content: "";
+  position: absolute;
+  background: var(--color-ink);
+}
+.atlas-cursor-cross::before {
+  left: -14px;
+  top: 0;
+  width: 28px;
+  height: 1px;
+}
+.atlas-cursor-cross::after {
+  left: 0;
+  top: -14px;
+  width: 1px;
+  height: 28px;
+}
+.atlas-cursor.is-lens .atlas-cursor-cross::before,
+.atlas-cursor.is-lens .atlas-cursor-cross::after {
+  background: var(--color-ivory);
+}
+.atlas-cursor-ring {
+  position: absolute;
+  left: -68px;
+  top: -68px;
+  width: 136px;
+  height: 136px;
+  border: 1px solid var(--color-ivory);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgb(25 24 23 / 0.25), 0 18px 40px -12px rgb(25 10 14 / 0.6);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 300ms var(--ease), transform 450ms var(--ease);
+}
+.atlas-cursor.is-lens .atlas-cursor-ring {
+  opacity: 1;
+  transform: scale(1);
+}
+.atlas-cursor-read,
+.atlas-cursor-note {
+  position: absolute;
+  left: 18px;
+  white-space: pre;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  color: var(--color-ink);
+  text-shadow: 0 0 3px var(--color-paper), 0 0 6px var(--color-paper);
+}
+.atlas-cursor-read {
+  top: 12px;
+}
+.atlas-cursor.is-lens .atlas-cursor-read {
+  left: 78px;
+  top: -8px;
+}
+.atlas-cursor-note {
+  top: 28px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-crimson);
+}
+.atlas-cursor.is-over-state .atlas-cursor-cross::before,
+.atlas-cursor.is-over-state .atlas-cursor-cross::after {
+  background: var(--color-crimson);
+}
+.atlas-focus:hover .atlas-focus-fill {
+  fill: #dcc7bd;
+}
+
+/* Dossier: the stamp and the leader to the map */
+.dossier-stamp {
+  position: absolute;
+  right: 0.25rem;
+  top: 4.4rem;
+  z-index: 3;
+  width: 6.4rem;
+  rotate: 10deg;
+  pointer-events: none;
+}
+.dossier-stamp .postmark {
+  width: 100%;
+}
+.dossier-leader {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  overflow: visible;
+}
+.dossier-leader line {
+  stroke: var(--color-crimson);
+  stroke-width: 1;
+  stroke-dasharray: 3 4;
+}
+.dossier-leader circle {
+  fill: var(--color-paper);
+  stroke: var(--color-crimson);
+  stroke-width: 1.5;
+}
+.dossier {
+  z-index: 2;
+}
+
+/* The idea: the four words of the brochure cover in one line */
+.idea-words {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2em 0.9em;
+  padding: 1.6rem 0 1.4rem;
+  border-top: 1px solid color-mix(in srgb, var(--color-ivory) 30%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-ivory) 30%, transparent);
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(2.4rem, 1rem + 5.2vw, 7.2rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.idea-word {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.25em;
+}
+.idea-word:nth-child(even) {
+  font-style: italic;
+  color: var(--color-saffron-soft);
+}
+.idea-word-num {
+  font-size: 0.16em;
+  letter-spacing: 0.05em;
+  padding-top: 0.6em;
+  color: color-mix(in srgb, var(--color-ivory) 80%, transparent);
+}
+@media (max-width: 47.99rem) {
+  .postmark.register-stamp {
+    top: -3.2rem;
+    right: 0.75rem;
+    width: 5.6rem;
   }
 }

@@ -7,6 +7,13 @@ import { pastEditions, photos, proposedMaharashtra, stateDossiers, upcoming, CON
 import { lockScroll } from "@/lib/scroll";
 import type { FocusIso } from "@/lib/atlas";
 import { NoteRef, Script, Value } from "../primitives";
+import { Postmark } from "../postmark";
+
+const STAMP: Record<FocusIso, string> = {
+  "IN-GJ": "GUJARAT ✦ GANDHINAGAR ✦ 23.22° N 72.64° E ✦ ",
+  "IN-GA": "GOA ✦ PANAJI ✦ 15.49° N 73.83° E ✦ ",
+  "IN-MH": "MAHARASHTRA ✦ MUMBAI ✦ 19.08° N 72.88° E ✦ ",
+};
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -30,6 +37,35 @@ export function StateDossierPanel({ dossier, onClose, onNavigate }: { dossier: S
   }, []);
 
   const isOpen = dossier !== null;
+  const leader = useRef<SVGSVGElement>(null);
+
+  // A fine leader from the panel to its state on the map, kept in place
+  // while the camera flies there. Large screens only.
+  const iso = dossier?.iso;
+  useEffect(() => {
+    if (!iso || !wide) return;
+    let raf = 0;
+    const step = () => {
+      raf = requestAnimationFrame(step);
+      const svg = leader.current;
+      const shape = document.querySelector<SVGPathElement>(`[data-hit="${iso}"]`);
+      const box = panel.current?.getBoundingClientRect();
+      if (!svg || !shape || !box) return;
+      const r = shape.getBoundingClientRect();
+      const line = svg.querySelector("line")!;
+      const dot = svg.querySelector("circle")!;
+      const x2 = r.left + r.width / 2;
+      const y2 = r.top + r.height / 2;
+      line.setAttribute("x1", String(box.right));
+      line.setAttribute("y1", String(box.top + 150));
+      line.setAttribute("x2", String(x2));
+      line.setAttribute("y2", String(y2));
+      dot.setAttribute("cx", String(x2));
+      dot.setAttribute("cy", String(y2));
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [iso, wide]);
   useEffect(() => {
     if (!isOpen) return;
     lockScroll(true);
@@ -77,6 +113,19 @@ export function StateDossierPanel({ dossier, onClose, onNavigate }: { dossier: S
             exit={{ opacity: 0 }}
             transition={{ duration: reduce ? 0 : 0.4 }}
           />
+          {wide ? (
+            <motion.svg
+              ref={leader}
+              aria-hidden="true"
+              className="dossier-leader"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, transition: { delay: reduce ? 0 : 0.7, duration: 0.5 } }}
+              exit={{ opacity: 0, transition: { duration: 0.15 } }}
+            >
+              <line />
+              <circle r="5" />
+            </motion.svg>
+          ) : null}
           <motion.div
             ref={panel}
             role="dialog"
@@ -122,11 +171,20 @@ export function StateDossierPanel({ dossier, onClose, onNavigate }: { dossier: S
 
 function DossierBody({ d }: { d: StateDossier }) {
   const [shown, setShown] = useState(0);
+  const reduce = useReducedMotion();
   const native = upcoming.states.find((s) => s.name === d.name)!;
   const photo = photos[d.photos[shown]];
   const routes = pastEditions.filter((e) => e.route.split(" – ").includes(d.name));
   return (
     <div>
+      <motion.div
+        className="dossier-stamp"
+        initial={reduce ? { opacity: 0.88 } : { scale: 1.7, opacity: 0, rotate: -20 }}
+        animate={{ scale: 1, opacity: 0.88, rotate: 0 }}
+        transition={reduce ? { duration: 0 } : { delay: 0.45, type: "spring", stiffness: 520, damping: 22 }}
+      >
+        <Postmark ring={STAMP[d.iso]} centre={native.native} lang={native.lang} />
+      </motion.div>
       <h2 id="dossier-title" className="dossier-name">
         {d.name}
         <Script lang={native.lang} className="dossier-native">
