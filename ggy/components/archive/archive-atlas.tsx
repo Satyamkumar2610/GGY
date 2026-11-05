@@ -65,7 +65,7 @@ export function ArchiveAtlas() {
     () => {
       const mm = gsap.matchMedia();
       mm.add(MOTION_QUERIES.any, () => {
-        gsap.from("[data-arch-fig]", { opacity: 0, y: 24, duration: 1, stagger: 0.08, ease: "land", scrollTrigger: { trigger: "[data-arch-figs]", start: "top 80%", once: true } });
+        gsap.from("[data-arch-fig]", { opacity: 0, y: 24, duration: 1, stagger: 0.08, ease: "land", scrollTrigger: { trigger: "[data-arch-figs]", start: "top 80%", toggleActions: "play none none none" } });
       });
       return () => mm.revert();
     },

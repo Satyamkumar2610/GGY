@@ -20,7 +20,7 @@ export function PageMotion() {
     mm.add(MOTION_QUERIES.any, () => {
       document.querySelectorAll<HTMLElement>("[data-reveal]").forEach((frame) => {
         const img = frame.querySelector("img");
-        const tl = gsap.timeline({ scrollTrigger: { trigger: frame, start: "top 85%", once: true } });
+        const tl = gsap.timeline({ scrollTrigger: { trigger: frame, start: "top 85%", toggleActions: "play none none none" } });
         tl.fromTo(frame, { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.4, ease: "expo.inOut" });
         if (img) tl.fromTo(img, { scale: 1.2 }, { scale: 1, duration: 1.9, ease: "land" }, 0.1);
       });
@@ -47,7 +47,7 @@ export function PageMotion() {
 
       // Ruled rows arrive one after another as their list reaches the reader.
       document.querySelectorAll<HTMLElement>("[data-row]").forEach((row) => {
-        gsap.from(row, { opacity: 0, y: 28, duration: 1, ease: "land", scrollTrigger: { trigger: row, start: "top 88%", once: true } });
+        gsap.from(row, { opacity: 0, y: 28, duration: 1, ease: "land", scrollTrigger: { trigger: row, start: "top 88%", toggleActions: "play none none none" } });
       });
 
       document.querySelectorAll<HTMLElement>("[data-drift]").forEach((title) => {

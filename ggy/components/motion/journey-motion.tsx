@@ -31,7 +31,7 @@ export function JourneyMotion() {
 
       const tl = gsap.timeline({
         defaults: { ease: "land" },
-        scrollTrigger: { trigger: root, start: "top 72%", once: true },
+        scrollTrigger: { trigger: root, start: "top 72%", toggleActions: "play none none none" },
       });
       if (split) tl.from(split.lines, { yPercent: 112, duration: 1.2, stagger: 0.1 }, 0);
 

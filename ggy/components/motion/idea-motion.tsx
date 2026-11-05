@@ -26,7 +26,7 @@ export function IdeaMotion() {
 
       const tl = gsap.timeline({
         defaults: { ease: "land" },
-        scrollTrigger: { trigger: root, start: "top 72%", once: true },
+        scrollTrigger: { trigger: root, start: "top 72%", toggleActions: "play none none none" },
       });
 
       tl.from(claimLines.lines, { yPercent: 112, duration: 1.3, stagger: 0.11 }, 0)
@@ -67,7 +67,6 @@ export function IdeaMotion() {
       const st = ScrollTrigger.create({
         trigger: plate,
         start: "top 62%",
-        once: true,
         onEnter: () => plate.classList.add("is-colour"),
       });
       return () => {
