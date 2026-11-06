@@ -28,23 +28,26 @@ const STAR = "M14.4 0l2 11.9 11.3-4.2.4.6-9.3 7.7 9.3 7.7-.4.6-11.3-4.2-2 11.9h-
 
 const tf = (c: Camera) => `translate(${c.x.toFixed(2)} ${c.y.toFixed(2)}) scale(${c.k.toFixed(5)})`;
 
+/** Where the nav reads its ground: the same point landing-nav.tsx probes. */
+const NAV_PROBE_Y = 34;
+
 /** The hero title, laid out once in its own 600-unit box so it scales with the map. */
 function Title({ tone }: { tone: "cream" | "crimson" }) {
   return (
     <svg className={`lp-hero__type is-${tone}`} x="0" y="0" width="100%" height="100%" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid meet" overflow="visible">
-      <text x="300" y="250" textAnchor="middle" className="lp-hero__t1">
+      <text x="230" y="258" textAnchor="middle" className="lp-hero__t1">
         THE GOOD
       </text>
-      <text x="300" y="296" textAnchor="middle" className="lp-hero__t1">
+      <text x="230" y="293" textAnchor="middle" className="lp-hero__t1">
         GOVERNANCE
       </text>
-      <text x="300" y="346" textAnchor="middle" className="lp-hero__t2">
+      <text x="230" y="332" textAnchor="middle" className="lp-hero__t2">
         Yatra
       </text>
-      <text x="300" y="380" textAnchor="middle" className="lp-hero__t3">
+      <text x="230" y="362" textAnchor="middle" className="lp-hero__t3">
         An immersive journey through the institutions,
       </text>
-      <text x="300" y="398" textAnchor="middle" className="lp-hero__t3">
+      <text x="230" y="378" textAnchor="middle" className="lp-hero__t3">
         people and ideas shaping India’s future.
       </text>
     </svg>
@@ -65,6 +68,8 @@ export function LandingHero() {
       const el = root.current!;
       const stage = el.querySelector<HTMLElement>("[data-stage]")!;
       const sheet = el.querySelectorAll<SVGPathElement>("[data-sheet]");
+      // The painted sheet (the one inside <defs> is a clip source, never hit-tested).
+      const paper = el.querySelector<SVGPathElement>(".lp-hero__sheet")!;
       const coast = el.querySelector<SVGPathElement>("[data-coast]")!;
       const lift = el.querySelectorAll<SVGGElement>("[data-lift]");
       const deco = el.querySelector<SVGGElement>("[data-deco]")!;
@@ -104,10 +109,18 @@ export function LandingHero() {
         // The sheet is fully outside the screen by the end; fade the last of it for safety.
         el.style.setProperty("--sheet", String(gsap.utils.clamp(0, 1, (1 - t) / 0.12)));
         img.style.setProperty("--zoom", (1.18 - 0.13 * t).toFixed(4));
-        const next = t > 0.8 ? "light" : "dark";
+        // What is actually behind the nav? SVG hit testing honours the sheet's
+        // even-odd fill, so the paper path is only returned while the nav sits
+        // on paper rather than in the window. Over paper the nav is crimson and
+        // needs no band; once the photograph is behind it, it turns cream and
+        // takes the backdrop. The old threshold (t > 0.8) left crimson nav
+        // links sitting on the photograph for most of the dive.
+        const onPaper = document.elementsFromPoint(W / 2, NAV_PROBE_Y).includes(paper);
+        const next = onPaper ? "dark" : "light";
         if (next !== tone) {
           tone = next;
           stage.dataset.nav = tone;
+          stage.toggleAttribute("data-nav-bare", onPaper);
           window.dispatchEvent(new Event("lp:tone"));
         }
       };
@@ -176,7 +189,7 @@ export function LandingHero() {
       <h1 id="lp-hero-title" className="sr-only">
         The Good Governance Yatra. An immersive journey through the institutions, people and ideas shaping India’s future.
       </h1>
-      <div className="lp-hero__stage" data-stage data-nav="dark">
+      <div className="lp-hero__stage" data-stage data-nav="dark" data-nav-bare>
         <div className="lp-hero__lens">
           <div ref={photo} className="lp-hero__photo">
             <div className="lp-hero__zoom">
@@ -227,12 +240,20 @@ export function LandingHero() {
         </svg>
 
         <div className="lp-hero__cue" data-cue>
-          <span data-intro className="lp-chip">
-            Upcoming edition · Gujarat, Maharashtra, Goa
-          </span>
-          <a data-intro href="#yatra" className="lp-pill lp-pill--crimson">
-            Explore
-          </a>
+          {/* The SVG tagline scales with the map and falls under 7px on a phone,
+              so below 768px it is hidden there and set in HTML here instead.
+              Without this the mobile hero stated nothing about the programme. */}
+          <p data-intro className="lp-hero__tagline">
+            An immersive journey through the institutions, people and ideas shaping India’s future.
+          </p>
+          <div className="lp-hero__cue-row">
+            <span data-intro className="lp-chip">
+              Upcoming edition · Gujarat, Maharashtra, Goa
+            </span>
+            <a data-intro href="#yatra" className="lp-pill lp-pill--crimson">
+              Explore
+            </a>
+          </div>
         </div>
       </div>
 

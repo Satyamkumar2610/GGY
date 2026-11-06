@@ -18,10 +18,7 @@ export function ProgrammeChapter() {
       <div className="page">
         <div className="grid gap-8 lg:grid-cols-12 lg:gap-[var(--gap)]">
           <div className="lg:col-span-7">
-            <p className="kicker">
-              <span className="num">05</span> The programme experience
-            </p>
-            <h2 id="programme-title" className="d-l mt-6" data-drift>
+            <h2 id="programme-title" className="d-l" data-drift>
               Six parts of the programme, <em>as run in 2025.</em>
             </h2>
           </div>

@@ -49,7 +49,7 @@ export function Questions() {
                 setOpen(null);
               }}
               placeholder="dates, fee, apply…"
-              className="w-full bg-transparent py-3 font-display text-[1.35rem] outline-none placeholder:text-ink/35"
+              className="w-full bg-transparent py-3 font-display text-[1.35rem] outline-none placeholder:text-muted"
               autoComplete="off"
             />
           </div>

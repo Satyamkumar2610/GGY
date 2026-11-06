@@ -20,8 +20,7 @@ export function ItineraryChapter() {
       <div className="page">
         <div className="grid items-end gap-10 lg:grid-cols-12 lg:gap-[var(--gap)]">
           <div className="lg:col-span-8">
-            <p className="kicker">From the archive: the 2025 itinerary</p>
-            <h2 id="itinerary-title" className="d-xl mt-7" data-drift>
+            <h2 id="itinerary-title" className="d-xl" data-drift>
               Nine days <em>on the road</em>
             </h2>
           </div>

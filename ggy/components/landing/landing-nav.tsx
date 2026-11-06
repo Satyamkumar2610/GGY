@@ -57,7 +57,11 @@ export function LandingNav() {
         }
         if (host) {
           tone = host.dataset.nav ?? tone;
-          glass = host.hasAttribute("data-nav-glass") ? tone : "";
+          // The backdrop is the default: a bare nav over a photograph or over
+          // body copy scrolling under it is unreadable, and only one section
+          // used to opt in. Sections that want the nav to float free of any
+          // band — the hero's opening composition — set data-nav-bare.
+          glass = host.hasAttribute("data-nav-bare") ? "" : tone;
           break;
         }
       }

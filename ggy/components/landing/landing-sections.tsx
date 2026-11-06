@@ -60,17 +60,19 @@ export function FieldCards() {
             <div className="lp-tile__img" data-lp-parallax>
               <Image src={c.photo.src} alt={c.photo.alt} fill sizes="(min-width: 768px) 48vw, 100vw" quality={82} className="object-cover" />
             </div>
+            {/* Heading first, then the text, then the action: the pill used to
+                lead and the eye met a bare "Explore" before learning what for. */}
             <div className="lp-tile__foot">
-              <a href={c.href} className="lp-pill lp-pill--glass">
+              <div className="lp-tile__line">
+                <h3>{c.title}</h3>
+                <p>{c.text}</p>
+              </div>
+              <a href={c.href} className="lp-pill lp-pill--glass" aria-label={`Explore ${c.title.toLowerCase()}`}>
                 Explore
                 <svg viewBox="0 0 16 16" aria-hidden="true">
                   <path d="M13.5 7.06 7.06 13.5 6 12.44 12.44 6H6.76V4.5H15v8.24h-1.5z" fill="currentColor" />
                 </svg>
               </a>
-              <div className="lp-tile__line">
-                <h3>{c.title}</h3>
-                <p>{c.text}</p>
-              </div>
             </div>
           </article>
         ))}

@@ -346,7 +346,7 @@ export function YatraFlight() {
 
   return (
     <section ref={root} id="journey" className="lp-flight" aria-labelledby="lp-flight-title">
-      <div className="lp-flight__stage" data-stage data-nav="dark" data-nav-glass>
+      <div className="lp-flight__stage" data-stage data-nav="dark">
         <svg className="lp-flight__map" data-map viewBox={OVERVIEW.map((v, i) => (i < 2 ? v : v - OVERVIEW[i - 2])).join(" ")} preserveAspectRatio="xMidYMid meet" aria-hidden="true">
           <defs>
             {STOPS.map((s) => (
@@ -477,7 +477,7 @@ export function YatraFlight() {
               </h3>
               <p className="lp-card__intro">From the Gulf of Kutch to the Konkan. The GGY team will announce the stops, the dates and the order of travel.</p>
               <a href="#connect" className="lp-pill lp-pill--crimson">
-                Connect with the team
+                Connect with the GGY team
               </a>
             </div>
           </article>

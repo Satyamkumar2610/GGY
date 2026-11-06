@@ -39,7 +39,10 @@ export function IdeaMotion() {
     });
 
     // The description fills with ink word by word, scrubbed: the reader's
-    // scroll is the pen. Words wait at a faint proof, never at nothing.
+    // scroll is the pen. Words wait at a proof that is already readable
+    // (0.6 ≈ 5:1 on deep crimson, so a reader who stops mid-paragraph can
+    // still read it), and the ink is complete by the time the paragraph
+    // reaches the middle of the screen.
     mm.add(MOTION_QUERIES.any, () => {
       const statement = q("[data-ink]")[0] as HTMLElement | undefined;
       if (!statement) return;
@@ -49,12 +52,12 @@ export function IdeaMotion() {
         onSplit: (self) =>
           gsap.fromTo(
             self.words,
-            { opacity: 0.16 },
+            { opacity: 0.6 },
             {
               opacity: 1,
               ease: "none",
               stagger: 0.12,
-              scrollTrigger: { trigger: statement, start: "top 78%", end: "bottom 42%", scrub: 0.5 },
+              scrollTrigger: { trigger: statement, start: "top 85%", end: "bottom 65%", scrub: 0.5 },
             },
           ),
       });

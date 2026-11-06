@@ -573,7 +573,7 @@ export const annotations: Partial<Record<PhotoKey, Annotation[]>> = {
 /* ------------------------------------------------------------------ */
 
 export const faqs: { q: string; a: string }[] = [
-  { q: "Where will the upcoming Yatra go?", a: "Through Maharashtra, Goa and Gujarat. The stops and the order of travel are still to be announced." },
+  { q: "Where will the upcoming Yatra go?", a: "Through Gujarat, Maharashtra and Goa. The stops and the order of travel are still to be announced." },
   { q: "When is the upcoming Yatra?", a: "The dates are still to be announced. The previous edition ran from 1 to 9 March 2025." },
   { q: "How long is the Yatra?", a: "The duration of the upcoming edition is to be announced. The 2025 brochure describes a 10-day programme; the GGY concept note describes a 9-day programme, and its itinerary for the 8th edition runs from 23 to 31 March." },
   { q: "How many delegates take part?", a: "The cohort size for the upcoming edition is to be announced. The 2025 edition had 45 handpicked delegates." },

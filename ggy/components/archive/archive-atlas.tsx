@@ -98,10 +98,7 @@ export function ArchiveAtlas() {
       <div className="page">
         <div className="grid gap-8 lg:grid-cols-12 lg:gap-[var(--gap)]">
           <div className="lg:col-span-8">
-            <p className="kicker">
-              <span className="num">06</span> The GGY archive
-            </p>
-            <h2 id="archive-title" className="d-xl mt-6" data-drift>
+            <h2 id="archive-title" className="d-xl" data-drift>
               A <em>decade</em> on the road
             </h2>
           </div>

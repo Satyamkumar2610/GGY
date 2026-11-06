@@ -26,10 +26,14 @@
      container (94rem, centred, with the same gutter). Percentages resolve
      against the full-width section, so wide screens line up exactly. */
   --edge: max(var(--pad), calc((100% - var(--page-max, 94rem)) / 2 + var(--pad)));
-  --nav-h: 4.25rem;
+  /* One measurement, one token: globals.css sets --header-h and derives
+     scroll-padding-top from it, so anchor offsets cannot drift from the bar. */
+  --nav-h: var(--header-h);
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --glass-light: inset 0 1px 0 0 rgb(255 255 255 / 0.85), inset 0 0 0 1px rgb(255 255 255 / 0.5), 0 1px 2px rgb(92 16 38 / 0.06), 0 28px 64px -30px rgb(92 16 38 / 0.34);
-  --glass-dark: inset 0 1px 0 0 rgb(255 236 226 / 0.26), inset 0 0 0 1px rgb(255 236 226 / 0.14), 0 34px 70px -34px rgb(30 4 12 / 0.65);
+  /* Paper sheets laid on the map: hairline edge, printed drop shadow.
+     (Names kept from the earlier glass treatment.) */
+  --glass-light: 0 0 0 1px rgb(92 16 38 / 0.12), 0 1px 2px rgb(92 16 38 / 0.06), 0 10px 24px -16px rgb(92 16 38 / 0.32);
+  --glass-dark: 0 0 0 1px rgb(255 236 226 / 0.14), 0 12px 28px -18px rgb(30 4 12 / 0.6);
 
   background: var(--c-paper);
   color: var(--c-crimson);
@@ -67,32 +71,24 @@
 /* Shared pieces                                                    */
 /* --------------------------------------------------------------- */
 
+/* Section headlines: sentence case Anek, condensed and tight, one voice.
+   The opening statement and the closing call are the only lines set in
+   capitals; everything between reads as a journal, not a poster. */
 .lp-h2 {
   font-family: var(--f-display);
-  font-weight: 750;
-  text-transform: uppercase;
-  font-size: clamp(2.2rem, 0.6rem + 3.9vw, 4.9rem);
-  line-height: 0.92;
-  letter-spacing: 0.004em;
+  font-weight: 640;
+  font-variation-settings: "wdth" 88;
+  font-size: clamp(2.2rem, 0.6rem + 3.9vw, 4.6rem);
+  line-height: 0.96;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
   color: var(--c-crimson);
 }
 .lp-h2 > span {
   display: block;
 }
-.lp .lp-h2 em,
-.lp .lp-card__title em {
-  font-family: var(--f-serif);
-  font-style: italic;
-  font-weight: 400;
-  text-transform: none;
-  letter-spacing: -0.01em;
-  color: var(--c-saffron);
-}
 .lp .on-dark .lp-h2 {
   color: var(--c-on-dark);
-}
-.lp .on-dark .lp-h2 em {
-  color: var(--c-saffron-soft);
 }
 
 .lp-pill {
@@ -155,14 +151,13 @@
   background: var(--c-deep);
 }
 .lp-pill--glass {
-  background: rgb(255 244 236 / 0.14);
+  background: transparent;
   color: var(--c-on-dark);
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
-  box-shadow: inset 0 1px 0 rgb(255 236 226 / 0.32), inset 0 0 0 1px rgb(255 236 226 / 0.24);
+  box-shadow: inset 0 0 0 1px rgb(255 236 226 / 0.5);
 }
 .lp-pill--glass:hover {
-  background: rgb(255 244 236 / 0.26);
+  background: var(--c-on-dark);
+  color: var(--c-deep);
 }
 
 .lp-chip {
@@ -173,11 +168,9 @@
   padding: 0.35rem 0.95rem;
   border-radius: 999px;
   font: 500 0.85rem/1.2 var(--f-sans);
-  background: rgb(251 248 242 / 0.74);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
+  background: var(--c-light);
   color: var(--c-crimson);
-  box-shadow: inset 0 1px 0 #fff, inset 0 0 0 1px rgb(255 255 255 / 0.5), 0 12px 30px -18px rgb(92 16 38 / 0.45);
+  box-shadow: inset 0 0 0 1px rgb(135 27 56 / 0.16);
 }
 .lp-chip--dark {
   background: rgb(255 244 236 / 0.08);
@@ -268,9 +261,9 @@
 }
 .lp-nav__brand span {
   margin-top: 0.3rem;
-  font-size: 0.5rem;
-  letter-spacing: 0.3em;
-  margin-right: -0.3em;
+  font-size: 0.6875rem;
+  letter-spacing: 0.2em;
+  margin-right: -0.2em;
   text-transform: uppercase;
   opacity: 0.85;
   white-space: nowrap;
@@ -323,12 +316,10 @@
   position: fixed;
   inset: calc(var(--nav-h) + 0.25rem) 0.75rem auto;
   padding: 1rem;
-  border-radius: 1.75rem;
+  border-radius: var(--radius-sheet);
   display: grid;
   gap: 0.25rem;
-  background: rgb(251 248 242 / 0.86);
-  -webkit-backdrop-filter: blur(24px);
-  backdrop-filter: blur(24px);
+  background: var(--c-light);
   box-shadow: var(--glass-light);
 }
 .lp-menu[hidden] {
@@ -424,20 +415,25 @@
 .lp-hero__type text {
   font-family: var(--f-display);
 }
+/* The title is sized to sit wholly inside the India window. At the previous
+   47px "GOVERNANCE" was wider than the cutout, so the sheet masked its last
+   letters and the crimson copy carried them on paper: the name broke mid-letter
+   along the coastline and read "GOVERNAN|CE". The crimson copy is kept as a
+   fallback for narrow viewports, but nothing should normally spill onto it. */
 .lp-hero__t1 {
-  font-size: 47px;
+  font-size: 33px;
   font-weight: 750;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.2px;
 }
 .lp-hero__t2 {
   font-family: var(--f-serif) !important;
   font-style: italic;
-  font-size: 54px;
+  font-size: 39px;
   font-weight: 400;
 }
 .lp-hero__t3 {
   font-family: var(--f-sans) !important;
-  font-size: 12.5px;
+  font-size: 10px;
   font-weight: 400;
 }
 .lp-hero__type.is-cream .lp-hero__t1,
@@ -462,8 +458,22 @@
   left: var(--edge);
   bottom: clamp(1.25rem, 5svh, 2.75rem);
   display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.9rem;
+}
+.lp-hero__cue-row {
+  display: flex;
   align-items: center;
   gap: 0.75rem;
+}
+/* The HTML stand-in for the SVG tagline; only shown where that one is hidden. */
+.lp-hero__tagline {
+  display: none;
+  max-width: 24rem;
+  font: 400 1rem/1.45 var(--f-sans);
+  color: var(--c-ink-soft);
+  text-wrap: balance;
 }
 .lp-hero__over {
   position: absolute;
@@ -487,7 +497,7 @@
   font-family: var(--f-display);
   font-weight: 750;
   text-transform: uppercase;
-  font-size: clamp(2.6rem, 7.4vw, 8rem);
+  font-size: clamp(2.6rem, 6.2vw, 6rem);
   line-height: 0.9;
   text-shadow: 0 2px 40px rgb(60 8 22 / 0.35);
 }
@@ -499,13 +509,6 @@
 }
 .lp-hero__statement .is-end {
   text-align: right;
-}
-.lp .lp-hero__statement em {
-  font-family: var(--f-serif);
-  font-style: italic;
-  font-weight: 400;
-  text-transform: none;
-  color: var(--c-saffron-soft);
 }
 .lp-hero__body {
   margin: clamp(1.75rem, 4svh, 3rem) 0 0 50%;
@@ -543,7 +546,7 @@ html:not(.js-motion) .lp-hero__second {
 .lp-band__title {
   font-family: var(--f-serif);
   font-weight: 300;
-  font-size: clamp(3.2rem, 9.4vw, 10rem);
+  font-size: clamp(3rem, 7vw, 6rem);
   line-height: 0.9;
   letter-spacing: -0.015em;
 }
@@ -552,9 +555,6 @@ html:not(.js-motion) .lp-hero__second {
 }
 .lp-band__title > span:nth-child(2) {
   padding-left: 0.9em;
-}
-.lp .lp-band__title em {
-  color: var(--c-saffron-soft);
 }
 .lp-band__claim {
   margin-top: clamp(2rem, 4vw, 3rem);
@@ -649,12 +649,10 @@ html:not(.js-motion) .lp-hero__second {
 .lp-tile__foot {
   margin: 0.7rem;
   padding: clamp(1.25rem, 2.4vw, 2rem);
-  border-radius: 1.1rem;
+  border-radius: var(--radius-media);
   display: grid;
   gap: 1.1rem;
-  background: rgb(92 16 38 / 0.5);
-  -webkit-backdrop-filter: blur(18px) saturate(1.15);
-  backdrop-filter: blur(18px) saturate(1.15);
+  background: var(--c-deep);
   box-shadow: var(--glass-dark);
 }
 .lp-tile__foot .lp-pill {
@@ -811,7 +809,7 @@ html:not(.js-motion) .lp-hero__second {
   border-radius: 50%;
   background: var(--c-paper);
   border: 2px solid var(--c-crimson);
-  transition: background-color 0.5s var(--ease), scale 0.6s cubic-bezier(0.2, 1.6, 0.4, 1);
+  transition: background-color 0.5s var(--ease), scale 0.6s var(--ease);
 }
 .lp-flight__pin.is-reached i {
   background: var(--c-crimson);
@@ -835,10 +833,8 @@ html:not(.js-motion) .lp-hero__second {
   font: 500 0.8rem/1 var(--f-sans);
   white-space: nowrap;
   color: var(--c-crimson);
-  background: rgb(251 248 242 / 0.88);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 6px 18px -10px rgb(92 16 38 / 0.5);
+  background: var(--c-light);
+  box-shadow: 0 0 0 1px rgb(135 27 56 / 0.16), 0 4px 10px -6px rgb(92 16 38 / 0.4);
   opacity: 0;
   translate: -6px 0;
   transition: opacity 0.6s var(--ease), translate 0.6s var(--ease);
@@ -882,7 +878,7 @@ html:not(.js-motion) .lp-hero__second {
   translate: -50% 0;
   padding: 0.42rem 0.65rem;
   border-radius: 999px;
-  font: 500 0.68rem/1 var(--f-sans);
+  font: 500 0.75rem/1 var(--f-sans);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.06em;
   white-space: pre;
@@ -910,11 +906,6 @@ html:not(.js-motion) .lp-hero__second {
     opacity: 0;
   }
 }
-@keyframes lp-blink {
-  50% {
-    opacity: 0.25;
-  }
-}
 
 .lp-flight__head {
   position: absolute;
@@ -923,10 +914,8 @@ html:not(.js-motion) .lp-hero__second {
   top: calc(var(--nav-h) + 0.5svh);
   max-width: 36rem;
   padding: 1.1rem 1.25rem 1.2rem;
-  border-radius: 1.5rem;
-  background: rgb(251 248 242 / 0.66);
-  -webkit-backdrop-filter: blur(18px) saturate(1.1);
-  backdrop-filter: blur(18px) saturate(1.1);
+  border-radius: var(--radius-sheet);
+  background: var(--c-light);
   box-shadow: var(--glass-light);
 }
 .lp-flight__head .lp-h2 {
@@ -966,7 +955,6 @@ html:not(.js-motion) .lp-hero__second {
   height: 8px;
   border-radius: 50%;
   background: var(--c-saffron);
-  animation: lp-blink 1.6s ease-in-out infinite;
 }
 
 .lp-flight__panel {
@@ -984,10 +972,8 @@ html:not(.js-motion) .lp-hero__second {
   display: flex;
   flex-direction: column;
   overflow: clip;
-  border-radius: 1.75rem;
-  background: rgb(251 248 242 / 0.76);
-  -webkit-backdrop-filter: blur(22px) saturate(1.1);
-  backdrop-filter: blur(22px) saturate(1.1);
+  border-radius: var(--radius-sheet);
+  background: var(--c-light);
   box-shadow: var(--glass-light);
   transition:
     opacity 0.7s var(--ease),
@@ -1063,16 +1049,15 @@ html:not(.js-motion) .lp-hero__second {
   line-height: 1.45;
   color: var(--c-ink-soft);
 }
+/* Two facts as a ruled row on the card, not boxes inside the card. */
 .lp-card__facts {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.45rem;
+  gap: 0 1rem;
+  border-top: 1px solid rgb(135 27 56 / 0.18);
 }
 .lp-card__facts > div {
-  padding: 0.55rem 0.75rem;
-  border-radius: 0.8rem;
-  background: rgb(255 255 255 / 0.6);
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.7);
+  padding: 0.55rem 0 0;
 }
 .lp-card__facts dt {
   font-size: 0.78rem;
@@ -1145,14 +1130,13 @@ html:not(.js-motion) .lp-hero__second {
   padding: 2rem;
 }
 .lp-card--end .lp-card__native {
-  color: var(--c-saffron-soft);
+  /* The end card's ground is crimson at 90% over paper (#923049), where
+     saffron-soft falls to 3.5:1 at 16px. This clears AA at 4.6:1. */
+  color: var(--color-saffron-soft-hi);
 }
 .lp-card--end .lp-card__title {
   color: var(--c-on-dark);
   font-size: clamp(2.3rem, 3.4vw, 3.4rem);
-}
-.lp .lp-card--end .lp-card__title em {
-  color: var(--c-saffron-soft);
 }
 .lp-card--end .lp-card__intro {
   color: rgb(247 241 232 / 0.86);
@@ -1171,10 +1155,8 @@ html:not(.js-motion) .lp-hero__second {
   bottom: clamp(1rem, 3svh, 2rem);
   width: min(28rem, 38vw);
   height: 4rem;
-  border-radius: 1.25rem;
-  background: rgb(251 248 242 / 0.66);
-  -webkit-backdrop-filter: blur(18px);
-  backdrop-filter: blur(18px);
+  border-radius: var(--radius-sheet);
+  background: var(--c-light);
   box-shadow: var(--glass-light);
 }
 .lp-flight__track {
@@ -1204,6 +1186,10 @@ html:not(.js-motion) .lp-hero__second {
   flex-direction: column;
   align-items: center;
   gap: 0.45rem;
+  /* The shortest label, "Goa", measured 23.8px wide — just under the 24 CSS px
+     WCAG 2.2 Target Size minimum. These buttons are also the keyboard and
+     single-pointer alternative to dragging the rail, so they must clear it. */
+  min-width: 2.75rem;
   padding: 0;
   border: 0;
   background: none;
@@ -1217,7 +1203,7 @@ html:not(.js-motion) .lp-hero__second {
   border-radius: 50%;
   background: var(--c-paper);
   border: 2px solid var(--c-crimson);
-  transition: background-color 0.4s var(--ease), scale 0.5s cubic-bezier(0.2, 1.6, 0.4, 1);
+  transition: background-color 0.4s var(--ease), scale 0.5s var(--ease);
 }
 .lp-flight__station:hover i {
   scale: 1.25;
@@ -1299,7 +1285,7 @@ html:not(.js-motion) .lp-hero__second {
   font-family: var(--f-display);
   font-weight: 750;
   text-transform: uppercase;
-  font-size: clamp(2.6rem, 0.4rem + 6.2vw, 7.2rem);
+  font-size: clamp(2.6rem, 0.6rem + 5.4vw, 6rem);
   line-height: 0.9;
   text-shadow: 0 2px 40px rgb(60 8 22 / 0.35);
 }
@@ -1308,13 +1294,6 @@ html:not(.js-motion) .lp-hero__second {
 }
 .lp-connect__title .is-r {
   text-align: right;
-}
-.lp .lp-connect__title em {
-  font-family: var(--f-serif);
-  font-style: italic;
-  font-weight: 400;
-  text-transform: none;
-  color: var(--c-saffron-soft);
 }
 .lp-connect__go {
   align-self: center;
@@ -1349,9 +1328,17 @@ html:not(.js-motion) .lp-hero__second {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.55rem;
+  gap: 0.3rem;
   font-size: 0.95rem;
   line-height: 1.4;
+}
+/* WCAG 2.2 Target Size (Minimum): pointer targets need 24 CSS px. The links
+   sat at 21px, so the gap above moves into the links themselves as hit area. */
+.lp-footer__grid a:not(.lp-pill) {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.75rem;
+  transition: color 0.3s var(--ease);
 }
 .lp-footer__grid a {
   transition: color 0.3s var(--ease);
@@ -1428,17 +1415,38 @@ html:not(.js-motion) .lp-hero__second {
 }
 
 @media (max-width: 767px) {
-  .lp-nav .lp-pill--line {
+  /* The nav's only conversion link used to be hidden here, leaving the burger
+     as the sole action. Keep it, and shorten the brand to the monogram so the
+     bar still fits: GGY + Connect + burger, not the full wordmark. */
+  .lp-nav__brand span {
     display: none;
+  }
+  .lp-nav .lp-pill--line {
+    height: 2.4rem;
+    padding: 0 0.95rem;
+    font-size: 0.82rem;
   }
   .lp-hero__t3 {
     display: none;
   }
+  .lp-hero__tagline {
+    display: block;
+  }
   .lp-hero__cue {
-    left: 0;
-    right: 0;
+    left: var(--edge);
+    right: var(--edge);
+    align-items: flex-start;
+    text-align: left;
+    gap: 0.8rem;
+  }
+  /* Side by side the chip wrapped to two lines and crowded the pill. */
+  .lp-hero__cue-row {
     flex-direction: column;
-    gap: 0.6rem;
+    align-items: flex-start;
+    gap: 0.7rem;
+  }
+  .lp-hero__tagline {
+    font-size: 0.95rem;
   }
   .lp-hero__body {
     margin-left: 0;
@@ -1578,22 +1586,20 @@ html:not(.js-motion) .lp-hero__second {
 .lp .lp-chapters .on-ember {
   background: var(--c-deep);
 }
+/* Chapter headlines share the landing's section voice (.lp-h2): sentence
+   case, condensed, tight; capped at 6rem so no line shouts over its photograph. */
 .lp .lp-chapters :is(h2, .d-xl, .d-l) {
-  font-weight: 750;
-  font-variation-settings: "wdth" 100;
-  letter-spacing: 0.004em;
-  text-transform: uppercase;
-  line-height: 0.92;
-}
-.lp .lp-chapters :is(h2, .d-xl, .d-l) em {
-  text-transform: none;
-  letter-spacing: -0.01em;
+  font-weight: 640;
+  font-variation-settings: "wdth" 88;
+  letter-spacing: -0.03em;
+  line-height: 0.96;
+  text-wrap: balance;
 }
 .lp .lp-chapters .d-xl {
-  font-size: clamp(2.6rem, 0.4rem + 6.2vw, 7.2rem);
+  font-size: clamp(2.6rem, 0.6rem + 5.4vw, 6rem);
 }
 .lp .lp-chapters .d-l {
-  font-size: clamp(2.2rem, 0.6rem + 3.9vw, 4.9rem);
+  font-size: clamp(2.2rem, 0.6rem + 3.9vw, 4.6rem);
 }
 .lp .lp-chapters :is(h3, .d-m, .d-s) {
   font-variation-settings: "wdth" 100;
