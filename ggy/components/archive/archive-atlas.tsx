@@ -65,7 +65,7 @@ export function ArchiveAtlas() {
     () => {
       const mm = gsap.matchMedia();
       mm.add(MOTION_QUERIES.any, () => {
-        gsap.from("[data-arch-fig]", { opacity: 0, y: 24, duration: 1, stagger: 0.08, ease: "land", scrollTrigger: { trigger: "[data-arch-figs]", start: "top 80%", once: true } });
+        gsap.from("[data-arch-fig]", { opacity: 0, y: 24, duration: 1, stagger: 0.08, ease: "land", scrollTrigger: { trigger: "[data-arch-figs]", start: "top 80%", toggleActions: "play none none none" } });
       });
       return () => mm.revert();
     },
@@ -98,10 +98,7 @@ export function ArchiveAtlas() {
       <div className="page">
         <div className="grid gap-8 lg:grid-cols-12 lg:gap-[var(--gap)]">
           <div className="lg:col-span-8">
-            <p className="kicker">
-              <span className="num">06</span> The GGY archive
-            </p>
-            <h2 id="archive-title" className="d-xl mt-6" data-drift>
+            <h2 id="archive-title" className="d-xl" data-drift>
               A <em>decade</em> on the road
             </h2>
           </div>

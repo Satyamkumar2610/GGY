@@ -5,3 +5,7 @@ node_modules/
 dist/
 build/
 .playwright-mcp/
+
+# Static Flyward-template reference clone (bundles Apris/FoundersGrotesk
+# template fonts of unknown license) — kept local only, not redistributed.
+ggy/public/ggy-india/

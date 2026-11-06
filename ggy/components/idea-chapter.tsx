@@ -59,10 +59,7 @@ export function IdeaChapter() {
       <div className="page">
         <div className="grid gap-10 lg:grid-cols-12 lg:gap-[var(--gap)]">
           <div className="lg:col-span-7">
-            <p className="kicker text-ivory/80">
-              <span className="num">04</span> The idea behind the Yatra
-            </p>
-            <h2 id="about-title" className="d-xl mt-6" data-drift>
+            <h2 id="about-title" className="d-xl" data-drift>
               Beyond the map lies <em>the real learning.</em>
             </h2>
           </div>

@@ -1,6 +1,9 @@
-import { SiteHeader } from "@/components/site-header";
-import { Atlas } from "@/components/atlas/atlas";
-import { ConnectingJourney } from "@/components/journey/connecting-journey";
+import "./landing.css";
+import { LandingNav } from "@/components/landing/landing-nav";
+import { LandingHero } from "@/components/landing/landing-hero";
+import { YatraFlight } from "@/components/landing/yatra-flight";
+import { ComeAndSee, FieldCards, GroundBand, LandingFooter } from "@/components/landing/landing-sections";
+import { LandingMotion } from "@/components/landing/landing-motion";
 import { EditionNotes } from "@/components/edition-notes";
 import { IdeaChapter } from "@/components/idea-chapter";
 import { FormatChapter } from "@/components/format-chapter";
@@ -11,51 +14,57 @@ import { LifeAfterChapter, PeopleChapter } from "@/components/people-chapter";
 import { AdmissionsChapter } from "@/components/admissions-chapter";
 import { FieldGallery } from "@/components/field-gallery";
 import { Questions } from "@/components/questions";
-import { Colophon } from "@/components/colophon";
 import { ScrollRefresh } from "@/components/motion/scroll-refresh";
 import { PageMotion } from "@/components/motion/page-motion";
 import { Interactions } from "@/components/motion/interactions";
 import { ScrollProgress } from "@/components/motion/scroll-progress";
 
 /**
- * The Western India Field Journal. One map runs through the page: India in
- * the opening, the three states of the upcoming edition, the line that joins
- * the chapters, and the routes of past editions in the archive.
+ * The homepage.
  *
- * 01–02 Atlas: the opening and the three states (sticky map, state dossiers)
- * 03    The connecting journey
- *       What is confirmed so far
- * 04    The idea, and the learning journey
- * 05    The programme experience
- * 06    The archive, and the 2025 itinerary and field photographs
- * 07    People and institutions, and where alumni went
- *       Questions
- * 08    The upcoming edition: connect with the team
+ * Opening    India is a window cut in paper; the camera dives through it into
+ *            Maharashtra until the photograph fills the screen.
+ * Band       Governance, on the ground: the states of India draw themselves in.
+ * Field      The institutions and the people, two stepped photographs.
+ * Journey    Gujarat → Maharashtra → Goa, flown on a pinned map.
+ *            What is confirmed so far
+ * Chapters   The idea and the learning journey, the programme, the archive and
+ *            the 2025 itinerary, field photographs, people and institutions,
+ *            where alumni went, questions.
+ * Close      Come and see: the photograph opens out; then admissions and contact.
  */
 export default function Home() {
   return (
-    <>
+    <div className="lp">
       <ScrollProgress />
-      <SiteHeader />
-      <main id="main" tabIndex={-1} className="overflow-x-clip outline-none">
-        <Atlas />
-        <ConnectingJourney />
-        <EditionNotes />
-        <IdeaChapter />
-        <FormatChapter />
-        <ProgrammeChapter />
-        <ArchiveAtlas />
-        <ItineraryChapter />
-        <FieldGallery />
-        <PeopleChapter />
-        <LifeAfterChapter />
-        <Questions />
-        <AdmissionsChapter />
+      <LandingNav />
+      <main id="main" tabIndex={-1} className="outline-none">
+        <LandingHero />
+        <GroundBand />
+        <FieldCards />
+        <YatraFlight />
+        <div className="lp-chapters">
+          <EditionNotes />
+          <IdeaChapter />
+          <FormatChapter />
+          <ProgrammeChapter />
+          <ArchiveAtlas />
+          <ItineraryChapter />
+          <FieldGallery />
+          <PeopleChapter />
+          <LifeAfterChapter />
+          <Questions />
+        </div>
+        <ComeAndSee />
+        <div className="lp-chapters lp-chapters--deep">
+          <AdmissionsChapter />
+        </div>
       </main>
-      <Colophon />
+      <LandingFooter />
+      <LandingMotion />
       <PageMotion />
       <Interactions />
       <ScrollRefresh />
-    </>
+    </div>
   );
 }

@@ -35,10 +35,7 @@ export function FormatChapter() {
     <section id="learning" aria-labelledby="format-title" className="relative isolate bg-cream pb-[clamp(6rem,12vw,10rem)] pt-[clamp(6rem,12vw,11rem)]" data-format>
       <Contours variant="c" />
       <div className="page">
-        <p className="kicker">
-          <span className="num">04</span> The learning journey
-        </p>
-        <h2 id="format-title" className="d-l mt-6 max-w-[14ch]">
+        <h2 id="format-title" className="d-l max-w-[14ch]">
           Four stages of a <em>personal</em> learning journey
         </h2>
         <p className="mt-6 max-w-[30rem] text-ink-soft">
@@ -69,7 +66,8 @@ export function FormatChapter() {
                   </li>
                 ))}
               </ol>
-              <p className="caption mt-4">{hall.caption} Photograph from the GGY brochure; each stage is a closer crop of it.</p>
+              {/* The photograph bleeds to the window edge; its caption returns to the page gutter. */}
+              <p className="caption mt-4 max-w-[60ch] pl-[var(--gutter)]">{hall.caption} Photograph from the GGY brochure; each stage is a closer crop of it.</p>
             </div>
           </div>
 

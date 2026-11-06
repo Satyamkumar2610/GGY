@@ -40,11 +40,11 @@ const anekDevanagari = Anek_Devanagari({ variable: "--font-anek-devanagari", sub
 const anekGujarati = Anek_Gujarati({ variable: "--font-anek-gujarati", subsets: ["gujarati"], axes: ["wdth"], display: "swap", preload: false });
 
 const description =
-  "Good Governance Yatra is an immersive journey into governance and leadership. The upcoming edition travels through Maharashtra, Goa and Gujarat. Dates to be announced.";
+  "Good Governance Yatra is an immersive journey into governance and leadership. The upcoming edition travels through Gujarat, Maharashtra and Goa. Dates to be announced.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Good Governance Yatra: Maharashtra, Goa and Gujarat",
+  title: "Good Governance Yatra: Gujarat, Maharashtra and Goa",
   description,
   alternates: { canonical: "/" },
   applicationName: "Good Governance Yatra",
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_IN",
     siteName: "Good Governance Yatra",
-    title: "Good Governance Yatra: Maharashtra, Goa and Gujarat",
+    title: "Good Governance Yatra: Gujarat, Maharashtra and Goa",
     description,
   },
   twitter: { card: "summary_large_image" },

@@ -15,7 +15,7 @@ export function PeopleMotion() {
     const mm = gsap.matchMedia();
 
     mm.add(MOTION_QUERIES.any, () => {
-      const tl = gsap.timeline({ scrollTrigger: { trigger: root, start: "top 72%", once: true } });
+      const tl = gsap.timeline({ scrollTrigger: { trigger: root, start: "top 72%", toggleActions: "play none none none" } });
 
       const count = q("[data-people-count]")[0] as HTMLElement | undefined;
       if (count) {

@@ -20,10 +20,7 @@ export function PeopleChapter() {
       <div className="page">
         <div className="grid items-end gap-10 lg:grid-cols-12 lg:gap-[var(--gap)]">
           <div className="lg:col-span-8">
-            <p className="kicker">
-              <span className="num">07</span> People and institutions
-            </p>
-            <h2 id="people-title" className="d-xl mt-6" data-drift>
+            <h2 id="people-title" className="d-xl" data-drift>
               The people <em>delegates met</em>
             </h2>
           </div>

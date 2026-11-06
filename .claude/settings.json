@@ -1,4 +1,12 @@
 {
+  "permissions": {
+    "allow": [
+      "Read(//Users/satyam/Desktop/**)",
+      "Bash(cd ~/Desktop/Flyward && ls; grep -rliE \"australia\" . --exclude-dir=node_modules --exclude-dir=.next --exclude-dir=.git 2>/dev/null | head)",
+      "Read(//Users/satyam/Desktop/Flyward/**)",
+      "Bash(cd ~/Desktop/Flyward && ls -la . assets js css | head -60; wc -c index.html india-map-zoom.html app.js styles.css; grep -niE \"zoom|map|journey|gujarat\" index.html | head -30)"
+    ]
+  },
   "enabledPlugins": {
     "superdesign@claude-plugins-official": true
   }

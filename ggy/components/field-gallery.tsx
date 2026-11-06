@@ -147,7 +147,11 @@ export function FieldGallery() {
               </AnimatePresence>
             </div>
             <div className="page flex flex-wrap items-center justify-between gap-4 py-5">
-              <p className="max-w-[40rem] text-[0.9rem] text-ivory/85">{current.caption} Photograph from the GGY brochure.</p>
+              {/* Captions in content/ggy.ts are written with and without a closing
+                  full stop; add one only when it is missing. */}
+              <p className="max-w-[40rem] text-[0.9rem] text-ivory/85">
+                {/[.!?]$/.test(current.caption) ? current.caption : `${current.caption}.`} Photograph from the GGY brochure.
+              </p>
               <div className="flex gap-6 text-[0.95rem]">
                 <button type="button" onClick={() => step(-1)} className="tlink">
                   Previous

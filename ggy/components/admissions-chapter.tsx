@@ -16,13 +16,10 @@ export function AdmissionsChapter() {
         <ClosingMap />
         <div className="page relative">
           <div className="closing-copy">
-            <p className="kicker text-ivory/80">
-              <span className="num">08</span> The upcoming edition
-            </p>
-            <h2 id="admissions-title" className="closing-title mt-7" data-drift>
+            <h2 id="admissions-title" className="closing-title" data-drift>
               The journey changes <em>the way you see</em> governance.
             </h2>
-            <p className="lede mt-8 max-w-[30rem] text-ivory/90">Explore the upcoming Good Governance Yatra across Maharashtra, Goa and Gujarat.</p>
+            <p className="lede mt-8 max-w-[30rem] text-ivory/90">Explore the upcoming Good Governance Yatra across Gujarat, Maharashtra and Goa.</p>
             <p className="mt-4 max-w-[30rem] text-[0.95rem] text-ivory/75">
               Applications for the upcoming edition have not opened, and its dates are still to be announced. Until then, the GGY team can be reached directly.
             </p>
@@ -43,7 +40,7 @@ export function AdmissionsChapter() {
               <p className="caps text-crimson">Good Governance Yatra</p>
               <p className="caps text-muted">Upcoming edition</p>
             </div>
-            <p className="d-m mt-5 text-ink">Maharashtra, Goa and Gujarat</p>
+            <p className="d-m mt-5 text-ink">Gujarat, Maharashtra and Goa</p>
             <p className="caption mt-1">The order of travel is to be announced.</p>
             <dl className="mt-8 grid grid-cols-1 gap-x-8 gap-y-6 text-ink sm:grid-cols-2 lg:grid-cols-4">
               {[

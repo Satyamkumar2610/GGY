@@ -87,7 +87,7 @@ export function EditionNotes() {
           <div className="edition-page absolute inset-0 text-ink">
             <div className={`absolute flex flex-col justify-end p-[clamp(1.5rem,4vw,3.5rem)] ${vertical ? "inset-x-0 bottom-0 h-[44%]" : "inset-y-0 right-0 w-[44%] pl-[2%]"}`}>
               <p className="caps text-saffron-ink">The upcoming edition</p>
-              <p className="d-m mt-4">Maharashtra, Goa and Gujarat</p>
+              <p className="d-m mt-4">Gujarat, Maharashtra and Goa</p>
               <div aria-hidden="true" className="route-rule mt-6 text-ink" />
               <dl className="mt-7 grid grid-cols-2 gap-x-7 gap-y-5 md:grid-cols-3">
                 {pending.map(([t, v]) => (

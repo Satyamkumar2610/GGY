@@ -202,7 +202,7 @@ export function ConnectingJourney() {
           const fromLeft = comp.dataset.side === "left";
           const main = comp.querySelector<HTMLElement>("[data-main]");
           const img = main?.querySelector("img");
-          const tl = gsap.timeline({ scrollTrigger: { trigger: comp, start: "top 72%", once: true }, defaults: { ease: "land" } });
+          const tl = gsap.timeline({ scrollTrigger: { trigger: comp, start: "top 72%", toggleActions: "play none none none" }, defaults: { ease: "land" } });
           if (main)
             tl.fromTo(
               main,
@@ -227,7 +227,7 @@ export function ConnectingJourney() {
 
         el.querySelectorAll<HTMLElement>("[data-statement]").forEach((s) => {
           const split = SplitText.create(s, { type: "lines", mask: "lines" });
-          gsap.from(split.lines, { yPercent: 110, duration: 1.3, stagger: 0.1, ease: "land", scrollTrigger: { trigger: s, start: "top 78%", once: true } });
+          gsap.from(split.lines, { yPercent: 110, duration: 1.3, stagger: 0.1, ease: "land", scrollTrigger: { trigger: s, start: "top 78%", toggleActions: "play none none none" } });
         });
 
         return () => {

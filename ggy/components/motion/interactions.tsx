@@ -1,8 +1,49 @@
 "use client";
 
+import { useEffect } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 
 const FINE_MOTION = "(pointer: fine) and (prefers-reduced-motion: no-preference)";
+
+/**
+ * Footnotes open centred on their dagger, so one near a column edge used to be
+ * cut off by the section's overflow clip — on a 390px screen the tip ran to
+ * 435px and the text was simply lost. Before it is shown, measure it and pass
+ * the overshoot back to CSS as --note-shift, which slides it inside the
+ * viewport without moving the dagger it points from.
+ */
+function useNoteClamp() {
+  useEffect(() => {
+    const MARGIN = 12;
+    const place = (note: Element) => {
+      const tip = note.querySelector<HTMLElement>(".note-tip");
+      if (!tip) return;
+      // The tip's transform is transitioned, so its rect reports a mid-flight
+      // value. Derive the resting box instead: CSS centres it on the note, so
+      // offsetWidth plus the note's own (untransformed) rect gives it exactly.
+      const nr = note.getBoundingClientRect();
+      const w = tip.offsetWidth;
+      const centre = nr.left + nr.width / 2;
+      const vw = document.documentElement.clientWidth;
+      let shift = 0;
+      if (centre + w / 2 > vw - MARGIN) shift = vw - MARGIN - (centre + w / 2);
+      if (centre - w / 2 + shift < MARGIN) shift = MARGIN - (centre - w / 2);
+      tip.style.setProperty("--note-shift", `${Math.round(shift)}px`);
+    };
+    const onEnter = (e: Event) => {
+      const note = (e.target as Element | null)?.closest?.(".note");
+      if (note) place(note);
+    };
+    // pointerover and focusin both bubble, so one pair of listeners covers
+    // notes that mount later with their chapter.
+    document.addEventListener("pointerover", onEnter, { passive: true });
+    document.addEventListener("focusin", onEnter);
+    return () => {
+      document.removeEventListener("pointerover", onEnter);
+      document.removeEventListener("focusin", onEnter);
+    };
+  }, []);
+}
 
 /**
  * Pointer interactions, owned by GSAP, for fine pointers that accept motion.
@@ -18,6 +59,7 @@ const FINE_MOTION = "(pointer: fine) and (prefers-reduced-motion: no-preference)
  * menu's button, the photo viewer) are covered without rebinding.
  */
 export function Interactions() {
+  useNoteClamp();
   useGSAP(() => {
     const mm = gsap.matchMedia();
     mm.add(FINE_MOTION, () => {
