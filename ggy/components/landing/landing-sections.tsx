@@ -120,46 +120,40 @@ const FOOTER_LINKS = [
   { href: "#connect", label: "Admissions" },
 ];
 
+/**
+ * The footer, kept to one screen-width band: the mark and a way back up, the
+ * contents in a single row, contact and address side by side, and the
+ * provenance in the fine print.
+ */
 export function LandingFooter() {
-  const word = "Good Governance Yatra";
   return (
     <footer id="notes" className="lp-footer on-dark" data-nav="light" aria-label="Contents and contact">
-      <div className="lp-footer__grid">
-        <div>
-          <p className="lp-footer__label">Contents</p>
+      <div className="lp-footer__top">
+        <a href="#top" className="lp-footer__brand" aria-label="Good Governance Yatra, back to top">
+          <span className="lp-footer__mono">GGY</span>
+          <span className="lp-footer__name">Good Governance Yatra</span>
+        </a>
+        <nav className="lp-footer__nav" aria-label="Contents">
           {FOOTER_LINKS.map((l) => (
             <a key={l.href} href={l.href}>
               {l.label}
             </a>
           ))}
-        </div>
-        <div>
-          <p className="lp-footer__label">Contact</p>
+        </nav>
+      </div>
+      <div className="lp-footer__row">
+        <div className="lp-footer__contact">
           <a href={`mailto:${contact.email}`}>{contact.email}</a>
           <a href={contact.phoneHref}>{contact.phoneDisplay}</a>
-          <p className="lp-footer__fine">As printed in the 2025 brochure. Contact details for the upcoming edition are to be confirmed.</p>
-        </div>
-        <div>
-          <p className="lp-footer__label">Address</p>
           <p>{contact.address}</p>
         </div>
-        <div className="lp-footer__org">
-          <p>
-            Printed for the {previousEdition.label}: organised by {previousEdition.organisedBy}; the brochure cover reads “An initiative by {previousEdition.initiativeOf}”.
-          </p>
-          <p>The organiser of the upcoming edition is to be confirmed.</p>
-          <a href="#top" className="lp-pill lp-pill--glass">
-            Back to top
-          </a>
-        </div>
+        <p className="lp-footer__fine">
+          Contact details as printed in the 2025 brochure; those for the upcoming edition are to be confirmed. The {previousEdition.label} was organised by {previousEdition.organisedBy}, “an initiative by {previousEdition.initiativeOf}”. The organiser of the upcoming edition is to be confirmed.
+        </p>
+        <a href="#top" className="lp-footer__up" data-magnetic>
+          <span aria-hidden="true">↑</span> Back to top
+        </a>
       </div>
-      <p className="lp-footer__mark" aria-label={word} data-mark>
-        {word.split("").map((ch, i) => (
-          <span key={i} aria-hidden="true">
-            {ch === " " ? " " : ch}
-          </span>
-        ))}
-      </p>
       <div className="lp-footer__base">
         <span>© Good Governance Yatra</span>
         <span>Photographs: GGY brochure, Wikimedia Commons, Unsplash</span>

@@ -1,9 +1,12 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { AnimatePresence, LayoutGroup, motion } from "motion/react";
+import { useEffect, useMemo, useState } from "react";
+import { BookOpen, MapPin } from "lucide-react";
 import { BROCHURE, CONCEPT_NOTE, met8, previousEdition, roleModels } from "@/content/ggy";
-import { gsap, MOTION_QUERIES, ScrollTrigger, useGSAP } from "@/lib/gsap";
+import { ScrollTrigger } from "@/lib/gsap";
 import { NoteRef } from "../primitives";
+import SpotlightCard from "../SpotlightCard";
 import { Head, Title } from "./head";
 
 type Person = { name: string; title: string; from: "8th" | "brochure"; where: string };
@@ -13,6 +16,17 @@ const people: Person[] = [
   ...roleModels.map((p) => ({ name: p.name, title: p.title, from: "brochure" as const, where: "2025 brochure" })),
 ];
 
+/** Two initials from the name as printed, honorifics and post-nominals left out. */
+const HONORIFIC = /^(late|shri|smt\.?|dr\.?|ias)$/i;
+function initials(name: string) {
+  const words = name.split(/\s+/).filter((w) => !HONORIFIC.test(w));
+  const first = words[0]?.[0] ?? "";
+  const last = words.length > 1 ? words[words.length - 1][0] : "";
+  return (first + last).toUpperCase();
+}
+
+const EASE = [0.22, 1, 0.36, 1] as const;
+
 const FILTERS = [
   { id: "all", label: "Everyone" },
   { id: "8th", label: "Met on the 8th edition" },
@@ -21,39 +35,23 @@ const FILTERS = [
 type FilterId = (typeof FILTERS)[number]["id"];
 
 /**
- * The people delegates have met, as a roll call on the page grid: name,
- * office, and where the name comes from. The row at the reading line is
- * inked; so is any row under the pointer or keyboard focus.
+ * The people delegates have met, as a filterable wall of cards: a monogram,
+ * the name and office as printed, and where the name comes from. Changing the
+ * filter re-deals the cards in place.
  */
 export function People() {
-  const root = useRef<HTMLElement>(null);
   const [filter, setFilter] = useState<FilterId>("all");
   const shown = useMemo(() => people.filter((p) => filter === "all" || p.from === filter), [filter]);
 
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia();
-      mm.add(MOTION_QUERIES.desktop, () => {
-        const rows = gsap.utils.toArray<HTMLElement>("[data-person]");
-        const sts = rows.map((row) =>
-          ScrollTrigger.create({
-            trigger: row,
-            start: "top 56%",
-            end: "bottom 56%",
-            onToggle: (self) => row.toggleAttribute("data-on", self.isActive),
-          }),
-        );
-        return () => sts.forEach((s) => s.kill());
-      });
-      // The list changed length: everything below it moved.
-      ScrollTrigger.refresh();
-      return () => mm.revert();
-    },
-    { scope: root, dependencies: [filter], revertOnUpdate: true },
-  );
+  // The wall changed height: everything below it moved. Refresh once the
+  // cards have settled.
+  useEffect(() => {
+    const t = window.setTimeout(() => ScrollTrigger.refresh(), 650);
+    return () => window.clearTimeout(t);
+  }, [filter]);
 
   return (
-    <section ref={root} id="people" className="j-sec j-paper" data-nav="dark" data-j-station="people" aria-labelledby="people-title">
+    <section id="people" className="j-sec j-paper" data-nav="dark" data-j-station="people" data-arch aria-labelledby="people-title">
       <div className="j-wrap">
         <Head id="people-title" title="The people" em="delegates met">
           <p>
@@ -62,24 +60,48 @@ export function People() {
           </p>
         </Head>
 
-        <div className="j-filters" role="group" aria-label="Show people">
-          {FILTERS.map((f) => (
-            <button key={f.id} type="button" aria-pressed={filter === f.id} className="j-filter" onClick={() => setFilter(f.id)}>
-              {f.label}
-              <span>{people.filter((p) => f.id === "all" || p.from === f.id).length}</span>
-            </button>
-          ))}
-        </div>
+        <LayoutGroup>
+          <div className="x-seg" role="group" aria-label="Show people">
+            {FILTERS.map((f) => {
+              const on = filter === f.id;
+              return (
+                <button key={f.id} type="button" aria-pressed={on} className="x-seg__btn" onClick={() => setFilter(f.id)}>
+                  {on ? <motion.span layoutId="people-seg" className="x-seg__pill" transition={{ duration: 0.45, ease: EASE }} /> : null}
+                  <span className="x-seg__label">{f.label}</span>
+                  <span className="x-seg__n">{people.filter((p) => f.id === "all" || p.from === f.id).length}</span>
+                </button>
+              );
+            })}
+          </div>
 
-        <ul className="j-roll" aria-label="People delegates have met">
-          {shown.map((p) => (
-            <li key={p.name} className="j-person" data-person tabIndex={0}>
-              <p className="j-person__name">{p.name}</p>
-              <p className="j-person__role">{p.title}</p>
-              <p className="j-person__where">{p.where}</p>
-            </li>
-          ))}
-        </ul>
+          <motion.ul layout className="x-wall" aria-label="People delegates have met">
+            <AnimatePresence mode="popLayout" initial={false}>
+              {shown.map((p) => (
+                <motion.li
+                  key={p.name}
+                  layout
+                  initial={{ opacity: 0, scale: 0.92, y: 14 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.92 }}
+                  transition={{ duration: 0.5, ease: EASE }}
+                  className="x-wall__cell"
+                >
+                  <SpotlightCard theme="light" className="x-person" spotlightColor="#871b38" intensity={0.5} spotlightSize={220} borderGlow={0.9} tabIndex={0}>
+                    <span className={`x-person__mono${p.from === "8th" ? " is-8th" : ""}`} aria-hidden="true">
+                      {initials(p.name)}
+                    </span>
+                    <p className="x-person__name">{p.name}</p>
+                    <p className="x-person__role">{p.title}</p>
+                    <p className="x-person__tag">
+                      {p.from === "8th" ? <MapPin aria-hidden="true" strokeWidth={1.8} /> : <BookOpen aria-hidden="true" strokeWidth={1.8} />}
+                      {p.where}
+                    </p>
+                  </SpotlightCard>
+                </motion.li>
+              ))}
+            </AnimatePresence>
+          </motion.ul>
+        </LayoutGroup>
 
         <div className="j-inst">
           <Title as="h3" sub title="The institutions behind" em="the 2025 edition" />

@@ -59,7 +59,7 @@ export function Stages() {
   );
 
   return (
-    <section ref={root} id="learning" className="j-sec j-deep j-sheet on-dark j-reel-sec" data-nav="light" data-j-station="learning" aria-labelledby="learning-title">
+    <section ref={root} id="learning" className="j-sec j-deep j-sheet on-dark j-reel-sec" data-nav="light" data-j-station="learning" data-arch aria-labelledby="learning-title">
       <div className="j-reel__track" data-reel-track>
         <div className="j-reel__stage">
           <div className="j-wrap">

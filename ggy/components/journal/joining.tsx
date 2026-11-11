@@ -1,15 +1,17 @@
-import { admissionSteps, contact, upcoming } from "@/content/ggy";
+import { contact, upcoming } from "@/content/ggy";
 import { Button, NoteRef, Value } from "../primitives";
 import { TicketMotion } from "../motion/ticket-motion";
 import { Readiness } from "../readiness";
 import { Head, Title } from "./head";
 import BorderGlow from "../BorderGlow";
 import HoloCard from "../HoloCard";
+import { ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
+import { AdmissionPath } from "./admission-path";
 
 /**
  * Joining: the one action available today, the upcoming edition set as a
  * pass whose fields are still blank, a self-check, and the admission process
- * as printed for 2025, its five steps on one line.
+ * as printed for 2025, its five steps set as a climb.
  */
 export function Joining() {
   return (
@@ -28,7 +30,7 @@ export function Joining() {
         <div id="admissions" className="j-pass-wrap" data-ticket>
           <BorderGlow
             className="j-pass-glow"
-            backgroundColor="#fbf8f2"
+            backgroundColor="#ffffff"
             borderRadius={10}
             glowRadius={34}
             glowColor="22 61 70"
@@ -90,34 +92,40 @@ export function Joining() {
           <Title as="h3" sub title="The admission process" em="as printed for 2025">
             <NoteRef id="process" />
           </Title>
-          <div className="j-steps" data-steps>
-            <i className="j-steps__line" data-steps-line aria-hidden="true" />
-            <ol>
-              {admissionSteps.map((step, i) => (
-                <li key={step.name}>
-                  <span className="j-steps__n" aria-hidden="true">
-                    {i + 1}
-                  </span>
-                  <h4 className="j-h3">{step.name}</h4>
-                  <p className="j-body">
-                    {step.text}
-                    {step.note ? <NoteRef id={step.note} /> : null}
-                  </p>
-                </li>
-              ))}
-            </ol>
-          </div>
+          <AdmissionPath />
         </div>
 
-        <address className="j-contact">
-          <p className="j-meta">Contact, as printed in 2025. Details for the upcoming edition are to be confirmed.</p>
-          <a className="tlink tlink-static" href={`mailto:${contact.email}`}>
-            {contact.email}
-          </a>
-          <a className="tlink tlink-static" href={contact.phoneHref}>
-            {contact.phoneDisplay}
-          </a>
-          <p className="j-body">{contact.address}</p>
+        <address className="x-contact">
+          <p className="x-contact__lead">Contact, as printed in 2025. Details for the upcoming edition are to be confirmed.</p>
+          <div className="x-contact__row">
+            {[
+              { Icon: Mail, label: "Write", value: contact.email, href: `mailto:${contact.email}` },
+              { Icon: Phone, label: "Call", value: contact.phoneDisplay, href: contact.phoneHref },
+              { Icon: MapPin, label: "Visit", value: contact.address, href: null },
+            ].map(({ Icon, label, value, href }) => {
+              const body = (
+                <>
+                  <span className="x-contact__icon">
+                    <Icon aria-hidden="true" strokeWidth={1.6} />
+                  </span>
+                  <span className="x-contact__text">
+                    <span className="x-contact__label">{label}</span>
+                    <span className="x-contact__value">{value}</span>
+                  </span>
+                  {href ? <ArrowUpRight className="x-contact__go" aria-hidden="true" strokeWidth={1.6} /> : null}
+                </>
+              );
+              return href ? (
+                <a key={label} href={href} className="x-contact__item">
+                  {body}
+                </a>
+              ) : (
+                <div key={label} className="x-contact__item">
+                  {body}
+                </div>
+              );
+            })}
+          </div>
         </address>
       </div>
       <TicketMotion />

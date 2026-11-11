@@ -1,12 +1,16 @@
 import "./landing.css";
 import "./journal.css";
+import "./cinema.css";
+import "./sections.css";
 import { LandingNav } from "@/components/landing/landing-nav";
 import { LandingHero } from "@/components/landing/landing-hero";
 import { YatraFlight } from "@/components/landing/yatra-flight";
 import { ComeAndSee, LandingFooter } from "@/components/landing/landing-sections";
 import { LandingMotion } from "@/components/landing/landing-motion";
 import { Departure, Field } from "@/components/journal/opening";
-import { Coda, Ledger, Programme } from "@/components/journal/chapters";
+import { Coda } from "@/components/journal/chapters";
+import { Ledger } from "@/components/journal/ledger";
+import { Programme } from "@/components/journal/programme";
 import { Stages } from "@/components/journal/stages";
 import { Decade } from "@/components/journal/decade";
 import { People } from "@/components/journal/people";
@@ -15,6 +19,8 @@ import { Questions } from "@/components/journal/questions";
 import { Joining } from "@/components/journal/joining";
 import { Thread } from "@/components/journal/thread";
 import { JournalMotion } from "@/components/journal/journal-motion";
+import { Act } from "@/components/journal/act";
+import { CinemaMotion } from "@/components/motion/cinema-motion";
 import { FieldGallery } from "@/components/field-gallery";
 import { ScrollRefresh } from "@/components/motion/scroll-refresh";
 import { PageMotion } from "@/components/motion/page-motion";
@@ -43,16 +49,20 @@ export default function Home() {
         <LandingHero />
         <Departure />
         <Field />
+        <Act id="act-where" n="I" photos={["highCourt", "sabarmati", "bomJesus", "municipalCorporation", "oldSecretariat"]} title="Along the western coast" dek="Gujarat, Maharashtra and Goa: the three states of the upcoming edition." />
         <YatraFlight />
         <div className="lp-chapters">
           <Coda />
+          <Act id="act-how" n="II" photos={["address", "fieldGroup", "overhead", "legislatureSteps", "lectureHall"]} title="How the days are spent" dek="Four stages of learning, and the field visits, workshops and conversations that make up the programme." />
           <Stages />
           <Programme />
+          <Act id="act-proof" n="III" photos={["cohort", "flagOff", "openLandscape", "fieldGroup", "legislatureSteps"]} title="The record so far" dek="Eight editions since 2015, the nine days of 2025, and where delegates went next." />
           <Decade />
           <Ledger />
           <FieldGallery />
           <People />
           <After />
+          <Act id="act-joining" n="IV" photos={["flagOff", "overhead", "address", "cohort", "lectureHall"]} title="Joining the next edition" dek="Common questions, a conversation with the team, and how admission works." />
           <Questions />
         </div>
         <ComeAndSee />
@@ -64,6 +74,7 @@ export default function Home() {
       <Thread />
       <LandingMotion />
       <JournalMotion />
+      <CinemaMotion />
       <PageMotion />
       <Interactions />
       <ScrollRefresh />

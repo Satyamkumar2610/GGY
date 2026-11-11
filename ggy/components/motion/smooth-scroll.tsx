@@ -13,8 +13,8 @@ export function SmoothScroll() {
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const lenis = new Lenis({
-      lerp: 0.075,
-      wheelMultiplier: 0.85,
+      lerp: 0.1,
+      wheelMultiplier: 1,
       smoothWheel: true,
       autoRaf: false,
       anchors: { offset: -64 },

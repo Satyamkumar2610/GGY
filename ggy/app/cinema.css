@@ -1,0 +1,278 @@
+/* =====================================================================
+   Cinema: the devices that carry the reader from act to act.
+
+   Doorways  Each act opens through an arch cut in white paper; the arch
+             widens to a full-bleed photograph (components/journal/act.tsx).
+   Domes     Where the ground changes colour, the next ground rises over
+             the last as a shallow dome and settles flat ([data-arch]).
+   Locator   The margin thread carries a small map of India; a dot walks
+             Gandhinagar, Mumbai, Panaji as the page is read.
+
+   All three are driven from components/motion/cinema-motion.tsx. Without
+   motion (no .js-motion) each falls back to a still, complete state.
+   ===================================================================== */
+
+/* ---- Acts: prints on a table, then full bleed ------------------- */
+
+.act {
+  position: relative;
+  background: var(--c-paper, #fff);
+  color: var(--c-crimson);
+}
+.act__stage {
+  position: relative;
+  height: 100svh;
+  min-height: 34rem;
+  overflow: hidden;
+}
+.js-motion .act {
+  height: 300svh;
+}
+.js-motion .act__stage {
+  position: sticky;
+  top: 0;
+}
+.act__zoom {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  will-change: transform;
+  pointer-events: none;
+}
+.act__print {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.4rem;
+  background: var(--c-deep);
+  box-shadow: 0 30px 60px -30px rgb(46 6 18 / 0.45);
+}
+.act__zoom.is-main .act__print {
+  border-radius: 1.6rem;
+  box-shadow: none;
+}
+/* Before motion takes over, the centre print rests at a quarter. */
+.js-motion .act__zoom.is-main {
+  transform: scale(0.25);
+}
+.act__img {
+  position: absolute;
+  inset: 0;
+}
+.act__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    linear-gradient(to top, rgb(46 6 18 / 0.82), rgb(46 6 18 / 0.2) 50%, transparent 75%),
+    linear-gradient(to right, rgb(46 6 18 / 0.55), transparent 60%);
+  opacity: 0;
+  pointer-events: none;
+}
+.act__intro,
+.act__outro {
+  position: absolute;
+  z-index: 3;
+  left: var(--edge, var(--gutter));
+  bottom: clamp(2.5rem, 8svh, 5.5rem);
+  width: min(100% - 2 * var(--edge, var(--gutter)), 40rem);
+}
+.act__label {
+  display: inline-flex;
+  margin: 0 0 1rem;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid rgb(135 27 56 / 0.25);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.72);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  font: 600 0.75rem / 1 var(--f-display);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.act__label.is-light {
+  border-color: rgb(255 255 255 / 0.3);
+  background: rgb(255 255 255 / 0.12);
+  color: #fff;
+}
+.lp .act .act__title {
+  margin: 0;
+  font-family: var(--f-serif);
+  font-weight: 300;
+  font-size: clamp(2.8rem, 1.2rem + 4.6vw, 6.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+.act__intro .act__title {
+  text-shadow: 0 0 40px rgb(255 255 255 / 0.9);
+}
+.act__dek {
+  max-width: 26rem;
+  margin: clamp(1rem, 2vw, 1.5rem) 0 0;
+  font-family: var(--f-sans);
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.15rem);
+  line-height: 1.5;
+  color: var(--c-ink-soft);
+}
+.act__cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 1.5rem 0 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-saffron-ink, #8c4a2f);
+}
+.act__cue::before {
+  content: "";
+  width: 2.5rem;
+  height: 1px;
+  background: currentColor;
+  transform-origin: left;
+  animation: act-cue 1.8s var(--ease) infinite;
+}
+@keyframes act-cue {
+  0% { transform: scaleX(0); }
+  60%, 100% { transform: scaleX(1); opacity: 0; }
+}
+.act__outro {
+  color: #fff;
+}
+.js-motion .act__outro > * {
+  opacity: 0;
+}
+.act__outro .act__dek {
+  color: rgb(255 255 255 / 0.88);
+}
+.act__credit {
+  max-width: 30rem;
+  margin: 1.25rem 0 0;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: rgb(255 255 255 / 0.7);
+}
+
+/* Without motion: a still. The centre photograph fills the stage and the
+   title sits on it in white. */
+html:not(.js-motion) .act__zoom:not(.is-main),
+html:not(.js-motion) .act__intro {
+  display: none;
+}
+html:not(.js-motion) .act__zoom.is-main .act__print {
+  width: 100% !important;
+  height: 100% !important;
+  translate: none !important;
+}
+html:not(.js-motion) .act__scrim {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .act__cue::before {
+    animation: none;
+  }
+}
+
+/* ---- Domes ---------------------------------------------------------- */
+
+/* The next ground swells up over the last, then flattens as it arrives.
+   The dome is the section's own colour, drawn above its top edge and
+   scaled from its base; --arch runs 1 to 0 with the scroll. */
+/* z-index 4 clears the opening band (3), so every dome paints over the
+   ground before it; the nav (50) and the thread (55) stay above. */
+.js-motion [data-arch] {
+  --arch-h: clamp(3.5rem, 9vw, 9rem);
+  position: relative;
+  z-index: 4;
+}
+/* Grounds that clip their overflow still clip sideways, but let the dome
+   out of the top. */
+.js-motion .gloss[data-arch],
+.js-motion .j-sec--led[data-arch] {
+  overflow-x: clip;
+  overflow-y: visible;
+}
+.js-motion [data-arch] > .arch-dome {
+  position: absolute;
+  left: 0;
+  right: 0;
+  /* Overlaps the section by a pixel, so no seam shows at its base. */
+  bottom: calc(100% - 1px);
+  height: calc(var(--arch-h) + 1px);
+  background: inherit;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  transform: scaleY(0);
+  transform-origin: 50% 100%;
+  will-change: transform;
+  pointer-events: none;
+}
+/* Sheets that rise as a dome no longer need their fixed rounded lip. */
+.js-motion .j-sheet[data-arch] {
+  margin-top: 0;
+  border-radius: 0;
+}
+
+/* ---- Locator -------------------------------------------------------- */
+
+.j-locator {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 1.1rem);
+  display: none;
+  width: 2.4rem;
+  translate: -50% 0;
+  overflow: visible;
+}
+.j-locator__land {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  stroke-opacity: 0.55;
+  vector-effect: non-scaling-stroke;
+}
+.j-locator__state {
+  fill: currentColor;
+  fill-opacity: 0.38;
+}
+.j-locator__route {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.25;
+  stroke-dasharray: 2 3;
+  vector-effect: non-scaling-stroke;
+}
+.j-locator__dot {
+  fill: var(--c-crimson);
+  stroke: #fff;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+.j-rail[data-tone="light"] .j-locator__dot {
+  fill: #fff;
+  stroke: var(--c-deep);
+}
+/* Only where the margin is wide enough to hold it clear of the text. */
+@media (min-width: 88rem) {
+  .j-locator {
+    display: block;
+  }
+}
+
+/* ---- Asymmetry ------------------------------------------------------ */
+
+/* The field: a large print and a small one, the small one dropped and set
+   to the right, so the pair reads as laid on a table, not tiled. */
+@media (min-width: 64rem) {
+  .lp .j-pair {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--j-gap);
+  }
+  .lp .j-pair > :first-child {
+    grid-column: 1 / 8;
+  }
+  .lp .j-pair > :last-child {
+    grid-column: 9 / 13;
+    margin-top: clamp(8rem, 16vw, 15rem);
+  }
+}

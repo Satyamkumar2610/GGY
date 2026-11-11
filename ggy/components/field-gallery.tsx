@@ -1,204 +1,72 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Draggable } from "gsap/Draggable";
-import { InertiaPlugin } from "gsap/InertiaPlugin";
+import ScrollStack, { ScrollStackItem } from "@/components/ScrollStack";
 import { photos, type PhotoKey } from "@/content/ggy";
 import { gsap, MOTION_QUERIES, useGSAP } from "@/lib/gsap";
 import { lockScroll } from "@/lib/scroll";
 
-if (typeof window !== "undefined") gsap.registerPlugin(Draggable, InertiaPlugin);
-
-/**
- * Where each print comes to rest on the table: centre (x, y) as a percentage
- * of the stage, width in table units (see --u in globals.css), and the angle
- * it lands at. Widths keep every photograph below its original pixel size.
- */
-const prints: { key: PhotoKey; x: number; y: number; w: number; r: number }[] = [
-  { key: "cohort", x: 65, y: 27, w: 40, r: -2 },
-  { key: "openLandscape", x: 44, y: 55, w: 24, r: 3 },
-  { key: "lectureHall", x: 84, y: 54, w: 26, r: -3 },
-  { key: "fieldGroup", x: 63, y: 69, w: 20, r: 5 },
-  { key: "legislatureSteps", x: 29, y: 63, w: 13, r: -4 },
-  { key: "overhead", x: 46, y: 85, w: 18, r: -6 },
-  { key: "flagOff", x: 86, y: 83, w: 21, r: 4 },
-  { key: "address", x: 40, y: 27, w: 19, r: 6 },
+/** The prints, in the order they are laid down. */
+const prints: { key: PhotoKey }[] = [
+  { key: "cohort" },
+  { key: "openLandscape" },
+  { key: "lectureHall" },
+  { key: "fieldGroup" },
+  { key: "legislatureSteps" },
+  { key: "overhead" },
+  { key: "flagOff" },
+  { key: "address" },
 ];
-// The pile the prints are dealt from, and how each one lies in it.
-const PILE = { x: 0.6, y: 0.56 };
-const pileTilt = [-3, 5, -6, 2, 8, -4, 6, -2];
-const STEP = 0.8;
-const LEAD = 0.35;
 
 const sentence = (s: string) => (/[.!?]$/.test(s) ? s : `${s}.`);
 
 /**
- * Field photographs from past editions, laid out like prints on a table.
- * On large screens the section holds while the reader scrolls: the prints
- * start as a pile and are dealt out one at a time, each with its caption.
- * Once they are down they can be dragged around, and any print opens in a
- * full-screen viewer. Small screens and reduced motion get the same prints
- * in a plain column or the finished layout.
+ * Field photographs from past editions, as a stack of prints. Each print
+ * pins in turn as the page scrolls and the earlier ones shrink and dim
+ * beneath it. Any print opens in a full-screen viewer.
  */
 export function FieldGallery() {
-  const root = useRef<HTMLElement>(null);
-  const [dealt, setDealt] = useState(prints.length - 1);
-  const [hover, setHover] = useState<number | null>(null);
   const [open, setOpen] = useState<number | null>(null);
   const lastFocus = useRef<HTMLElement | null>(null);
-  const dragged = useRef(false);
-
-  useGSAP(
-    () => {
-      const stage = root.current!.querySelector<HTMLElement>("[data-fp-stage]")!;
-      const slots = gsap.utils.toArray<HTMLElement>("[data-slot]");
-      const deals = gsap.utils.toArray<HTMLElement>("[data-deal]");
-      const mm = gsap.matchMedia();
-
-      // Large screens: the pile is dealt out across the pinned stage.
-      mm.add(MOTION_QUERIES.desktop, () => {
-        setDealt(-1);
-        gsap.set(slots, { zIndex: (i) => 10 - i });
-        const tl = gsap.timeline({
-          defaults: { ease: "power3.out", duration: 1 },
-          scrollTrigger: {
-            trigger: "[data-fp-track]",
-            start: "top top",
-            end: "bottom bottom",
-            scrub: 0.7,
-            invalidateOnRefresh: true,
-          },
-        });
-        // Count from the timeline itself, so the caption keeps step with the
-        // smoothed scrub rather than the raw scroll position.
-        tl.eventCallback("onUpdate", () => {
-          const n = Math.min(prints.length, Math.max(0, Math.ceil((tl.time() - LEAD) / STEP)));
-          setDealt(n - 1);
-        });
-        deals.forEach((d, i) => {
-          const slot = slots[i];
-          const at = LEAD + i * STEP;
-          tl.set(slot, { zIndex: 20 + i }, at).fromTo(
-            d,
-            {
-              x: () => stage.offsetWidth * PILE.x - slot.offsetLeft,
-              y: () => stage.offsetHeight * PILE.y - slot.offsetTop,
-              rotation: pileTilt[i],
-            },
-            { x: 0, y: 0, rotation: prints[i].r, immediateRender: true },
-            at,
-          );
-        });
-        // Hold on the finished table for a beat before the page moves on.
-        tl.to({}, { duration: 0.6 });
-        return () => setDealt(prints.length - 1);
-      });
-
-      // Small screens: each print straightens as it comes up the page.
-      mm.add("(max-width: 63.99rem) and (prefers-reduced-motion: no-preference)", () => {
-        deals.forEach((d, i) => {
-          gsap.fromTo(
-            d,
-            { rotation: prints[i].r * 3, x: i % 2 ? 48 : -48, opacity: 0.4 },
-            { rotation: prints[i].r, x: 0, opacity: 1, ease: "none", scrollTrigger: { trigger: slots[i], start: "top 96%", end: "top 62%", scrub: 0.6 } },
-          );
-        });
-      });
-
-      // A mouse can pick the prints up and move them about the table.
-      mm.add("(min-width: 64rem) and (pointer: fine)", () => {
-        let top = 40;
-        const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        const drags = Draggable.create("[data-print]", {
-          type: "x,y",
-          bounds: stage,
-          inertia: !calm,
-          throwResistance: 4000,
-          maxDuration: 0.9,
-          dragClickables: true,
-          dragResistance: 0.05,
-          edgeResistance: 0.8,
-          zIndexBoost: false,
-          onPress() {
-            gsap.set(this.target.closest("[data-slot]"), { zIndex: ++top });
-            if (!calm) gsap.to(this.target, { scale: 1.05, rotation: -prints[Number(this.target.dataset.i)].r * 0.5, duration: 0.3, ease: "power2.out", overwrite: "auto" });
-          },
-          onDragStart() {
-            dragged.current = true;
-          },
-          onRelease() {
-            if (!calm) gsap.to(this.target, { scale: 1, rotation: 0, duration: 0.6, ease: "back.out(2)", overwrite: "auto" });
-            // The click that ends a drag arrives after release: let it pass first.
-            setTimeout(() => (dragged.current = false), 0);
-          },
-        });
-        return () => drags.forEach((d) => d.kill());
-      });
-
-      return () => mm.revert();
-    },
-    { scope: root },
-  );
-
-  const shown = hover ?? dealt;
-  const caption = shown >= 0 ? photos[prints[shown].key].caption : null;
 
   return (
-    <section ref={root} id="gallery" aria-labelledby="gallery-title" className="fp on-dark on-ember ground gloss" data-j-station="gallery">
-      <div className="fp-track" data-fp-track>
-        <div className="fp-stage" data-fp-stage>
-          <h2 id="gallery-title" className="j-title fp-title">
-            <span>Field</span>
-            <em>photographs</em>
-          </h2>
+    <section id="gallery" aria-labelledby="gallery-title" className="fs on-dark on-ember ground gloss" data-j-station="gallery" data-arch>
+      <header className="fs-head">
+        <h2 id="gallery-title" className="j-title fp-title">
+          <span>Field</span>
+          <em>photographs</em>
+        </h2>
+        <p className="fs-help">From past editions, as printed in the GGY brochure. Scroll to lay the prints down; select one to see it full screen.</p>
+      </header>
 
-          <div className="fp-note">
-            <p className="fp-count num" aria-hidden="true">
-              {Math.max(0, shown + 1)}
-              <span>of {prints.length}</span>
-            </p>
-            <p className="fp-caption" aria-hidden="true">
-              {caption ? sentence(caption) : "Keep scrolling to lay the prints out."}
-            </p>
-            <p className="fp-help">
-              From past editions, as printed in the GGY brochure. <span className="fp-help-drag">Drag a print to move it. </span>Select one to see it full screen.
-            </p>
-          </div>
-
-          <ul className="fp-table">
-            {prints.map((s, i) => {
-              const p = photos[s.key];
-              return (
-                <li key={s.key} className="fp-slot" data-slot data-tall={p.height > p.width ? "" : undefined} style={{ "--x": `${s.x}%`, "--y": `${s.y}%`, "--w": s.w, "--r": `${s.r}deg`, aspectRatio: `${p.width} / ${p.height}` } as CSSProperties}>
-                  <div className="fp-deal" data-deal>
-                    <button
-                      type="button"
-                      className="fp-print"
-                      data-print
-                      data-i={i}
-                      data-cursor="Drag"
-                      aria-label={`Open photograph ${i + 1} of ${prints.length}: ${p.caption}`}
-                      onPointerEnter={(e) => e.pointerType === "mouse" && setHover(i)}
-                      onPointerLeave={() => setHover(null)}
-                      onFocus={() => setHover(i)}
-                      onBlur={() => setHover(null)}
-                      onClick={(e) => {
-                        if (dragged.current) return;
-                        lastFocus.current = e.currentTarget;
-                        setOpen(i);
-                      }}
-                    >
-                      <Image src={p.src} alt={p.alt} fill quality={82} sizes="(min-width: 64rem) 42vw, 90vw" draggable={false} className="object-cover" />
-                    </button>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      </div>
+      <ScrollStack useWindowScroll smoothScroll={false} stackPosition="18%" itemDistance={90} itemStackDistance={28} itemScale={0.04} baseScale={0.85} dimAmount={0.18} rotationAmount={1.2} holdDistance={160}>
+        {prints.map((s, i) => {
+          const p = photos[s.key];
+          return (
+            <ScrollStackItem key={s.key} itemClassName="fs-card">
+              <button
+                type="button"
+                className="fs-card__btn"
+                aria-label={`Open photograph ${i + 1} of ${prints.length}: ${p.caption}`}
+                onClick={(e) => {
+                  lastFocus.current = e.currentTarget;
+                  setOpen(i);
+                }}
+              >
+                <Image src={p.src} alt={p.alt} fill quality={82} sizes="(min-width: 64rem) 70vw, 92vw" draggable={false} className="object-cover" />
+              </button>
+              <p className="fs-card__cap">
+                <span className="num">
+                  {i + 1} <small>of {prints.length}</small>
+                </span>
+                {sentence(p.caption)}
+              </p>
+            </ScrollStackItem>
+          );
+        })}
+      </ScrollStack>
 
       {open !== null ? (
         <Viewer

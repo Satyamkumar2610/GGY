@@ -50,7 +50,7 @@ export function LandingMotion() {
           strokeDashoffset: 0,
           ease: "none",
           stagger: { each: 0.02, from: "random" },
-          scrollTrigger: { trigger: band, start: "top 80%", end: "bottom 40%", scrub: 0.6 },
+          scrollTrigger: { trigger: band, start: "top 80%", end: "top 10%", scrub: 0.6 },
         });
       }
 
@@ -72,17 +72,6 @@ export function LandingMotion() {
         gsap.fromTo("[data-window-img]", { scale: 1.25 }, { scale: 1, ease: "none", scrollTrigger: { trigger: ".lp-connect", start: "top bottom", end: "bottom bottom", scrub: true } });
       }
 
-      // Footer wordmark letters rise in a wave.
-      const mark = document.querySelector(".lp-footer__mark");
-      if (mark) {
-        gsap.from(mark.children, {
-          yPercent: 110,
-          duration: 1.1,
-          ease: "land",
-          stagger: { each: 0.03 },
-          scrollTrigger: { trigger: mark, start: "top 95%", toggleActions: "play none none none" },
-        });
-      }
     });
     document.fonts?.ready.then(() => ScrollTrigger.refresh());
     return () => mm.revert();

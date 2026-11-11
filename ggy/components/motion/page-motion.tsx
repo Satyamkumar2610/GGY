@@ -6,6 +6,7 @@ import { gsap, MOTION_QUERIES, SplitText, useGSAP } from "@/lib/gsap";
  * Page-wide motion, owned by GSAP. Everything is visible without it.
  * [data-reveal]   a photograph's frame opens upward once as it arrives, while the image settles from 1.2x.
  * [data-parallax] on large screens, a photograph drifts gently inside its fixed frame.
+ *                 Every [data-reveal] photograph drifts too, within the 10% it is oversized by.
  * [data-drift]    a chapter title is set in sheared lines: alternate lines enter from opposite sides,
  *                 meet as the title reaches the upper part of the window, and part again, more
  *                 slowly, as it leaves. Scrubbed, so the type is always exactly where the scroll is.
@@ -22,7 +23,10 @@ export function PageMotion() {
         const img = frame.querySelector("img");
         const tl = gsap.timeline({ scrollTrigger: { trigger: frame, start: "top 85%", toggleActions: "play none none none" } });
         tl.fromTo(frame, { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.4, ease: "expo.inOut" });
-        if (img) tl.fromTo(img, { scale: 1.2 }, { scale: 1, duration: 1.9, ease: "land" }, 0.1);
+        // On large screens the photograph stays a little oversized, so it has
+        // room to drift inside its frame (see the parallax below).
+        const rest = window.matchMedia("(min-width: 64rem)").matches && !frame.matches("[data-parallax]") ? 1.1 : 1;
+        if (img) tl.fromTo(img, { scale: rest + 0.2 }, { scale: rest, duration: 1.9, ease: "land" }, 0.1);
       });
 
       // Linework that draws itself with the scroll.
@@ -74,6 +78,13 @@ export function PageMotion() {
     });
 
     mm.add(MOTION_QUERIES.desktop, () => {
+      // Every revealed photograph drifts against the scroll inside its frame.
+      document.querySelectorAll<HTMLElement>("[data-reveal]:not([data-parallax])").forEach((frame) => {
+        const img = frame.querySelector("img");
+        if (!img) return;
+        gsap.fromTo(img, { yPercent: -4 }, { yPercent: 4, ease: "none", scrollTrigger: { trigger: frame, start: "top bottom", end: "bottom top", scrub: 1 } });
+      });
+
       document.querySelectorAll<HTMLElement>("[data-parallax]").forEach((frame) => {
         const media = frame.querySelector<HTMLElement>("[data-parallax-media]");
         if (!media) return;

@@ -39,8 +39,8 @@
   color: var(--c-ink-soft);
 }
 .j-cream {
-  --j-ground: #efe7d9;
-  background: #efe7d9;
+  --j-ground: #f7efef;
+  background: #f7efef;
   color: var(--c-ink-soft);
 }
 .j-deep {
@@ -192,22 +192,21 @@
   }
 }
 
-/* Paper has a tooth; the crimson grounds are laid over it as sheets. */
-.j-paper::before,
-.j-cream::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: url("/paper-grain.svg");
-  pointer-events: none;
-}
+/* White grounds stay clean: no grain. Depth comes from the photographs
+   and from the crimson grounds that rise over them through an arch. */
 .j-sec > * {
   position: relative;
 }
+/* A dark chapter rises over the white one before it. Its top edge is an
+   arch (see [data-arch] in cinema-motion.tsx) that flattens as it arrives;
+   without motion the edge is a shallow fixed curve. */
 .j-sheet {
   z-index: 1;
   margin-top: -2.5rem;
   border-radius: 2.5rem 2.5rem 0 0;
+}
+.js-motion .j-sheet[data-arch] {
+  border-radius: 0;
 }
 /* A section led by a marquee starts closer to the edge. */
 .j-sec--led {
@@ -313,80 +312,203 @@
   margin-top: 1.25rem;
 }
 
-/* ---- The thread ---------------------------------------------------- */
+/* ---- The chapter rail --------------------------------------------- */
 
-.j-thread {
+.j-rail {
   position: fixed;
   z-index: 55;
-  left: 0.9rem;
+  left: 0.7rem;
   top: 50%;
-  height: min(44vh, 22rem);
   translate: 0 -50%;
   display: none;
   opacity: 0;
-  color: var(--c-saffron);
-  pointer-events: none;
-  transition: opacity 500ms ease, color 400ms ease;
+  --rail-ink: var(--c-crimson);
+  --rail-soft: rgb(135 27 56 / 0.22);
+  --rail-glass: rgb(255 255 255 / 0.62);
+  --rail-edge: rgb(135 27 56 / 0.14);
+  transition: opacity 500ms ease, translate 600ms var(--ease);
 }
-.j-thread[data-tone="light"] {
-  color: var(--c-saffron-soft);
+.j-rail[data-tone="light"] {
+  --rail-ink: var(--c-saffron-soft);
+  --rail-soft: rgb(247 241 232 / 0.25);
+  --rail-glass: rgb(46 6 18 / 0.42);
+  --rail-edge: rgb(247 241 232 / 0.16);
 }
-.j-thread[data-on] {
+.j-rail[data-on] {
   opacity: 1;
 }
-.j-thread__track {
-  position: relative;
-  width: 1px;
-  height: 100%;
-  background: color-mix(in srgb, currentColor 50%, transparent);
-}
-.j-thread__tick {
-  position: absolute;
-  left: -3px;
-  width: 7px;
-  height: 1px;
-  background: currentColor;
-}
-.j-thread__bead {
-  position: absolute;
-  top: 0;
-  left: -4px;
-  width: 9px;
-  height: 9px;
-  margin-top: -4.5px;
+.j-rail__capsule {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  width: 2.5rem;
+  padding: 0.7rem 0 0.75rem;
+  border: 1px solid var(--rail-edge);
   border-radius: 999px;
-  background: currentColor;
+  background: var(--rail-glass);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  backdrop-filter: blur(14px) saturate(1.4);
+  box-shadow: 0 18px 40px -22px rgb(46 6 18 / 0.55), inset 0 1px 0 rgb(255 255 255 / 0.35);
+  color: var(--rail-ink);
+  transition: background 500ms ease, border-color 500ms ease, color 500ms ease;
 }
-.j-thread__name {
-  position: absolute;
-  left: 0.55rem;
-  bottom: 0;
+.j-rail__map {
+  width: 1.7rem;
+  height: auto;
+  overflow: visible;
+  color: var(--rail-ink);
+}
+.j-rail__count,
+.j-rail__total {
   margin: 0;
-  writing-mode: vertical-rl;
-  rotate: 180deg;
-  font-size: 0.72rem;
-  line-height: 1;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-  animation: j-name 600ms var(--ease) both;
+  font: 650 0.78rem / 1 var(--f-display);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
 }
-@keyframes j-name {
+.j-rail__count {
+  overflow: hidden;
+}
+.j-rail__count span {
+  display: block;
+  animation: j-rail-count 500ms var(--ease) both;
+}
+@keyframes j-rail-count {
   from {
     opacity: 0;
-    translate: 0 -0.6rem;
+    transform: translateY(70%);
   }
 }
+.j-rail__total {
+  font-weight: 500;
+  opacity: 0.5;
+}
+.j-rail__stops {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: min(40vh, 19rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.j-rail__line {
+  position: absolute;
+  left: 50%;
+  top: 0.3rem;
+  bottom: 0.3rem;
+  width: 2px;
+  margin-left: -1px;
+  border-radius: 2px;
+  background: var(--rail-soft);
+}
+.j-rail__line > i {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--rail-ink);
+  transform: scaleY(0);
+  transform-origin: top center;
+  will-change: transform;
+}
+.j-rail__stops li {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+.j-rail__stops a {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1rem;
+}
+.j-rail__stops a > i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--rail-glass);
+  box-shadow: 0 0 0 1.5px var(--rail-soft);
+  transition: transform 400ms var(--ease), background 400ms ease, box-shadow 400ms ease;
+}
+.j-rail__stops li[data-state="past"] a > i {
+  background: var(--rail-ink);
+  box-shadow: 0 0 0 1.5px var(--rail-ink);
+}
+.j-rail__stops li[data-state="now"] a > i {
+  background: var(--rail-ink);
+  box-shadow: 0 0 0 3px var(--rail-glass), 0 0 0 4.5px var(--rail-ink);
+  transform: scale(1.35);
+}
+.j-rail__stops a:hover > i,
+.j-rail__stops a:focus-visible > i {
+  transform: scale(1.6);
+}
+.j-rail__tip,
+.j-rail__chip {
+  position: absolute;
+  left: calc(100% + 0.9rem);
+  white-space: nowrap;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--rail-edge);
+  border-radius: 999px;
+  background: var(--rail-glass);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  backdrop-filter: blur(14px) saturate(1.4);
+  box-shadow: 0 10px 24px -14px rgb(46 6 18 / 0.5);
+  font: 500 0.8rem / 1.2 var(--f-display);
+  color: var(--rail-ink);
+  pointer-events: none;
+}
+.j-rail__tip {
+  top: 50%;
+  translate: -0.4rem -50%;
+  opacity: 0;
+  transition: opacity 250ms ease, translate 300ms var(--ease);
+}
+.j-rail__stops a:hover .j-rail__tip,
+.j-rail__stops a:focus-visible .j-rail__tip {
+  opacity: 1;
+  translate: 0 -50%;
+}
+.j-rail__chip {
+  top: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin: 0;
+  padding: 0.55rem 0.9rem;
+  border-radius: 0.9rem;
+  translate: -0.4rem -50%;
+  opacity: 0;
+  transition: opacity 400ms ease, translate 500ms var(--ease);
+}
+.j-rail__chip small {
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+.j-rail[data-flash] .j-rail__chip,
+.j-rail__capsule:hover ~ .j-rail__chip {
+  opacity: 1;
+  translate: 0 -50%;
+}
+.j-rail__capsule:has(a:hover) ~ .j-rail__chip {
+  opacity: 0;
+}
 @media (min-width: 64rem) {
-  .j-thread {
+  .j-rail {
     display: block;
   }
-  /* The margin thread takes over from the bar across the top. */
+  /* The rail takes over from the bar across the top. */
   .lp .scroll-progress {
     display: none;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .j-thread__name {
+  .j-rail__count span {
     animation: none;
   }
 }
@@ -573,7 +695,7 @@
   height: 11px;
   border-radius: 999px;
   border: 2px solid var(--c-saffron);
-  background: #efe7d9;
+  background: #f7efef;
 }
 .j-date {
   margin-bottom: 0.75rem;
@@ -1374,11 +1496,6 @@
   display: block;
   height: 1.6rem;
 }
-@media (min-width: 64rem) {
-  .j-faq {
-    margin-left: calc((100% + var(--j-gap)) / 12 * 6);
-  }
-}
 @media (prefers-reduced-motion: reduce) {
   .j-faq__a,
   .j-faq__item button i::after {
@@ -1563,7 +1680,7 @@
 }
 /* The back of a print: plain paper with its notes written on it. */
 .j-print .tilted-card__back {
-  background: #f7f1e6 url("/paper-grain.svg");
+  background: #fdfafa;
 }
 .j-print__back {
   display: flex;
@@ -1731,4 +1848,73 @@
     width: 7rem;
     margin-top: 1.5rem;
   }
+}
+
+/* Gujarat, Maharashtra and Goa on a ribbon, running between the map and the four words. */
+.j-loop {
+  margin: clamp(1rem, 3vw, 2.5rem) 0 0;
+}
+.j-band__map path.is-border {
+  opacity: 0.9;
+  stroke-width: 1.4;
+  fill: none;
+}
+
+/* ---- Field photographs: a stack of prints -------------------------- */
+
+.fs {
+  position: relative;
+  padding: clamp(5rem, 10vw, 8rem) 0 clamp(4rem, 8vw, 7rem);
+}
+.fs-head {
+  display: grid;
+  gap: 1rem;
+  padding-inline: var(--gutter, 1.5rem);
+  max-width: 90rem;
+  margin: 0 auto clamp(2rem, 5vw, 4rem);
+}
+.fs-help {
+  max-width: 26rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: rgb(247 241 232 / 0.8);
+}
+.fs .scroll-stack__inner {
+  max-width: 64rem;
+  margin-inline: auto;
+}
+.fs-card.scroll-stack-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: min(34rem, 72svh);
+  padding: 0.9rem 0.9rem 1.1rem;
+  border-radius: 6px;
+  background: var(--c-on-dark, #f7f1e8);
+  color: var(--c-crimson, #521726);
+}
+.fs-card__btn {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  border: 0;
+  padding: 0;
+  cursor: zoom-in;
+  background: var(--c-sand, #f1e8e7);
+}
+.fs-card__cap {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin: 0;
+  font-family: var(--f-serif);
+  font-size: clamp(1rem, 1.4vw, 1.25rem);
+}
+.fs-card__cap .num {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+.fs-card__cap small {
+  font-size: 0.8rem;
 }

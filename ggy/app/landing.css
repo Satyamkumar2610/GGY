@@ -5,10 +5,10 @@
    ===================================================================== */
 
 .lp {
-  --c-paper: #f4f0e8;
-  --c-light: #fbf8f2;
-  --c-sand: #e9e2d5;
-  --c-cream-deep: #e5d9c4;
+  --c-paper: #ffffff;
+  --c-light: #ffffff;
+  --c-sand: #f1e8e7;
+  --c-cream-deep: #ecdedf;
   --c-crimson: #871b38;
   --c-deep: #5c1026;
   --c-saffron: #b66c4c;
@@ -401,56 +401,31 @@
   stroke-width: 1.25;
   stroke-linejoin: round;
 }
-.lp-hero__deco line {
-  stroke: var(--c-sand);
-  stroke-width: 1;
+.lp-hero__title {
+  position: absolute;
+  z-index: 2;
+  left: var(--tx, 50%);
+  top: var(--ty, 50%);
+  width: var(--tw, 30rem);
+  translate: -50% -50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+  text-align: center;
+  pointer-events: none;
 }
-.lp-hero__deco line.is-faint {
-  stroke: #ddd3c3;
-  stroke-dasharray: 2 7;
-}
-.lp-hero__star {
-  fill: rgb(182 108 76 / 0.45);
-}
-.lp-hero__type text {
+.lp-hero__masked {
   font-family: var(--f-display);
+  text-transform: uppercase;
+  color: var(--c-on-dark);
 }
-/* The title is sized to sit wholly inside the India window. At the previous
-   47px "GOVERNANCE" was wider than the cutout, so the sheet masked its last
-   letters and the crimson copy carried them on paper: the name broke mid-letter
-   along the coastline and read "GOVERNAN|CE". The crimson copy is kept as a
-   fallback for narrow viewports, but nothing should normally spill onto it. */
-.lp-hero__t1 {
-  font-size: 33px;
-  font-weight: 750;
-  letter-spacing: 0.2px;
-}
-.lp-hero__t2 {
-  font-family: var(--f-serif) !important;
-  font-style: italic;
-  font-size: 39px;
-  font-weight: 400;
-}
-.lp-hero__t3 {
-  font-family: var(--f-sans) !important;
-  font-size: 10px;
-  font-weight: 400;
-}
-.lp-hero__type.is-cream .lp-hero__t1,
-.lp-hero__type.is-cream .lp-hero__t3 {
-  fill: var(--c-on-dark);
-}
-.lp-hero__type.is-cream .lp-hero__t2 {
-  fill: var(--c-saffron-soft);
-}
-.lp-hero__type.is-crimson text {
-  fill: var(--c-crimson);
-}
-.lp-hero__type.is-crimson .lp-hero__t2 {
-  fill: var(--c-saffron);
-}
-.lp-hero__type.is-crimson .lp-hero__t3 {
-  fill: var(--c-ink-soft);
+.lp-hero__sub {
+  max-width: 100%;
+  font: 400 clamp(0.8rem, 1.05vw, 1rem) / 1.45 var(--f-sans);
+  color: var(--c-on-dark);
+  text-wrap: balance;
+  text-shadow: 0 1px 14px rgb(40 6 16 / 0.7);
 }
 .lp-hero__cue {
   position: absolute;
@@ -466,14 +441,6 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-}
-/* The HTML stand-in for the SVG tagline; only shown where that one is hidden. */
-.lp-hero__tagline {
-  display: none;
-  max-width: 24rem;
-  font: 400 1rem/1.45 var(--f-sans);
-  color: var(--c-ink-soft);
-  text-wrap: balance;
 }
 .lp-hero__over {
   position: absolute;
@@ -1314,77 +1281,108 @@ html:not(.js-motion) .lp-hero__second {
   position: relative;
   z-index: 3;
   overflow: clip;
-  padding: clamp(5rem, 9vw, 7rem) var(--edge) 1.5rem;
+  padding: clamp(2.5rem, 4.5vw, 3.75rem) var(--edge) 1.25rem;
   background: var(--c-deep);
   color: var(--c-on-dark);
   border-top: 1px solid rgb(247 241 232 / 0.1);
 }
-.lp-footer__grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr)) 1.3fr;
-  gap: 2rem;
+.lp-footer a {
+  transition: color 0.3s var(--ease);
 }
-.lp-footer__grid > div {
+.lp-footer a:hover {
+  color: var(--c-saffron-soft);
+}
+.lp-footer__top {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.3rem;
-  font-size: 0.95rem;
-  line-height: 1.4;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem 3rem;
+  padding-bottom: clamp(1.5rem, 3vw, 2.25rem);
+  border-bottom: 1px solid rgb(247 241 232 / 0.12);
 }
-/* WCAG 2.2 Target Size (Minimum): pointer targets need 24 CSS px. The links
-   sat at 21px, so the gap above moves into the links themselves as hit area. */
-.lp-footer__grid a:not(.lp-pill) {
+.lp-footer__brand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.9rem;
+}
+.lp-footer__mono {
+  font: 800 clamp(2rem, 3.2vw, 2.75rem) / 1 var(--f-display);
+  letter-spacing: 0.12em;
+  color: var(--c-saffron-soft);
+}
+.lp-footer__name {
+  font: 400 italic clamp(1rem, 1.3vw, 1.2rem) / 1.2 var(--f-serif);
+  color: rgb(247 241 232 / 0.8);
+}
+.lp-footer__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+  font-size: 0.92rem;
+}
+/* WCAG 2.2 target size: 24px minimum. */
+.lp-footer__nav a {
   display: inline-flex;
   align-items: center;
   min-height: 1.75rem;
-  transition: color 0.3s var(--ease);
 }
-.lp-footer__grid a {
-  transition: color 0.3s var(--ease);
+.lp-footer__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr) auto;
+  align-items: start;
+  gap: 1.5rem 3rem;
+  padding-block: clamp(1.5rem, 3vw, 2.25rem);
 }
-.lp-footer__grid a:hover {
-  color: var(--c-saffron-soft);
-}
-.lp-footer__label {
-  margin-bottom: 0.6rem;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--c-saffron-soft);
-}
-.lp-footer__grid > .lp-footer__org {
-  align-items: flex-end;
-  text-align: right;
-  color: rgb(247 241 232 / 0.78);
-}
-.lp-footer__org .lp-pill {
-  margin-top: 1rem;
-}
-.lp-footer__mark {
+.lp-footer__contact {
   display: flex;
-  justify-content: space-between;
-  overflow: clip;
-  margin: clamp(4rem, 8vw, 7rem) 0 1.25rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+.lp-footer__contact a {
+  display: inline-flex;
+  min-height: 1.75rem;
+  align-items: center;
   font-family: var(--f-display);
-  font-weight: 800;
-  text-transform: uppercase;
-  font-size: 7.4vw;
-  line-height: 0.86;
-  letter-spacing: -0.01em;
-  color: var(--c-saffron-soft);
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+.lp-footer__contact p {
+  max-width: 24rem;
+  margin-top: 0.35rem;
+  color: rgb(247 241 232 / 0.7);
+}
+.lp-footer__fine {
+  max-width: 34rem;
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: rgb(247 241 232 / 0.6);
+}
+.lp-footer__up {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2.6rem;
+  padding: 0 1.1rem;
+  border: 1px solid rgb(247 241 232 / 0.3);
+  border-radius: 999px;
+  font-size: 0.88rem;
   white-space: nowrap;
 }
-.lp-footer__mark span {
-  display: inline-block;
+.lp-footer__up:hover {
+  border-color: var(--c-saffron-soft);
 }
 .lp-footer__base {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
-  padding-top: 1.25rem;
+  padding-top: 1rem;
   border-top: 1px solid rgb(247 241 232 / 0.12);
-  font-size: 0.78rem;
-  color: rgb(247 241 232 / 0.65);
+  font-size: 0.76rem;
+  color: rgb(247 241 232 / 0.6);
 }
 
 /* --------------------------------------------------------------- */
@@ -1405,12 +1403,8 @@ html:not(.js-motion) .lp-hero__second {
     justify-self: start;
     align-items: flex-start;
   }
-  .lp-footer__grid {
-    grid-template-columns: 1fr 1fr;
-  }
-  .lp-footer__grid > .lp-footer__org {
-    align-items: flex-start;
-    text-align: left;
+  .lp-footer__row {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -1426,12 +1420,6 @@ html:not(.js-motion) .lp-hero__second {
     padding: 0 0.95rem;
     font-size: 0.82rem;
   }
-  .lp-hero__t3 {
-    display: none;
-  }
-  .lp-hero__tagline {
-    display: block;
-  }
   .lp-hero__cue {
     left: var(--edge);
     right: var(--edge);
@@ -1444,9 +1432,6 @@ html:not(.js-motion) .lp-hero__second {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.7rem;
-  }
-  .lp-hero__tagline {
-    font-size: 0.95rem;
   }
   .lp-hero__body {
     margin-left: 0;
@@ -1547,9 +1532,6 @@ html:not(.js-motion) .lp-hero__second {
     margin: 0.5rem 0.5rem 0;
   }
 
-  .lp-footer__grid {
-    grid-template-columns: 1fr;
-  }
   .lp-footer__base {
     flex-direction: column;
   }
@@ -1615,5 +1597,5 @@ html:not(.js-motion) .lp-hero__second {
 /* Ground rhythm: deep crimson, cream, paper alternate down the page. */
 .lp .lp-field,
 .lp #editions {
-  background: #efe7d9;
+  background: #f7efef;
 }

@@ -20,26 +20,47 @@ export function Marquee({ items, label, className = "" }: { items: ReactNode[]; 
         const belt = root.current!.querySelector<HTMLElement>("[data-belt]")!;
         const run = gsap.to(belt, { xPercent: -50, duration: 46, ease: "none", repeat: -1 });
         const lean = gsap.quickTo(belt, "skewX", { duration: 0.5, ease: "power3" });
+        // One ticker eases the belt's speed toward a target; scroll events
+        // only set numbers. (It used to start two tweens per scroll event.)
+        let boost = 0;
+        let speed = 1;
+        let resting = false;
+        let active = false;
+        const tick = () => {
+          boost *= 0.94;
+          const target = resting ? 0 : 1 + boost;
+          speed += (target - speed) * 0.12;
+          run.timeScale(speed);
+        };
         const st = ScrollTrigger.create({
           trigger: root.current,
           start: "top bottom",
           end: "bottom top",
-          onToggle: (self) => (self.isActive ? run.play() : run.pause()),
+          onToggle: (self) => {
+            active = self.isActive;
+            if (active) {
+              run.play();
+              gsap.ticker.add(tick);
+            } else {
+              run.pause();
+              gsap.ticker.remove(tick);
+            }
+          },
           onUpdate: (self) => {
             const v = self.getVelocity();
-            gsap.to(run, { timeScale: 1 + Math.min(7, Math.abs(v) / 260), duration: 0.25, overwrite: true });
-            gsap.to(run, { timeScale: 1, duration: 1.4, delay: 0.25 });
+            boost = Math.max(boost, Math.min(7, Math.abs(v) / 260));
             lean(gsap.utils.clamp(-9, 9, v / -260));
           },
         });
         const calm = () => lean(0);
         ScrollTrigger.addEventListener("scrollEnd", calm);
         const el = root.current!;
-        const rest = () => gsap.to(run, { timeScale: 0, duration: 0.6, overwrite: true });
-        const go = () => gsap.to(run, { timeScale: 1, duration: 0.6, overwrite: true });
+        const rest = () => (resting = true);
+        const go = () => (resting = false);
         el.addEventListener("pointerenter", rest);
         el.addEventListener("pointerleave", go);
         return () => {
+          gsap.ticker.remove(tick);
           ScrollTrigger.removeEventListener("scrollEnd", calm);
           el.removeEventListener("pointerenter", rest);
           el.removeEventListener("pointerleave", go);

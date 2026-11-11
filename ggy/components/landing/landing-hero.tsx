@@ -12,6 +12,9 @@ const SHEET = `M-100000,-100000H100000V100000H-100000Z${atlas.outline}`;
 /** Where the camera dives: the interior of Maharashtra, far from any coast. */
 const DIVE = project(76.2, 20.6);
 
+/** The centre of the title block: central India, well inside every border. */
+const TITLE_AT = project(77.6, 21.3);
+
 /** Distance from the dive point to the nearest point on the national outline. */
 const DIVE_CLEARANCE = (() => {
   let min = Infinity;
@@ -24,35 +27,10 @@ const DIVE_CLEARANCE = (() => {
   return min;
 })();
 
-const STAR = "M14.4 0l2 11.9 11.3-4.2.4.6-9.3 7.7 9.3 7.7-.4.6-11.3-4.2-2 11.9h-.8l-2-11.9-11.3 4.2L0 23.7 9.3 16 0 8.3l.4-.6 11.3 4.2L13.7 0z";
-
 const tf = (c: Camera) => `translate(${c.x.toFixed(2)} ${c.y.toFixed(2)}) scale(${c.k.toFixed(5)})`;
 
 /** Where the nav reads its ground: the same point landing-nav.tsx probes. */
 const NAV_PROBE_Y = 34;
-
-/** The hero title, laid out once in its own 600-unit box so it scales with the map. */
-function Title({ tone }: { tone: "cream" | "crimson" }) {
-  return (
-    <svg className={`lp-hero__type is-${tone}`} x="0" y="0" width="100%" height="100%" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid meet" overflow="visible">
-      <text x="230" y="258" textAnchor="middle" className="lp-hero__t1">
-        THE GOOD
-      </text>
-      <text x="230" y="293" textAnchor="middle" className="lp-hero__t1">
-        GOVERNANCE
-      </text>
-      <text x="230" y="332" textAnchor="middle" className="lp-hero__t2">
-        Yatra
-      </text>
-      <text x="230" y="362" textAnchor="middle" className="lp-hero__t3">
-        An immersive journey through the institutions,
-      </text>
-      <text x="230" y="378" textAnchor="middle" className="lp-hero__t3">
-        people and ideas shaping India’s future.
-      </text>
-    </svg>
-  );
-}
 
 /**
  * The opening. India is a window cut in a paper sheet; through it, the
@@ -68,12 +46,9 @@ export function LandingHero() {
       const el = root.current!;
       const stage = el.querySelector<HTMLElement>("[data-stage]")!;
       const sheet = el.querySelectorAll<SVGPathElement>("[data-sheet]");
-      // The painted sheet (the one inside <defs> is a clip source, never hit-tested).
-      const paper = el.querySelector<SVGPathElement>(".lp-hero__sheet")!;
       const coast = el.querySelector<SVGPathElement>("[data-coast]")!;
-      const lift = el.querySelectorAll<SVGGElement>("[data-lift]");
-      const deco = el.querySelector<SVGGElement>("[data-deco]")!;
-      const cue = el.querySelector<HTMLElement>("[data-cue]")!;
+      const lift = el.querySelectorAll<HTMLElement>("[data-lift]");
+            const cue = el.querySelector<HTMLElement>("[data-cue]")!;
       const img = photo.current!;
 
       let A: Camera = { k: 1, x: 0, y: 0 };
@@ -90,6 +65,12 @@ export function LandingHero() {
         A = fit(INDIA_BOX, [narrow ? 16 : 40, narrow ? 96 : 84, W - (narrow ? 16 : 40), H - (narrow ? 120 : 36)]);
         const k = (Math.hypot(W, H) / 2 / DIVE_CLEARANCE) * 1.08;
         B = { k, x: W / 2 - DIVE[0] * k, y: H / 2 - DIVE[1] * k };
+        // The title sits on the heart of the peninsula, sized to the map so it
+        // can never spill past the coast.
+        const mapW = (INDIA_BOX[2] - INDIA_BOX[0]) * A.k;
+        stage.style.setProperty("--tx", `${(TITLE_AT[0] * A.k + A.x).toFixed(1)}px`);
+        stage.style.setProperty("--ty", `${(TITLE_AT[1] * A.k + A.y).toFixed(1)}px`);
+        stage.style.setProperty("--tw", `${(mapW * (narrow ? 0.62 : 0.52)).toFixed(1)}px`);
       };
 
       const render = () => {
@@ -99,7 +80,6 @@ export function LandingHero() {
         sheet.forEach((p) => p.setAttribute("transform", s));
         coast.setAttribute("transform", s);
         coast.style.opacity = String(gsap.utils.clamp(0, 1, 1 - t / 0.55));
-        deco.style.opacity = String(gsap.utils.clamp(0, 1, 1 - t / 0.45));
         cue.style.opacity = String(gsap.utils.clamp(0, 1, 1 - t / 0.15));
         const lt = Math.min(t / 0.4, 1);
         lift.forEach((g) => {
@@ -109,13 +89,13 @@ export function LandingHero() {
         // The sheet is fully outside the screen by the end; fade the last of it for safety.
         el.style.setProperty("--sheet", String(gsap.utils.clamp(0, 1, (1 - t) / 0.12)));
         img.style.setProperty("--zoom", (1.18 - 0.13 * t).toFixed(4));
-        // What is actually behind the nav? SVG hit testing honours the sheet's
-        // even-odd fill, so the paper path is only returned while the nav sits
-        // on paper rather than in the window. Over paper the nav is crimson and
-        // needs no band; once the photograph is behind it, it turns cream and
-        // takes the backdrop. The old threshold (t > 0.8) left crimson nav
-        // links sitting on the photograph for most of the dive.
-        const onPaper = document.elementsFromPoint(W / 2, NAV_PROBE_Y).includes(paper);
+        // What is behind the nav? Map the probe point back into the sheet's
+        // own coordinates and ask the outline whether it lies inside India.
+        // Pure geometry: the old elementsFromPoint() call forced a full
+        // layout on every scroll frame and was the main cause of stutter.
+        const px = (W / 2 - cam.x) / cam.k;
+        const py = (NAV_PROBE_Y - cam.y) / cam.k;
+        const onPaper = !coast.isPointInFill(new DOMPoint(px, py));
         const next = onPaper ? "dark" : "light";
         if (next !== tone) {
           tone = next;
@@ -136,7 +116,6 @@ export function LandingHero() {
         intro
           .fromTo(coast, { strokeDasharray: len, strokeDashoffset: len }, { strokeDashoffset: 0, duration: 2.2, ease: "power2.inOut", clearProps: "strokeDasharray,strokeDashoffset" })
           .fromTo(img, { opacity: 0 }, { opacity: 1, duration: 1.4 }, 0.5)
-          .fromTo(el.querySelectorAll(".lp-hero__type text"), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 1.1, stagger: 0.07 }, 0.75)
           .fromTo(el.querySelectorAll("[data-intro]"), { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.9, stagger: 0.1 }, 1.25);
 
         const st = ScrollTrigger.create({
@@ -200,52 +179,19 @@ export function LandingHero() {
         </div>
 
         <svg className="lp-hero__svg" aria-hidden="true">
-          <defs>
-            <clipPath id="lp-sheet-clip" clipPathUnits="userSpaceOnUse">
-              <path data-sheet d={SHEET} clipRule="evenodd" />
-            </clipPath>
-          </defs>
-
-          {/* Seen through the window, over the photograph */}
-          <g data-lift>
-            <Title tone="cream" />
-          </g>
 
           <path data-sheet d={SHEET} fillRule="evenodd" className="lp-hero__sheet" />
-
-          {/* Drawn on the paper only */}
-          <g clipPath="url(#lp-sheet-clip)">
-            <g data-deco className="lp-hero__deco">
-              <line x1="4%" y1="11%" x2="96%" y2="11%" />
-              <line x1="4%" y1="94%" x2="96%" y2="94%" />
-              <line x1="27%" y1="11%" x2="27%" y2="94%" />
-              <line x1="50%" y1="11%" x2="50%" y2="94%" />
-              <line x1="73%" y1="11%" x2="73%" y2="94%" />
-              <line x1="4%" y1="52%" x2="96%" y2="52%" />
-              <line x1="4%" y1="11%" x2="96%" y2="94%" className="is-faint" />
-              <line x1="96%" y1="11%" x2="4%" y2="94%" className="is-faint" />
-              <svg x="11%" y="52%" overflow="visible">
-                <path d={STAR} transform="translate(-14 -16)" className="lp-hero__star" />
-              </svg>
-              <svg x="89%" y="52%" overflow="visible">
-                <path d={STAR} transform="translate(-14 -16)" className="lp-hero__star" />
-              </svg>
-            </g>
-            <g data-lift>
-              <Title tone="crimson" />
-            </g>
-          </g>
 
           <path data-coast d={atlas.outline} className="lp-hero__coast" vectorEffect="non-scaling-stroke" />
         </svg>
 
-        <div className="lp-hero__cue" data-cue>
-          {/* The SVG tagline scales with the map and falls under 7px on a phone,
-              so below 768px it is hidden there and set in HTML here instead.
-              Without this the mobile hero stated nothing about the programme. */}
-          <p data-intro className="lp-hero__tagline">
+        <div className="lp-hero__title" data-lift>
+          <p data-intro className="lp-hero__sub">
             An immersive journey through the institutions, people and ideas shaping India’s future.
           </p>
+        </div>
+
+        <div className="lp-hero__cue" data-cue>
           <div className="lp-hero__cue-row">
             <span data-intro className="lp-chip">
               Upcoming edition: Gujarat, Maharashtra, Goa

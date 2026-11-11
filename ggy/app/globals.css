@@ -14,12 +14,12 @@
   /* The Western India Field Journal. Archival paper, deep charcoal ink,
      one Rashtram maroon; terracotta, sage and a restrained coastal blue for
      cartography. Contrast figures are WCAG 2.x against the surface named. */
-  --color-paper: #f4f0e8; /* archival ivory: main page, 15.9:1 with ink */
-  --color-sand: #e9e2d5; /* quiet fills, land on the map */
-  --color-light: #faf8f3; /* raised surfaces */
+  --color-paper: #ffffff; /* archival ivory: main page, 15.9:1 with ink */
+  --color-sand: #f1e8e7; /* quiet fills, land on the map */
+  --color-light: #fdfafa; /* raised surfaces */
   --color-ink: #191817; /* 15.9:1 on paper */
   --color-ink-2: #24211f;
-  --color-ivory: #f4f0e8; /* on maroon, ink and photographs */
+  --color-ivory: #ffffff; /* on maroon, ink and photographs */
 
   --color-ink-soft: #46413b; /* 8.9:1 on paper */
   --color-muted: #6a625a; /* 5.3:1 on paper */
@@ -33,8 +33,8 @@
 
   /* Terracotta carries the cartographic marks and large display accents;
      small text takes the deeper terracotta-ink, 5.4:1 on paper. */
-  --color-cream: #efe7d9;
-  --color-cream-deep: #e5d9c4;
+  --color-cream: #f7efef;
+  --color-cream-deep: #ecdedf;
   --color-saffron: #b66c4c;
   --color-saffron-ink: #8c4a2f;
   --color-saffron-soft: #e0a383; /* on maroon and ink: 6.3:1 on crimson-deep */
@@ -47,13 +47,13 @@
   /* Cartography */
   --color-sage: #73817c;
   --color-coast: #5c7a86;
-  --color-sea: #e6e4dc;
+  --color-sea: #f4f0f0;
 
-  --color-hair: #d6cdbe;
+  --color-hair: #e7dbdc;
   --color-hair-strong: #8c8378;
   --color-hair-ink: #3a3531;
   --color-hair-ember: #4d3436;
-  --color-hair-cream: #d9c9ad;
+  --color-hair-cream: #e6d6d8;
 }
 
 @theme inline {
@@ -124,9 +124,9 @@
      on the map rather than frosted over it. Blur is zero everywhere except
      the nav bar, where it keeps text legible over moving photographs. */
   --glass-blur: 0px;
-  --glass-paper: #fbf8f2;
-  --glass-paper-strong: #fbf8f2;
-  --glass-cream: #f4e7d6;
+  --glass-paper: #ffffff;
+  --glass-paper-strong: #ffffff;
+  --glass-cream: #f7efef;
   --glass-crimson: #6b1530;
   --glass-on-dark: rgb(255 244 236 / 0.06);
   --glass-shadow:
@@ -139,23 +139,23 @@
   color-scheme: light;
   /* shadcn's semantic tokens, mapped onto the GGY palette so anything added
      from a registry inherits paper, ink, crimson and saffron, not neutral grey. */
-  --background: #f4f0e8;
+  --background: #ffffff;
   --foreground: #191817;
-  --card: #fbf8f2;
+  --card: #ffffff;
   --card-foreground: #191817;
-  --popover: #fbf8f2;
+  --popover: #ffffff;
   --popover-foreground: #191817;
   --primary: #871b38;
-  --primary-foreground: #f4f0e8;
-  --secondary: #e9e2d5;
+  --primary-foreground: #ffffff;
+  --secondary: #f1e8e7;
   --secondary-foreground: #5c1026;
-  --muted: #e9e2d5;
+  --muted: #f1e8e7;
   --muted-foreground: #6a625a;
-  --accent: #efe7d9;
+  --accent: #f7efef;
   --accent-foreground: #5c1026;
   --destructive: #a3242b;
-  --border: #d6cdbe;
-  --input: #d6cdbe;
+  --border: #e7dbdc;
+  --input: #e7dbdc;
   --ring: #b66c4c;
   --chart-1: #871b38;
   --chart-2: #b66c4c;
