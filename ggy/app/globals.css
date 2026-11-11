@@ -1,4 +1,8 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
 
 /* =====================================================================
    GGY · The Yatra Field Journal
@@ -59,6 +63,46 @@
   --font-sans: var(--font-switzer), ui-sans-serif, system-ui, sans-serif;
   --font-deva: var(--font-anek-devanagari), "Kohinoor Devanagari", "Noto Sans Devanagari", sans-serif;
   --font-guj: var(--font-anek-gujarati), "Gujarati Sangam MN", "Noto Sans Gujarati", sans-serif;
+  --font-heading: var(--font-display);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  /* --color-muted is the site's secondary text colour (see @theme above);
+     shadcn's muted surface stays available as var(--muted). */
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
 :root {
@@ -93,6 +137,40 @@
     0 0 0 1px rgb(255 236 226 / 0.14),
     0 12px 28px -18px rgb(30 4 12 / 0.6);
   color-scheme: light;
+  /* shadcn's semantic tokens, mapped onto the GGY palette so anything added
+     from a registry inherits paper, ink, crimson and saffron, not neutral grey. */
+  --background: #f4f0e8;
+  --foreground: #191817;
+  --card: #fbf8f2;
+  --card-foreground: #191817;
+  --popover: #fbf8f2;
+  --popover-foreground: #191817;
+  --primary: #871b38;
+  --primary-foreground: #f4f0e8;
+  --secondary: #e9e2d5;
+  --secondary-foreground: #5c1026;
+  --muted: #e9e2d5;
+  --muted-foreground: #6a625a;
+  --accent: #efe7d9;
+  --accent-foreground: #5c1026;
+  --destructive: #a3242b;
+  --border: #d6cdbe;
+  --input: #d6cdbe;
+  --ring: #b66c4c;
+  --chart-1: #871b38;
+  --chart-2: #b66c4c;
+  --chart-3: #5c7a86;
+  --chart-4: #73817c;
+  --chart-5: #e0a383;
+  --radius: 0.375rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
 }
 
 /* Lenis */
@@ -114,12 +192,14 @@ html.lenis body {
     color: var(--color-ink);
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    @apply font-sans;
   }
   body {
     font-family: var(--font-sans);
     font-size: 1.03rem;
     line-height: 1.62;
     -webkit-font-smoothing: antialiased;
+    @apply bg-background text-foreground;
   }
   h1,
   h2,
@@ -158,6 +238,9 @@ html.lenis body {
   }
   .on-dark :focus-visible {
     outline-color: var(--color-ivory);
+  }
+  * {
+    @apply border-border outline-ring/50;
   }
 }
 
@@ -4053,4 +4136,38 @@ html:not(.js-motion) .itin-bead {
 .bg-cream .contours,
 .archive-atlas .contours {
   color: rgb(182 108 76 / 0.2);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
 }

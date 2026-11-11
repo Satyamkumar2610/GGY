@@ -1,4 +1,5 @@
-import Image from "next/image";
+import TiltedCard from "../TiltedCard";
+import { optimized } from "@/lib/image-url";
 import { atlas } from "@/lib/atlas";
 import { about, annotations, BROCHURE, components, photos } from "@/content/ggy";
 import { NoteRef } from "../primitives";
@@ -68,37 +69,86 @@ export function Field() {
           <p>Delegates leave the lecture hall for the places where policy is carried out, and meet the people carrying it out.</p>
         </Head>
 
+        {/* Two prints from the field. Each can be turned over to read what
+            the brochure says about it, as on the back of a photograph. */}
         <div className="j-pair" data-pair>
           <figure className="j-fig">
-            <div className="j-fig__frame" data-pair-left style={{ aspectRatio: "3 / 2" }}>
-              <Image src={hall.src} alt={hall.alt} fill sizes="(min-width: 64rem) 46vw, 100vw" quality={82} className="object-cover" />
+            <div className="j-print" data-pair-left data-cursor="Turn over">
+              <TiltedCard
+                imageSrc={optimized(hall.src)}
+                altText={hall.alt}
+                captionText="Turn over: the lecture hall"
+                showTooltip={false}
+                containerWidth="100%"
+                containerHeight="auto"
+                imageWidth="100%"
+                imageHeight="100%"
+                style={{ aspectRatio: "3 / 2" }}
+                radius={4}
+                rotateAmplitude={7}
+                scaleOnHover={1.02}
+                glare={0.28}
+                glareColor="#fbf3e6"
+                shadow={0.35}
+                gyroscope={false}
+                intro={false}
+                backContent={
+                  <div className="j-print__back">
+                    <p className="j-print__hand">{hall.caption}</p>
+                    <p className="j-meta">Photograph from the GGY brochure.</p>
+                  </div>
+                }
+              />
             </div>
             <figcaption>
               <h3 className="j-h3">The institutions</h3>
               <p className="j-body">{field.text}</p>
-              <p className="j-meta">{hall.caption} Photograph from the GGY brochure.</p>
             </figcaption>
           </figure>
           <figure className="j-fig">
-            <div className="j-fig__frame" data-pair-right style={{ aspectRatio: "3 / 2" }}>
-              <Image src={land.src} alt={land.alt} fill sizes="(min-width: 64rem) 46vw, 100vw" quality={82} className="object-cover" />
+            <div className="j-print" data-pair-right data-cursor="Turn over">
+              <TiltedCard
+                imageSrc={optimized(land.src)}
+                altText={land.alt}
+                captionText="Turn over: the Tropic of Cancer marker"
+                showTooltip={false}
+                containerWidth="100%"
+                containerHeight="auto"
+                imageWidth="100%"
+                imageHeight="100%"
+                style={{ aspectRatio: "3 / 2" }}
+                radius={4}
+                rotateAmplitude={7}
+                scaleOnHover={1.02}
+                glare={0.28}
+                glareColor="#fbf3e6"
+                shadow={0.35}
+                gyroscope={false}
+                intro={false}
+                backContent={
+                  <div className="j-print__back">
+                    <dl className="j-seen">
+                      {notes.map((n) => (
+                        <div key={n.title}>
+                          <dt>{n.title}</dt>
+                          <dd>{n.text}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                    <p className="j-meta">{land.caption} Photograph from the GGY brochure.</p>
+                  </div>
+                }
+              />
             </div>
             <figcaption>
               <h3 className="j-h3">The people</h3>
               <p className="j-body">
                 {policy.text} {cases.text}
               </p>
-              <dl className="j-seen">
-                {notes.map((n) => (
-                  <div key={n.title}>
-                    <dt>{n.title}</dt>
-                    <dd>{n.text}</dd>
-                  </div>
-                ))}
-              </dl>
             </figcaption>
           </figure>
         </div>
+        <p className="j-meta j-pair__hint">Select a photograph to turn it over.</p>
 
         <div id="idea" className="j-idea">
           <div className="j-idea__lead">

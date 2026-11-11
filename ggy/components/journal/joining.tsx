@@ -3,6 +3,8 @@ import { Button, NoteRef, Value } from "../primitives";
 import { TicketMotion } from "../motion/ticket-motion";
 import { Readiness } from "../readiness";
 import { Head, Title } from "./head";
+import BorderGlow from "../BorderGlow";
+import HoloCard from "../HoloCard";
 
 /**
  * Joining: the one action available today, the upcoming edition set as a
@@ -20,8 +22,23 @@ export function Joining() {
           </Button>
         </Head>
 
-        {/* The pass: issued, but with none of its details filled in yet */}
-        <div id="admissions" className="ticket j-pass" data-ticket>
+        {/* The pass: issued, but with none of its details filled in yet. Its
+            edge catches the light where the pointer comes near it, and the
+            stub carries a foil seal, as a printed pass would. */}
+        <div id="admissions" className="j-pass-wrap" data-ticket>
+          <BorderGlow
+            className="j-pass-glow"
+            backgroundColor="#fbf8f2"
+            borderRadius={10}
+            glowRadius={34}
+            glowColor="22 61 70"
+            glowIntensity={0.9}
+            edgeSensitivity={26}
+            coneSpread={22}
+            fillOpacity={0.32}
+            colors={["#e0a383", "#b66c4c", "#f4e7d6"]}
+          >
+        <div className="ticket j-pass">
           <div className="ticket-main">
             <span aria-hidden="true" className="ticket-band" />
             <div className="j-pass__top">
@@ -56,8 +73,13 @@ export function Joining() {
                 <Value value={upcoming.cohortSize} />
               </dd>
             </dl>
+            <div className="j-pass__seal">
+              <HoloCard image="/images/ggy-seal.png" alt="Foil seal of the Good Governance Yatra" preset="stars" width={112} radius={56} intensity={0.7} edgeSparkle={0.5} frame={0} glare={0.45} foilColor="#e9bfa8" tiltMax={18} hoverScale={1.06} shadow={false} />
+            </div>
             <span aria-hidden="true" className="ticket-code" />
           </div>
+        </div>
+          </BorderGlow>
         </div>
 
         <div className="j-ready">

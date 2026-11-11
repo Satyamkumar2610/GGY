@@ -1542,3 +1542,193 @@
     display: none;
   }
 }
+
+/* =====================================================================
+   React Bits components, brought into the journal: warm shadows rather
+   than black, the page's own radii, visible keyboard focus.
+   ===================================================================== */
+
+/* ---- Prints that turn over (TiltedCard) ----------------------------- */
+
+.j-print .tilted-card {
+  --tc-shadow-color: rgb(60 8 22 / 0.5);
+}
+.j-print .tilted-card__face {
+  background: var(--c-sand);
+}
+.j-print .tilted-card:focus-visible .tilted-card__body {
+  outline: 2px solid var(--c-saffron);
+  outline-offset: 5px;
+  border-radius: 4px;
+}
+/* The back of a print: plain paper with its notes written on it. */
+.j-print .tilted-card__back {
+  background: #f7f1e6 url("/paper-grain.svg");
+}
+.j-print__back {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+  color: var(--c-ink-soft);
+}
+.j-print__hand {
+  max-width: 26rem;
+  font-family: var(--f-serif);
+  font-style: italic;
+  font-size: clamp(1.15rem, 1.8vw, 1.6rem);
+  line-height: 1.35;
+  color: var(--c-deep);
+}
+.j-print__back .j-seen {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.j-print__back .j-seen dd {
+  font-family: var(--f-serif);
+  font-size: 0.95rem;
+}
+.j-pair__hint {
+  margin-top: 1.5rem;
+}
+
+/* ---- The three states (DepthCarousel) ------------------------------- */
+
+.j-places {
+  margin-top: var(--j-section);
+}
+.j-places__grid {
+  display: grid;
+  gap: 2rem var(--j-gap);
+  margin-top: var(--j-block);
+}
+.j-places__stage {
+  position: relative;
+  height: clamp(15rem, 58vw, 32rem);
+}
+.j-places .depth-carousel__card {
+  background: var(--c-deep);
+  box-shadow:
+    0 30px 60px -28px rgb(60 8 22 / 0.55),
+    0 8px 20px -12px rgb(60 8 22 / 0.4);
+}
+.j-places .depth-carousel:focus-visible {
+  outline: 2px solid var(--c-saffron);
+  outline-offset: 6px;
+  border-radius: 4px;
+}
+.j-places .depth-carousel__arrow {
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid rgb(135 27 56 / 0.3);
+  background: var(--c-paper);
+  color: var(--c-crimson);
+  backdrop-filter: none;
+}
+.j-places .depth-carousel__arrow:hover {
+  background: var(--c-crimson);
+  border-color: var(--c-crimson);
+  color: var(--c-paper);
+}
+.j-places .depth-carousel__arrow--prev {
+  left: 0;
+}
+.j-places .depth-carousel__arrow--next {
+  right: 0;
+}
+.j-places__note {
+  display: grid;
+  gap: 0.6rem;
+  align-content: end;
+}
+.j-places__count {
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: 2.6rem;
+  line-height: 1;
+  color: var(--c-saffron);
+}
+.j-places__count span {
+  margin-left: 0.6rem;
+  font-family: var(--f-sans);
+  font-weight: 400;
+  font-size: 0.875rem;
+  color: var(--c-muted);
+}
+.j-places__state {
+  font-family: var(--f-display);
+  font-weight: 750;
+  font-size: clamp(1.6rem, 2.6vw, 2.4rem);
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--c-crimson);
+}
+.j-places__caption {
+  font-family: var(--f-serif);
+  font-style: italic;
+  font-size: 1.25rem;
+  line-height: 1.35;
+  color: var(--c-deep);
+}
+.j-places__ref {
+  margin-top: 0.75rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--j-hair);
+}
+@media (min-width: 64rem) {
+  .j-places__grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: end;
+  }
+  .j-places__stage {
+    grid-column: 1 / 9;
+  }
+  .j-places__note {
+    grid-column: 9 / 13;
+    padding-bottom: 2rem;
+  }
+}
+
+/* ---- The pass (BorderGlow and a HoloCard seal) ---------------------- */
+
+.j-pass-wrap {
+  position: relative;
+}
+.lp .j-pass-glow {
+  border-color: rgb(135 27 56 / 0.14);
+  box-shadow: 0 50px 90px -50px rgb(30 4 12 / 0.75);
+}
+/* The stub's punched holes sit half outside the pass: nothing may clip them. */
+.lp .j-pass-glow .border-glow-inner {
+  overflow: visible;
+}
+.lp .j-pass-glow .ticket {
+  background: transparent;
+  box-shadow: none;
+}
+.j-pass .ticket-stub {
+  position: relative;
+}
+.j-pass__seal {
+  position: absolute;
+  top: clamp(1.25rem, 2.5vw, 2rem);
+  right: clamp(1.25rem, 2.5vw, 2rem);
+  width: 5.5rem;
+}
+.j-pass__seal .holo-card {
+  width: 100%;
+  border-radius: 999px;
+}
+.j-pass__seal .holo-card__face {
+  border-radius: 999px;
+}
+@media (min-width: 48rem) {
+  .j-pass__seal {
+    position: static;
+    width: 7rem;
+    margin-top: 1.5rem;
+  }
+}

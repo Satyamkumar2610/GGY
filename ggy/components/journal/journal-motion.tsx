@@ -65,9 +65,10 @@ export function JournalMotion() {
       const pair = document.querySelector("[data-pair]");
       if (pair) {
         const st = { trigger: pair, start: "top 82%", end: "top 30%", scrub: 0.5 };
-        gsap.fromTo("[data-pair-left]", { clipPath: "inset(0% 0% 0% 100%)" }, { clipPath: "inset(0% 0% 0% 0%)", ease: "none", scrollTrigger: st });
-        gsap.fromTo("[data-pair-right]", { clipPath: "inset(0% 100% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", ease: "none", scrollTrigger: st });
-        gsap.fromTo("[data-pair] img", { scale: 1.18 }, { scale: 1, ease: "none", scrollTrigger: { trigger: pair, start: "top 82%", end: "bottom 40%", scrub: 0.5 } });
+        // The wipe ends outside the frame, so a print lifted under the
+        // pointer is never cut off at its edge.
+        gsap.fromTo("[data-pair-left]", { clipPath: "inset(-12% -12% -12% 100%)" }, { clipPath: "inset(-12% -12% -12% -12%)", ease: "none", scrollTrigger: st });
+        gsap.fromTo("[data-pair-right]", { clipPath: "inset(-12% 100% -12% -12%)" }, { clipPath: "inset(-12% -12% -12% -12%)", ease: "none", scrollTrigger: st });
       }
 
       // Nine days: the road fills and a bead walks it as the days are read.

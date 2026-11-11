@@ -3,6 +3,7 @@ import { BROCHURE, components, CONCEPT_NOTE, itinerary8, photos, previousEdition
 import { NoteRef } from "../primitives";
 import { Head } from "./head";
 import { Marquee } from "./marquee";
+import { Places } from "./places";
 
 // The confirmed route, north to south as the flight above draws it.
 const ROUTE = ["Gujarat", "Maharashtra", "Goa"].map((n) => upcoming.states.find((s) => s.name === n)!);
@@ -51,6 +52,8 @@ export function Coda() {
             </ol>
           </div>
         </div>
+
+        <Places />
       </div>
     </section>
   );
