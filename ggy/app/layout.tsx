@@ -5,6 +5,8 @@ import "./globals.css";
 import { MotionProvider } from "@/components/motion/motion-provider";
 import { SmoothScroll } from "@/components/motion/smooth-scroll";
 import { INDEXABLE, SITE_URL } from "@/lib/site";
+import { cn } from "@/lib/utils";
+
 
 // Gambetta (quotations and unconfirmed values) and Switzer (text) by the Indian Type Foundry, from Fontshare, under the
 // ITF Free Font License. Self-hosting for our own website is permitted.
@@ -77,7 +79,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en-IN"
       suppressHydrationWarning
-      className={`${anekLatin.variable} ${gambetta.variable} ${switzer.variable} ${anekDevanagari.variable} ${anekGujarati.variable}`}
+      className={cn(anekLatin.variable, gambetta.variable, switzer.variable, anekDevanagari.variable, anekGujarati.variable)}
     >
       <head>
         {/* suppressHydrationWarning: some browser extensions inject their own

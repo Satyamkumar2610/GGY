@@ -38,12 +38,9 @@ export function ProgrammeChapter() {
               <p className="caption mt-3">{field.caption} Photograph from the GGY brochure.</p>
             </div>
           </div>
-          <ol className="programme-index lg:col-span-6 lg:col-start-7">
-            {components.map((c, i) => (
+          <ul className="programme-index lg:col-span-6 lg:col-start-7">
+            {components.map((c) => (
               <li key={c.name} className="programme-row" data-row>
-                <span className="programme-num num" aria-hidden="true">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
                 <div>
                   <h3 className="programme-name">{c.name}</h3>
                   <p className="mt-2 max-w-[28rem] text-[0.98rem] text-ink-soft">
@@ -53,7 +50,7 @@ export function ProgrammeChapter() {
                 </div>
               </li>
             ))}
-          </ol>
+          </ul>
         </div>
 
         <div className="mt-[clamp(6rem,12vw,10rem)] grid gap-10 lg:grid-cols-12 lg:gap-[var(--gap)]">

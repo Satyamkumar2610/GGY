@@ -1,0 +1,1734 @@
+/* =====================================================================
+   The journal system: everything below the opening.
+
+   Grid   12 columns inside the page container. Three verticals only:
+          A = column 1, B = column 7, C = column 9. Nothing is indented,
+          staggered or slid sideways.
+   Type   Anek at three widths (75 for titles, 100 for names and labels,
+          125 where a word opens up), Gambetta for the Yatra's own words,
+          Switzer for facts.
+   Edges  Hairlines and space. Only photographs, the gallery prints and
+          the pass have edges of their own.
+   Motion Titles settle, rules draw, and one scrubbed movement per act.
+   ===================================================================== */
+
+.lp {
+  --j-gap: 1.5rem;
+  --j-section: clamp(6rem, 12vw, 11rem);
+  --j-block: clamp(2.75rem, 5.5vw, 4.5rem);
+  --j-hair: rgb(92 16 38 / 0.2);
+  --j-hair-dark: rgb(247 241 232 / 0.26);
+}
+
+.j-wrap {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.j-sec {
+  position: relative;
+  padding-block: var(--j-section);
+}
+.j-sec--tight {
+  padding-top: 0;
+}
+.j-paper {
+  --j-ground: var(--c-paper);
+  background: var(--c-paper);
+  color: var(--c-ink-soft);
+}
+.j-cream {
+  --j-ground: #efe7d9;
+  background: #efe7d9;
+  color: var(--c-ink-soft);
+}
+.j-deep {
+  background: var(--c-deep);
+  color: var(--c-on-dark);
+}
+
+/* ---- Type ---------------------------------------------------------- */
+
+/* Titles speak in the opening's voice: capitals in Anek, then the phrase
+   that carries the line in Gambetta italic, as on the cover. */
+.lp :is(.j-wrap, .fp-stage) .j-title {
+  margin: 0;
+  font-family: var(--f-display);
+  font-weight: 750;
+  font-variation-settings: "wdth" 100;
+  font-size: clamp(2.1rem, 4.5vw, 4.4rem);
+  line-height: 0.94;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+  text-wrap: balance;
+  color: var(--c-crimson);
+}
+.lp :is(.j-wrap, .fp-stage) .j-title span {
+  display: block;
+}
+.lp :is(.j-wrap, .fp-stage) .j-title em {
+  display: block;
+  margin-top: 0.04em;
+  font-family: var(--f-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.16em;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--c-saffron);
+}
+.lp .on-dark :is(.j-wrap, .fp-stage) .j-title em,
+.lp .fp .j-title em {
+  color: var(--c-saffron-soft);
+}
+.lp .fp .j-title {
+  color: var(--c-on-dark);
+}
+.lp .j-wrap .j-title--sub {
+  font-size: clamp(1.7rem, 3.1vw, 3rem);
+}
+.lp .j-wrap .j-h3 {
+  margin: 0;
+  font-family: var(--f-display);
+  font-weight: 520;
+  font-variation-settings: "wdth" 100;
+  font-size: clamp(1.35rem, 2vw, 1.85rem);
+  line-height: 1.12;
+  letter-spacing: -0.012em;
+  color: var(--c-crimson);
+}
+.j-body {
+  max-width: 34rem;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+}
+.j-lede {
+  max-width: 34rem;
+  font-size: clamp(1.1rem, 1.35vw, 1.3rem);
+  line-height: 1.5;
+}
+.j-meta {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--c-muted);
+}
+.j-quote {
+  max-width: 34rem;
+  font-family: var(--f-serif);
+  font-style: italic;
+  font-size: clamp(1.15rem, 1.5vw, 1.4rem);
+  line-height: 1.35;
+}
+.j-rule {
+  display: block;
+  height: 1px;
+  background: var(--j-hair);
+}
+.lp .on-dark .j-wrap :is(.j-title, .j-h3) {
+  color: var(--c-on-dark);
+}
+.on-dark .j-body,
+.on-dark .j-note {
+  color: rgb(247 241 232 / 0.84);
+}
+.on-dark .j-meta {
+  color: rgb(247 241 232 / 0.7);
+}
+.on-dark .j-rule {
+  background: var(--j-hair-dark);
+}
+
+/* ---- The section head --------------------------------------------- */
+
+.j-head {
+  display: grid;
+  gap: 1.5rem;
+  margin-bottom: var(--j-block);
+}
+.j-note {
+  max-width: 26rem;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+}
+@media (min-width: 64rem) {
+  .j-head {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--j-gap);
+    align-items: end;
+  }
+  .j-head > .j-title {
+    grid-column: 1 / 9;
+  }
+  .j-head > .j-note {
+    grid-column: 9 / 13;
+  }
+}
+
+/* A star and a drawn rule open every chapter, as the cover's frame does. */
+.j-plate {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: clamp(1.75rem, 3.5vw, 3rem);
+}
+.j-plate .j-rule {
+  flex: 1;
+}
+.j-star {
+  flex: none;
+  width: 1.15rem;
+  height: 1.3rem;
+  fill: var(--c-saffron);
+}
+.on-dark .j-star {
+  fill: var(--c-saffron-soft);
+}
+@media (min-width: 64rem) {
+  .j-head > .j-plate {
+    grid-column: 1 / -1;
+    margin-bottom: clamp(0.5rem, 1.5vw, 1.5rem);
+  }
+}
+
+/* Paper has a tooth; the crimson grounds are laid over it as sheets. */
+.j-paper::before,
+.j-cream::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("/paper-grain.svg");
+  pointer-events: none;
+}
+.j-sec > * {
+  position: relative;
+}
+.j-sheet {
+  z-index: 1;
+  margin-top: -2.5rem;
+  border-radius: 2.5rem 2.5rem 0 0;
+}
+/* A section led by a marquee starts closer to the edge. */
+.j-sec--led {
+  padding-top: clamp(3.5rem, 7vw, 6rem);
+  overflow-x: clip;
+}
+
+/* ---- Marquee ------------------------------------------------------- */
+
+.j-marquee {
+  margin-bottom: clamp(4rem, 9vw, 8rem);
+  overflow: hidden;
+  font-family: var(--f-display);
+  font-weight: 750;
+  font-size: clamp(3.2rem, 9.5vw, 9.5rem);
+  line-height: 1.25;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--c-crimson);
+}
+.j-marquee__belt {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+.j-marquee__row {
+  display: flex;
+  align-items: center;
+}
+/* Names are drawn in outline; a state's name in its own script is filled. */
+.j-marquee__item {
+  padding-inline: 0.22em;
+  /* Stroke first, then a fill in the ground colour over it: the letters read
+     as clean outlines, without the joins inside a variable font's glyphs. */
+  color: var(--j-ground, var(--c-paper));
+  -webkit-text-stroke: 3px var(--c-crimson);
+  paint-order: stroke fill;
+}
+.j-marquee__item:has(.j-marquee__native) {
+  color: var(--c-saffron);
+  -webkit-text-stroke: 0;
+  font-weight: 600;
+}
+.j-marquee .j-star {
+  width: 0.36em;
+  height: 0.41em;
+  margin-inline: 0.1em;
+}
+@media (prefers-reduced-motion: reduce) {
+  .j-marquee__belt {
+    width: auto;
+    flex-wrap: wrap;
+  }
+  .j-marquee__row[aria-hidden] {
+    display: none;
+  }
+  .j-marquee__row {
+    flex-wrap: wrap;
+  }
+  .j-marquee {
+    font-size: clamp(2rem, 5vw, 4rem);
+    white-space: normal;
+  }
+}
+
+/* ---- Ruled rows ---------------------------------------------------- */
+
+.j-rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.j-row {
+  position: relative;
+  display: grid;
+  gap: 0.6rem;
+  padding-block: 1.75rem;
+}
+.j-row > .j-rule,
+.j-stage > .j-rule,
+.j-day > .j-rule,
+.j-figs .j-rule,
+.j-inst__cols .j-rule,
+.j-took__list .j-rule {
+  position: absolute;
+  inset: 0 0 auto;
+}
+
+/* ---- Figures ------------------------------------------------------- */
+
+.j-fig {
+  margin: 0;
+}
+.j-fig__frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--c-sand);
+}
+.j-fig figcaption {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 1.25rem;
+}
+
+/* ---- The thread ---------------------------------------------------- */
+
+.j-thread {
+  position: fixed;
+  z-index: 55;
+  left: 0.9rem;
+  top: 50%;
+  height: min(44vh, 22rem);
+  translate: 0 -50%;
+  display: none;
+  opacity: 0;
+  color: var(--c-saffron);
+  pointer-events: none;
+  transition: opacity 500ms ease, color 400ms ease;
+}
+.j-thread[data-tone="light"] {
+  color: var(--c-saffron-soft);
+}
+.j-thread[data-on] {
+  opacity: 1;
+}
+.j-thread__track {
+  position: relative;
+  width: 1px;
+  height: 100%;
+  background: color-mix(in srgb, currentColor 50%, transparent);
+}
+.j-thread__tick {
+  position: absolute;
+  left: -3px;
+  width: 7px;
+  height: 1px;
+  background: currentColor;
+}
+.j-thread__bead {
+  position: absolute;
+  top: 0;
+  left: -4px;
+  width: 9px;
+  height: 9px;
+  margin-top: -4.5px;
+  border-radius: 999px;
+  background: currentColor;
+}
+.j-thread__name {
+  position: absolute;
+  left: 0.55rem;
+  bottom: 0;
+  margin: 0;
+  writing-mode: vertical-rl;
+  rotate: 180deg;
+  font-size: 0.72rem;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  animation: j-name 600ms var(--ease) both;
+}
+@keyframes j-name {
+  from {
+    opacity: 0;
+    translate: 0 -0.6rem;
+  }
+}
+@media (min-width: 64rem) {
+  .j-thread {
+    display: block;
+  }
+  /* The margin thread takes over from the bar across the top. */
+  .lp .scroll-progress {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .j-thread__name {
+    animation: none;
+  }
+}
+
+/* ---- Departure ----------------------------------------------------- */
+
+.lp .j-band {
+  display: block;
+  min-height: 0;
+  padding: clamp(7rem, 13vw, 11rem) 0 clamp(4rem, 8vw, 7rem);
+}
+.j-band__top {
+  position: relative;
+  display: grid;
+  gap: 3rem;
+}
+.j-band__claim {
+  margin-top: clamp(1.75rem, 3vw, 2.5rem);
+  max-width: 22rem;
+  font-family: var(--f-serif);
+  font-size: clamp(1.3rem, 1.8vw, 1.65rem);
+  line-height: 1.3;
+  color: rgb(247 241 232 / 0.88);
+}
+.j-band__map {
+  width: 100%;
+  max-height: 70svh;
+}
+.j-band__map path {
+  fill: none;
+  stroke: var(--c-saffron-soft);
+  stroke-width: 1;
+  stroke-linejoin: round;
+  opacity: 0.42;
+}
+.j-band__map path.is-focus {
+  opacity: 1;
+  stroke-width: 1.8;
+  fill: rgb(224 163 131 / 0.16);
+}
+/* The four words, one line across the whole grid. Their width is the
+   animation: see JournalMotion. */
+.j-words {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.2em 0;
+  margin-top: clamp(3rem, 7vw, 6rem);
+  font-family: var(--f-display);
+  font-weight: 650;
+  font-size: 9.4vw;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+.j-words span {
+  --w: 100;
+  font-variation-settings: "wdth" var(--w);
+}
+@media (min-width: 64rem) {
+  .j-band__top {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--j-gap);
+    align-items: center;
+  }
+  .j-band__copy {
+    grid-column: 1 / 7;
+  }
+  .j-band__map {
+    grid-column: 7 / 13;
+    max-height: min(78svh, 46rem);
+  }
+  .j-words {
+    display: flex;
+    justify-content: space-between;
+    font-size: clamp(3rem, 4.9vw, 5.4rem);
+  }
+  .j-words span {
+    --w: 125;
+  }
+}
+
+/* ---- The field ----------------------------------------------------- */
+
+.j-pair {
+  display: grid;
+  gap: 3rem var(--j-gap);
+}
+.j-seen {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0.5rem 0 0;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--j-hair);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+.j-seen dt {
+  font-weight: 500;
+  color: var(--c-crimson);
+}
+.j-seen dd {
+  margin: 0;
+}
+.j-idea {
+  display: grid;
+  gap: 2.5rem;
+  margin-top: var(--j-section);
+}
+.j-idea__lead .j-meta {
+  margin-top: 1.5rem;
+}
+.j-idea__rows {
+  border-bottom: 1px solid var(--j-hair);
+}
+.j-statement {
+  margin-top: var(--j-section);
+  max-width: 62rem;
+  font-family: var(--f-serif);
+  font-weight: 300;
+  font-size: clamp(1.5rem, 2.7vw, 2.6rem);
+  line-height: 1.2;
+  color: var(--c-crimson);
+}
+@media (min-width: 48rem) {
+  .j-pair {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+  .j-seen > div {
+    display: grid;
+    grid-template-columns: 9.5rem 1fr;
+    gap: 1rem;
+  }
+}
+@media (min-width: 64rem) {
+  .j-idea {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--j-gap);
+    align-items: start;
+  }
+  .j-idea__lead {
+    grid-column: 1 / 7;
+    position: sticky;
+    top: calc(var(--header-h) + 3rem);
+  }
+  .j-idea__rows {
+    grid-column: 7 / 13;
+  }
+}
+
+/* ---- What is confirmed --------------------------------------------- */
+
+.j-proposed__lead {
+  display: grid;
+  gap: 0.6rem;
+  max-width: 34rem;
+  margin-bottom: 2.5rem;
+}
+.j-proposed__track {
+  position: relative;
+  padding-left: 1.75rem;
+}
+/* Dashed, because the plan is tentative. */
+.j-dash {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-left: 2px dashed var(--c-saffron);
+}
+.j-proposed__days {
+  display: grid;
+  gap: 2.25rem var(--j-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.j-proposed__days > li {
+  position: relative;
+}
+.j-node {
+  position: absolute;
+  top: 0.55rem;
+  left: calc(-1.75rem - 4.5px);
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
+  border: 2px solid var(--c-saffron);
+  background: #efe7d9;
+}
+.j-date {
+  margin-bottom: 0.75rem;
+  font-family: var(--f-display);
+  font-weight: 520;
+  font-size: 1.6rem;
+  line-height: 1.1;
+  color: var(--c-crimson);
+}
+.j-proposed__days ul {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  line-height: 1.45;
+}
+@media (min-width: 64rem) {
+  .j-proposed__track {
+    padding: 2.5rem 0 0;
+  }
+  .j-dash {
+    inset: 0 0 auto;
+    border-left: 0;
+    border-top: 2px dashed var(--c-saffron);
+  }
+  .j-proposed__days {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .j-node {
+    top: calc(-2.5rem - 4.5px);
+    left: 0;
+  }
+}
+
+/* ---- Four stages: the reel ----------------------------------------- */
+
+.j-reel {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 1px solid var(--j-hair-dark);
+}
+.j-reel__item {
+  display: grid;
+  gap: 1rem;
+  padding-block: 2.25rem;
+  border-top: 1px solid var(--j-hair-dark);
+}
+.lp .j-wrap .j-reel__name {
+  --w: 100;
+  margin: 0;
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-variation-settings: "wdth" var(--w);
+  font-size: clamp(2.9rem, 13vw, 5rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--c-on-dark);
+}
+.j-reel__n {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: 0.75rem;
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--c-saffron-soft);
+}
+.j-reel__n span {
+  font-family: var(--f-sans);
+  font-weight: 400;
+  font-size: 0.875rem;
+  color: rgb(247 241 232 / 0.7);
+}
+.j-reel__ticks {
+  display: none;
+}
+@media (min-width: 64rem) {
+  /* With scroll motion the section holds while the reel turns. */
+  .js-motion .j-reel-sec {
+    padding-block: 0;
+  }
+  .js-motion .j-reel__track {
+    height: 400vh;
+  }
+  .js-motion .j-reel__stage {
+    position: sticky;
+    top: 0;
+    display: flex;
+    height: 100vh;
+    min-height: 42rem;
+    align-items: center;
+    padding-top: var(--header-h);
+    overflow: clip;
+  }
+  .js-motion .j-reel-sec .j-head {
+    margin-bottom: clamp(1.5rem, 5vh, 4rem);
+  }
+  .js-motion .j-reel {
+    position: relative;
+    height: 3.3em;
+    overflow: hidden;
+    border: 0;
+    font-size: clamp(4rem, 7.4vw, 8.4rem);
+  }
+  /* The names above and below the one being read fade into the ground. */
+  .js-motion .j-reel::before,
+  .js-motion .j-reel::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    width: 56%;
+    height: 30%;
+    pointer-events: none;
+  }
+  .js-motion .j-reel::before {
+    top: 0;
+    background: linear-gradient(to bottom, var(--c-deep), transparent);
+  }
+  .js-motion .j-reel::after {
+    bottom: 0;
+    background: linear-gradient(to top, var(--c-deep), transparent);
+  }
+  .js-motion .j-reel__item {
+    display: block;
+    padding: 0;
+    border: 0;
+  }
+  .lp .js-motion .j-wrap .j-reel__name,
+  .js-motion .lp .j-wrap .j-reel__name {
+    height: 1.1em;
+    font-size: 1em;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+  .js-motion .j-reel__text {
+    position: absolute;
+    top: 50%;
+    left: calc((100% + var(--j-gap)) / 12 * 7);
+    right: 0;
+    margin-top: -5.5rem;
+    font-size: 1rem;
+  }
+  .js-motion .j-reel__ticks {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: clamp(1.5rem, 4vh, 3rem);
+  }
+  .j-reel__ticks i {
+    width: 3.5rem;
+    height: 2px;
+    background: var(--j-hair-dark);
+    transition: background-color 400ms ease;
+  }
+  .j-reel__ticks i[data-on] {
+    background: var(--c-saffron-soft);
+  }
+}
+
+/* ---- Programme ----------------------------------------------------- */
+
+.j-split {
+  display: grid;
+  gap: 3rem var(--j-gap);
+}
+.j-split__main {
+  border-bottom: 1px solid var(--j-hair);
+}
+@media (min-width: 64rem) {
+  .j-split {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: start;
+  }
+  .j-split__side {
+    grid-column: 1 / 6;
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+  }
+  .j-split__main {
+    grid-column: 7 / 13;
+  }
+}
+
+/* ---- A decade ------------------------------------------------------ */
+
+.j-figs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem var(--j-gap);
+  margin: 0;
+}
+.j-figs > div {
+  position: relative;
+  padding-top: 1.25rem;
+}
+.j-figs dd {
+  margin: 0;
+  font-family: var(--f-display);
+  font-weight: 650;
+  font-variation-settings: "wdth" 75;
+  font-size: clamp(2.6rem, 5.6vw, 5.5rem);
+  line-height: 0.92;
+  color: var(--c-crimson);
+}
+.j-figs dt {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+.j-figs__src {
+  margin-top: 1.25rem;
+}
+.j-decade {
+  display: grid;
+  gap: 2.5rem var(--j-gap);
+  margin-top: var(--j-block);
+}
+.j-years {
+  order: 2;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 1px solid var(--j-hair);
+}
+.j-year {
+  display: grid;
+  grid-template-columns: 5rem 1fr;
+  gap: 1rem;
+  align-content: start;
+  padding-block: 1.4rem;
+  border-top: 1px solid var(--j-hair);
+  transition: opacity 450ms ease;
+}
+.j-year__n {
+  font-family: var(--f-display);
+  font-weight: 650;
+  font-variation-settings: "wdth" 75;
+  font-size: 2.5rem;
+  line-height: 1;
+  color: var(--c-crimson);
+}
+.j-year__route {
+  font-family: var(--f-display);
+  font-weight: 500;
+  font-size: 1.3rem;
+  line-height: 1.25;
+  color: var(--c-crimson);
+}
+.j-year .j-meta {
+  margin-top: 0.35rem;
+}
+.j-map {
+  margin: 0;
+}
+.j-map svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: calc(100svh - var(--header-h) - 7rem);
+}
+.j-map figcaption {
+  max-width: 34rem;
+  margin-top: 1rem;
+}
+.j-map__state {
+  fill: rgb(92 16 38 / 0.035);
+  stroke: rgb(92 16 38 / 0.22);
+  stroke-width: 0.8;
+  stroke-linejoin: round;
+  transition: fill 600ms ease;
+}
+.j-map__state.is-seen {
+  fill: rgb(182 108 76 / 0.3);
+}
+.j-map__state.is-now {
+  fill: var(--c-saffron);
+}
+.j-map__outline {
+  fill: none;
+  stroke: var(--c-deep);
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+}
+.j-map__route {
+  fill: none;
+  stroke: var(--c-deep);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.32;
+  transition: opacity 500ms ease, stroke-width 500ms ease;
+}
+.j-map__route.is-now {
+  stroke-width: 4;
+  opacity: 1;
+}
+.j-map__stop {
+  fill: var(--c-paper);
+  stroke: var(--c-deep);
+  stroke-width: 2.5;
+}
+@media (min-width: 48rem) {
+  .j-figs {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (min-width: 64rem) {
+  .j-decade {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: start;
+  }
+  .j-years {
+    order: 0;
+    grid-column: 1 / 5;
+  }
+  .j-map {
+    grid-column: 6 / 13;
+    position: sticky;
+    top: calc(var(--header-h) + 1.5rem);
+  }
+  /* With scroll motion each year gets room to be read while its route draws. */
+  .js-motion .j-year {
+    min-height: 30vh;
+    opacity: 0.4;
+  }
+  .js-motion .j-year[data-on] {
+    opacity: 1;
+  }
+}
+
+/* ---- Nine days ----------------------------------------------------- */
+
+.j-facts {
+  display: grid;
+  gap: 1.5rem var(--j-gap);
+  margin: 0 0 var(--j-block);
+}
+.j-facts dt {
+  font-size: 0.8125rem;
+  color: var(--c-muted);
+}
+.j-facts dd {
+  margin: 0.35rem 0 0;
+  font-family: var(--f-display);
+  font-weight: 500;
+  font-size: 1.2rem;
+  line-height: 1.25;
+  color: var(--c-crimson);
+}
+.j-ledger {
+  position: relative;
+  border-bottom: 1px solid var(--j-hair);
+}
+.j-ledger > ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.j-ledger__road {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: var(--j-hair);
+}
+.j-ledger__road > i {
+  display: block;
+  height: 100%;
+  background: var(--c-crimson);
+  transform-origin: top center;
+}
+.j-ledger__bead {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 1px;
+  width: 11px;
+  height: 11px;
+  margin: -5.5px 0 0 -5.5px;
+  border-radius: 999px;
+  background: var(--c-saffron);
+  box-shadow: 0 0 0 3px var(--c-paper);
+}
+.j-day {
+  position: relative;
+  display: grid;
+  gap: 0.75rem;
+  padding: 2.25rem 0 2.25rem 1.75rem;
+}
+.j-day__dot {
+  position: absolute;
+  top: 2.75rem;
+  left: -3.5px;
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  border: 2px solid var(--c-crimson);
+  background: var(--c-paper);
+  transition: background-color 300ms ease;
+}
+.j-day[data-passed] .j-day__dot {
+  background: var(--c-crimson);
+}
+.j-day__date {
+  display: grid;
+  gap: 0.2rem;
+  font-family: var(--f-serif);
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+.j-day__date span {
+  font-family: var(--f-sans);
+  font-size: 0.8125rem;
+  color: var(--c-muted);
+}
+.lp .j-wrap .j-day__city {
+  margin: 0;
+  font-family: var(--f-display);
+  font-weight: 650;
+  font-variation-settings: "wdth" 75;
+  font-size: clamp(2.4rem, 4.4vw, 4.4rem);
+  line-height: 0.92;
+  letter-spacing: -0.012em;
+  color: var(--c-crimson);
+}
+.j-day__agenda ul {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+}
+/* A field note, set open beside its day in the Yatra's own voice. */
+.j-dispatch {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px dashed var(--j-hair);
+}
+.j-dispatch h4 {
+  margin: 0;
+  font-family: var(--f-display);
+  font-weight: 520;
+  font-size: 1.15rem;
+  color: var(--c-crimson);
+}
+.j-dispatch p {
+  max-width: 38rem;
+  margin-top: 0.5rem;
+  font-family: var(--f-serif);
+  font-size: 1.125rem;
+  line-height: 1.5;
+}
+@media (min-width: 48rem) {
+  .j-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 64rem) {
+  .j-facts {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+  .j-facts > div {
+    grid-column: span 2;
+  }
+  .j-facts > div:last-child {
+    grid-column: 7 / 13;
+  }
+  /* The road runs down the middle of the page, in the gutter beside B. */
+  .j-ledger__road {
+    left: calc(50% - 1px);
+  }
+  .j-ledger__bead {
+    left: 50%;
+  }
+  .j-day {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--j-gap);
+    align-items: start;
+    padding-left: 0;
+  }
+  .j-day__dot {
+    left: calc(50% - 4.5px);
+  }
+  .j-day__date {
+    grid-column: 1 / 3;
+    padding-top: 0.5rem;
+  }
+  .j-day__city {
+    grid-column: 3 / 7;
+  }
+  .j-day__agenda {
+    grid-column: 7 / 13;
+    padding-top: 0.35rem;
+    padding-left: 1rem;
+  }
+}
+
+/* ---- People -------------------------------------------------------- */
+
+.j-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 2rem;
+  margin-bottom: 1.75rem;
+}
+.j-filter {
+  min-height: 2.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1.5px solid transparent;
+  font-size: 1rem;
+  color: var(--c-muted);
+  cursor: pointer;
+  transition: color 250ms ease, border-color 250ms ease;
+}
+.j-filter:hover,
+.j-filter[aria-pressed="true"] {
+  color: var(--c-crimson);
+}
+.j-filter[aria-pressed="true"] {
+  border-bottom-color: var(--c-crimson);
+}
+.j-filter span {
+  margin-left: 0.5rem;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+.j-roll {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 1px solid var(--j-hair);
+}
+.j-person {
+  display: grid;
+  gap: 0.3rem;
+  padding-block: 1.1rem;
+  border-top: 1px solid var(--j-hair);
+  transition: border-color 300ms ease;
+}
+.j-person__name {
+  font-family: var(--f-display);
+  font-weight: 520;
+  font-variation-settings: "wdth" 100;
+  font-size: clamp(1.5rem, 2.4vw, 2.25rem);
+  line-height: 1.1;
+  letter-spacing: -0.012em;
+  color: var(--c-crimson);
+  transition: color 300ms ease, font-variation-settings 500ms var(--ease);
+}
+.j-person__where {
+  font-size: 0.8125rem;
+  color: var(--c-muted);
+}
+@media (min-width: 64rem) {
+  .j-person {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--j-gap);
+    align-items: baseline;
+  }
+  .j-person__name {
+    grid-column: 1 / 7;
+    white-space: nowrap;
+  }
+  .j-person__role {
+    grid-column: 7 / 11;
+  }
+  .j-person__where {
+    grid-column: 11 / 13;
+  }
+  /* The roll is read one name at a time: the row at the reading line, or
+     under the pointer or focus, opens up and takes the full ink. */
+  .js-motion .j-person__name {
+    color: color-mix(in srgb, var(--c-crimson) 66%, var(--c-paper));
+  }
+  .js-motion .j-person:is([data-on], :hover, :focus-visible) {
+    border-top-color: var(--c-crimson);
+  }
+  .js-motion .j-person:is([data-on], :hover, :focus-visible) .j-person__name {
+    color: var(--c-deep);
+    font-variation-settings: "wdth" 118;
+  }
+}
+.j-inst {
+  margin-top: var(--j-section);
+}
+.j-inst__cols {
+  display: grid;
+  gap: 2rem var(--j-gap);
+  margin: var(--j-block) 0 0;
+}
+.j-inst__cols > div {
+  position: relative;
+  display: grid;
+  gap: 0.4rem;
+  align-content: start;
+  padding-top: 1.25rem;
+}
+.j-inst__cols dt {
+  font-size: 0.8125rem;
+  color: var(--c-muted);
+}
+.j-inst__cols dd {
+  margin: 0;
+  font-family: var(--f-display);
+  font-weight: 520;
+  font-size: 1.5rem;
+  line-height: 1.15;
+  color: var(--c-crimson);
+}
+.j-inst__cols dd.j-meta {
+  font-family: var(--f-sans);
+  font-weight: 400;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--c-muted);
+}
+.j-inst__src {
+  margin-top: 2rem;
+}
+@media (min-width: 48rem) {
+  .j-inst__cols {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ---- Afterwards ---------------------------------------------------- */
+
+.j-saarthi {
+  margin: 0 0 var(--j-section);
+}
+.j-saarthi blockquote {
+  max-width: 60rem;
+  margin: 0;
+  font-family: var(--f-serif);
+  font-weight: 300;
+  font-size: clamp(1.8rem, 3.5vw, 3.4rem);
+  line-height: 1.14;
+}
+.j-saarthi figcaption {
+  margin-top: 1.5rem;
+}
+.j-fork__art {
+  display: none;
+}
+.j-paths {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 1px solid var(--j-hair-dark);
+}
+.j-paths li {
+  padding-block: 0.95rem;
+  border-top: 1px solid var(--j-hair-dark);
+  font-family: var(--f-display);
+  font-weight: 520;
+  font-variation-settings: "wdth" 100;
+  font-size: clamp(1.4rem, 2.2vw, 2.05rem);
+  line-height: 1.1;
+  letter-spacing: -0.012em;
+  transition: color 300ms ease, font-variation-settings 500ms var(--ease);
+}
+.j-paths li[data-on] {
+  color: var(--c-saffron-soft);
+  font-variation-settings: "wdth" 116;
+}
+.j-took {
+  margin-top: var(--j-section);
+}
+.j-took__list {
+  display: grid;
+  gap: 0 var(--j-gap);
+  margin: var(--j-block) 0 1.5rem;
+  padding: 0;
+  list-style: none;
+}
+.j-took__list li {
+  position: relative;
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+  padding-block: 1.75rem;
+}
+@media (min-width: 48rem) {
+  .j-took__list {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (min-width: 64rem) {
+  .j-fork {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--j-gap);
+  }
+  .j-fork__art {
+    display: block;
+    grid-column: 1 / 7;
+  }
+  .j-fork__art svg {
+    display: block;
+    overflow: visible;
+  }
+  .j-fork__art path {
+    fill: none;
+    stroke: rgb(224 163 131 / 0.8);
+    stroke-width: 1.4;
+    transition: stroke 300ms ease, stroke-width 300ms ease, opacity 300ms ease;
+  }
+  .j-fork__art path.is-on {
+    stroke: var(--c-on-dark);
+    stroke-width: 2.8;
+  }
+  .j-fork__art path.is-off {
+    opacity: 0.3;
+  }
+  .j-fork__art circle {
+    fill: var(--c-saffron-soft);
+  }
+  .j-paths {
+    grid-column: 7 / 13;
+  }
+}
+
+/* ---- Questions ----------------------------------------------------- */
+
+.j-faq {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 1px solid var(--j-hair);
+}
+.j-faq__item {
+  border-top: 1px solid var(--j-hair);
+}
+.j-faq__item h3 {
+  margin: 0;
+}
+.j-faq__item button {
+  display: flex;
+  width: 100%;
+  min-height: 4.5rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.1rem 0;
+  text-align: left;
+  font-family: var(--f-display);
+  font-weight: 520;
+  font-size: clamp(1.2rem, 1.7vw, 1.6rem);
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+  color: var(--c-crimson);
+  cursor: pointer;
+}
+.j-faq__item button i {
+  position: relative;
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+}
+.j-faq__item button i::before,
+.j-faq__item button i::after {
+  content: "";
+  position: absolute;
+  inset: calc(50% - 0.75px) 0 auto;
+  height: 1.5px;
+  background: currentColor;
+  transition: rotate 400ms var(--ease);
+}
+.j-faq__item button i::after {
+  rotate: 90deg;
+}
+.j-faq__item[data-open] button i::after {
+  rotate: 0deg;
+}
+.j-faq__a {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 450ms var(--ease);
+}
+.j-faq__item[data-open] .j-faq__a {
+  grid-template-rows: 1fr;
+}
+.j-faq__a p {
+  min-height: 0;
+  max-width: 40rem;
+  overflow: hidden;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+}
+.j-faq__a p::after {
+  content: "";
+  display: block;
+  height: 1.6rem;
+}
+@media (min-width: 64rem) {
+  .j-faq {
+    margin-left: calc((100% + var(--j-gap)) / 12 * 6);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .j-faq__a,
+  .j-faq__item button i::after {
+    transition: none;
+  }
+}
+
+/* ---- Come and see: every line on the left edge --------------------- */
+
+.lp .lp-connect__title .is-r {
+  text-align: left;
+}
+.lp .lp-connect__go {
+  align-self: flex-start;
+}
+
+/* ---- Joining ------------------------------------------------------- */
+
+.j-join__cta {
+  margin-top: 1.5rem;
+}
+.j-pass__top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.25rem 1.5rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--c-muted);
+}
+.j-pass__top p:first-child {
+  color: var(--c-crimson);
+}
+.j-pass__route {
+  margin-top: 1.25rem;
+  font-family: var(--f-display);
+  font-weight: 650;
+  font-variation-settings: "wdth" 75;
+  font-size: clamp(2.1rem, 4.2vw, 3.8rem);
+  line-height: 0.95;
+  color: var(--c-deep);
+}
+.j-pass .j-meta {
+  margin-top: 0.5rem;
+  color: var(--c-muted);
+}
+.j-pass__fields {
+  display: grid;
+  gap: 1.5rem 2rem;
+  margin: 2rem 0 0;
+}
+.j-pass :is(dt) {
+  font-size: 0.8125rem;
+  color: var(--c-muted);
+}
+.j-pass dd {
+  margin: 0.4rem 0 0;
+  font-family: var(--f-display);
+  font-size: 1.2rem;
+  color: var(--c-deep);
+}
+.j-pass__mark {
+  font-family: var(--f-display);
+  font-weight: 650;
+  font-size: 1.7rem;
+  line-height: 1;
+  color: var(--c-deep);
+}
+.j-pass .ticket-stub dl {
+  margin: 1.25rem 0 0;
+}
+.j-pass .ticket-stub dt:not(:first-child) {
+  margin-top: 1rem;
+}
+.j-ready {
+  margin-top: var(--j-gap);
+}
+.j-process {
+  margin-top: var(--j-section);
+}
+.j-steps {
+  position: relative;
+  margin-top: var(--j-block);
+}
+.j-steps__line {
+  display: none;
+}
+.j-steps ol {
+  display: grid;
+  gap: 2rem var(--j-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.j-steps li {
+  position: relative;
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+}
+.j-steps__n {
+  font-family: var(--f-display);
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--c-saffron-soft);
+}
+.j-contact {
+  display: grid;
+  gap: 0.6rem;
+  justify-items: start;
+  margin-top: var(--j-section);
+  font-style: normal;
+}
+.j-contact a {
+  font-family: var(--f-display);
+  font-size: clamp(1.4rem, 2.2vw, 2rem);
+}
+@media (min-width: 40rem) {
+  .j-pass__fields {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (min-width: 64rem) {
+  .j-pass__fields {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .j-steps {
+    padding-top: 2.5rem;
+  }
+  .j-steps__line {
+    position: absolute;
+    inset: 0 0 auto;
+    display: block;
+    height: 2px;
+    background: rgb(247 241 232 / 0.85);
+    transform-origin: left center;
+  }
+  .j-steps ol {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+  .j-steps li::before {
+    content: "";
+    position: absolute;
+    top: calc(-2.5rem - 4px);
+    left: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: var(--c-on-dark);
+  }
+}
+
+/* ---- The flight: the order of travel is unconfirmed, so nothing on it
+   is numbered or measured as progress. ---------------------------------- */
+.lp .lp-card__no,
+.lp .lp-flight__coords {
+  display: none;
+}
+@media (min-width: 64rem) {
+  .lp .lp-flight__rail {
+    display: none;
+  }
+}
+
+/* =====================================================================
+   React Bits components, brought into the journal: warm shadows rather
+   than black, the page's own radii, visible keyboard focus.
+   ===================================================================== */
+
+/* ---- Prints that turn over (TiltedCard) ----------------------------- */
+
+.j-print .tilted-card {
+  --tc-shadow-color: rgb(60 8 22 / 0.5);
+}
+.j-print .tilted-card__face {
+  background: var(--c-sand);
+}
+.j-print .tilted-card:focus-visible .tilted-card__body {
+  outline: 2px solid var(--c-saffron);
+  outline-offset: 5px;
+  border-radius: 4px;
+}
+/* The back of a print: plain paper with its notes written on it. */
+.j-print .tilted-card__back {
+  background: #f7f1e6 url("/paper-grain.svg");
+}
+.j-print__back {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+  color: var(--c-ink-soft);
+}
+.j-print__hand {
+  max-width: 26rem;
+  font-family: var(--f-serif);
+  font-style: italic;
+  font-size: clamp(1.15rem, 1.8vw, 1.6rem);
+  line-height: 1.35;
+  color: var(--c-deep);
+}
+.j-print__back .j-seen {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.j-print__back .j-seen dd {
+  font-family: var(--f-serif);
+  font-size: 0.95rem;
+}
+.j-pair__hint {
+  margin-top: 1.5rem;
+}
+
+/* ---- The three states (DepthCarousel) ------------------------------- */
+
+.j-places {
+  margin-top: var(--j-section);
+}
+.j-places__grid {
+  display: grid;
+  gap: 2rem var(--j-gap);
+  margin-top: var(--j-block);
+}
+.j-places__stage {
+  position: relative;
+  height: clamp(15rem, 58vw, 32rem);
+}
+.j-places .depth-carousel__card {
+  background: var(--c-deep);
+  box-shadow:
+    0 30px 60px -28px rgb(60 8 22 / 0.55),
+    0 8px 20px -12px rgb(60 8 22 / 0.4);
+}
+.j-places .depth-carousel:focus-visible {
+  outline: 2px solid var(--c-saffron);
+  outline-offset: 6px;
+  border-radius: 4px;
+}
+.j-places .depth-carousel__arrow {
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid rgb(135 27 56 / 0.3);
+  background: var(--c-paper);
+  color: var(--c-crimson);
+  backdrop-filter: none;
+}
+.j-places .depth-carousel__arrow:hover {
+  background: var(--c-crimson);
+  border-color: var(--c-crimson);
+  color: var(--c-paper);
+}
+.j-places .depth-carousel__arrow--prev {
+  left: 0;
+}
+.j-places .depth-carousel__arrow--next {
+  right: 0;
+}
+.j-places__note {
+  display: grid;
+  gap: 0.6rem;
+  align-content: end;
+}
+.j-places__count {
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: 2.6rem;
+  line-height: 1;
+  color: var(--c-saffron);
+}
+.j-places__count span {
+  margin-left: 0.6rem;
+  font-family: var(--f-sans);
+  font-weight: 400;
+  font-size: 0.875rem;
+  color: var(--c-muted);
+}
+.j-places__state {
+  font-family: var(--f-display);
+  font-weight: 750;
+  font-size: clamp(1.6rem, 2.6vw, 2.4rem);
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--c-crimson);
+}
+.j-places__caption {
+  font-family: var(--f-serif);
+  font-style: italic;
+  font-size: 1.25rem;
+  line-height: 1.35;
+  color: var(--c-deep);
+}
+.j-places__ref {
+  margin-top: 0.75rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--j-hair);
+}
+@media (min-width: 64rem) {
+  .j-places__grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: end;
+  }
+  .j-places__stage {
+    grid-column: 1 / 9;
+  }
+  .j-places__note {
+    grid-column: 9 / 13;
+    padding-bottom: 2rem;
+  }
+}
+
+/* ---- The pass (BorderGlow and a HoloCard seal) ---------------------- */
+
+.j-pass-wrap {
+  position: relative;
+}
+.lp .j-pass-glow {
+  border-color: rgb(135 27 56 / 0.14);
+  box-shadow: 0 50px 90px -50px rgb(30 4 12 / 0.75);
+}
+/* The stub's punched holes sit half outside the pass: nothing may clip them. */
+.lp .j-pass-glow .border-glow-inner {
+  overflow: visible;
+}
+.lp .j-pass-glow .ticket {
+  background: transparent;
+  box-shadow: none;
+}
+.j-pass .ticket-stub {
+  position: relative;
+}
+.j-pass__seal {
+  position: absolute;
+  top: clamp(1.25rem, 2.5vw, 2rem);
+  right: clamp(1.25rem, 2.5vw, 2rem);
+  width: 5.5rem;
+}
+.j-pass__seal .holo-card {
+  width: 100%;
+  border-radius: 999px;
+}
+.j-pass__seal .holo-card__face {
+  border-radius: 999px;
+}
+@media (min-width: 48rem) {
+  .j-pass__seal {
+    position: static;
+    width: 7rem;
+    margin-top: 1.5rem;
+  }
+}

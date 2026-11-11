@@ -248,7 +248,7 @@ export function LandingHero() {
           </p>
           <div className="lp-hero__cue-row">
             <span data-intro className="lp-chip">
-              Upcoming edition · Gujarat, Maharashtra, Goa
+              Upcoming edition: Gujarat, Maharashtra, Goa
             </span>
             <a data-intro href="#yatra" className="lp-pill lp-pill--crimson">
               Explore
