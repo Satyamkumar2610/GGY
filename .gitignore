@@ -9,3 +9,14 @@ build/
 # Static Flyward-template reference clone (bundles Apris/FoundersGrotesk
 # template fonts of unknown license) — kept local only, not redistributed.
 ggy/public/ggy-india/
+
+# Locally installed Claude skills / agent tooling — not part of the repo
+.claude/skills/
+.claude/settings.local.json
+.agents/
+.impeccable/
+skills-lock.json
+ggy/.claude/skills/
+ggy/.agents/
+ggy/.impeccable/
+ggy/skills-lock.json
