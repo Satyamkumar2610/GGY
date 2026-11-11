@@ -134,7 +134,7 @@ export function PeopleRoll() {
                 </span>
                 <span className="roll-title">
                   {p.title}
-                  <span className="roll-origin"> · {origin(p)}</span>
+                  <span className="roll-origin">{origin(p)}</span>
                 </span>
               </span>
             </li>

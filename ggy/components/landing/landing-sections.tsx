@@ -69,9 +69,6 @@ export function FieldCards() {
               </div>
               <a href={c.href} className="lp-pill lp-pill--glass" aria-label={`Explore ${c.title.toLowerCase()}`}>
                 Explore
-                <svg viewBox="0 0 16 16" aria-hidden="true">
-                  <path d="M13.5 7.06 7.06 13.5 6 12.44 12.44 6H6.76V4.5H15v8.24h-1.5z" fill="currentColor" />
-                </svg>
               </a>
             </div>
           </article>
@@ -106,9 +103,6 @@ export function ComeAndSee() {
         </h2>
         <a href="#connect" className="lp-pill lp-pill--solid lp-connect__go" data-rise>
           Admissions and contact
-          <svg viewBox="0 0 16 16" aria-hidden="true">
-            <path d="M13.5 7.06 7.06 13.5 6 12.44 12.44 6H6.76V4.5H15v8.24h-1.5z" fill="currentColor" />
-          </svg>
         </a>
       </div>
     </section>

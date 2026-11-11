@@ -105,22 +105,16 @@ export function LifeAfterChapter() {
             </div>
           </div>
           <div className="lg:col-span-9">
-            <ol className="paths" aria-label="Paths alumni have taken">
-              {careerPaths.map((c, i) => (
+            <ul className="paths" aria-label="Paths alumni have taken">
+              {careerPaths.map((c) => (
                 <li key={c} className="paths-row" data-path>
                   <span aria-hidden="true" className="paths-rule" data-path-rule />
-                  <span aria-hidden="true" className="paths-index num">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
                   <span className="paths-name" data-path-name>
                     {c}
                   </span>
-                  <span aria-hidden="true" className="paths-arrow">
-                    ↗
-                  </span>
                 </li>
               ))}
-            </ol>
+            </ul>
             <p className="caption mt-6">As listed in the {BROCHURE} under “Life after Good Governance Yatra”.</p>
           </div>
         </div>

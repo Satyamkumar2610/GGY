@@ -52,7 +52,6 @@ export function LandingMotion() {
           stagger: { each: 0.02, from: "random" },
           scrollTrigger: { trigger: band, start: "top 80%", end: "bottom 40%", scrub: 0.6 },
         });
-        gsap.fromTo(".lp-band__map", { rotate: -4, scale: 0.92 }, { rotate: 2, scale: 1.04, ease: "none", scrollTrigger: { trigger: band, start: "top bottom", end: "bottom top", scrub: true } });
       }
 
       q("[data-tile]").forEach((t, i) => {
@@ -74,7 +73,7 @@ export function LandingMotion() {
       }
 
       // Footer wordmark letters rise in a wave.
-      const mark = document.querySelector("[data-mark]");
+      const mark = document.querySelector(".lp-footer__mark");
       if (mark) {
         gsap.from(mark.children, {
           yPercent: 110,

@@ -75,7 +75,7 @@ const STATE_BOX = {
 
 const context = atlas.states.filter((s) => !ORDER.includes(s.iso as (typeof ORDER)[number]));
 
-const LEGS = ["Gujarat", "Gujarat to Maharashtra", "Maharashtra", "Maharashtra to Goa", "Goa", "Gujarat · Maharashtra · Goa"];
+const LEGS = ["Gujarat", "Gujarat to Maharashtra", "Maharashtra", "Maharashtra to Goa", "Goa", "Gujarat, Maharashtra, Goa"];
 
 /** Where each station sits in the scroll, for the rail's buttons. */
 const STATION_AT = [0.14, 0.5, 0.83];
@@ -345,7 +345,7 @@ export function YatraFlight() {
   );
 
   return (
-    <section ref={root} id="journey" className="lp-flight" aria-labelledby="lp-flight-title">
+    <section ref={root} id="journey" className="lp-flight" aria-labelledby="lp-flight-title" data-j-station="journey">
       <div className="lp-flight__stage" data-stage data-nav="dark">
         <svg className="lp-flight__map" data-map viewBox={OVERVIEW.map((v, i) => (i < 2 ? v : v - OVERVIEW[i - 2])).join(" ")} preserveAspectRatio="xMidYMid meet" aria-hidden="true">
           <defs>
@@ -471,7 +471,7 @@ export function YatraFlight() {
               ))}
             </svg>
             <div className="lp-card__body">
-              <p className="lp-card__native">Gujarat · Maharashtra · Goa</p>
+              <p className="lp-card__native">Gujarat, Maharashtra, Goa</p>
               <h3 className="lp-card__title">
                 One coast, <em>three</em> states
               </h3>
