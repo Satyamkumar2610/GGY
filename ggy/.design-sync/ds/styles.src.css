@@ -1,0 +1,15 @@
+/* Tailwind input for the design-system stylesheet (design-sync only).
+   Same files, same order as the site: globals.css from app/layout.tsx, then
+   the five sheets app/page.tsx imports. Utilities are generated from the
+   site's own components plus the authored previews. */
+@import "../../app/globals.css";
+@import "../../app/landing.css";
+@import "../../app/journal.css";
+@import "../../app/cinema.css";
+@import "../../app/sections.css";
+@import "../../app/metal.css";
+
+@source "../../components";
+@source "../../app";
+@source "../previews";
+@source "./";

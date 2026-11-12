@@ -1,8 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { TrainFront } from "lucide-react";
+import { Flag, GraduationCap, Landmark, MapPinned, TrainFront, type LucideIcon } from "lucide-react";
+
+const FIG_ICONS: LucideIcon[] = [Flag, MapPinned, GraduationCap, Landmark];
+import Image from "next/image";
+import { AnimatePresence, motion } from "motion/react";
 import { CONCEPT_NOTE, conceptFigures, pastEditions, previousEdition } from "@/content/ggy";
+import { editionPhotos } from "@/content/ggy27";
 import { atlas, ROUTE_ISO, stateByIso } from "@/lib/atlas";
 import { gsap, MOTION_QUERIES, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { NoteRef } from "../primitives";
@@ -31,7 +36,9 @@ const editions = pastEditions.map((e) => {
   const isos = names.map((n) => ROUTE_ISO[n]).filter(Boolean);
   const pts = isos.map((iso) => stateByIso(iso)).filter((s): s is NonNullable<typeof s> => Boolean(s));
   const ends = pts.map((s) => [s.cx, s.cy] as const);
-  return { ...e, names, isos, d: track(ends), ends };
+  // A photograph of a famous place on the route, keyed "2016 Summer" where a year ran twice.
+  const photo = editionPhotos[e.season && /Summer|Winter/.test(e.season) ? `${e.year} ${e.season}` : e.year];
+  return { ...e, names, isos, d: track(ends), ends, photo };
 });
 const LAST = editions.length - 1;
 
@@ -126,21 +133,26 @@ export function Decade() {
   return (
     <section ref={root} id="archive" className="j-sec j-cream" data-nav="dark" data-j-station="archive" data-arch aria-labelledby="archive-title">
       <div className="j-wrap">
-        <Head id="archive-title" title="A decade" em="on the road">
+        <Head id="archive-title" title="Past editions," em="a decade on the road">
           <p>Every route and figure here belongs to a past edition, not the upcoming one. Routes are reproduced from the 2025 brochure.</p>
         </Head>
 
-        <dl className="j-figs">
-          {conceptFigures.map((f) => (
-            <div key={f.label}>
-              <i className="j-rule" data-rule aria-hidden="true" />
-              <dd>
-                <span data-count={f.value}>{f.value}</span>
-                {f.note ? <NoteRef id={f.note} /> : null}
-              </dd>
-              <dt>{f.label}</dt>
-            </div>
-          ))}
+        <dl className="x-figs">
+          {conceptFigures.map((f, i) => {
+            const Icon = FIG_ICONS[i] ?? Flag;
+            return (
+              <div key={f.label} className="x-figs__card" data-row>
+                <span className="x-figs__icon" aria-hidden="true">
+                  <Icon strokeWidth={1.5} />
+                </span>
+                <dd>
+                  <span data-count={f.value}>{f.value}</span>
+                  {f.note ? <NoteRef id={f.note} /> : null}
+                </dd>
+                <dt>{f.label}</dt>
+              </div>
+            );
+          })}
         </dl>
         <p className="j-meta j-figs__src">Figures from the {CONCEPT_NOTE}, ahead of the next edition.</p>
 
@@ -176,13 +188,27 @@ export function Decade() {
 
           <figure className="j-map x-map">
             <div className="x-map__plate">
+              <AnimatePresence initial={false}>
+                {editions[active].photo ? (
+                  <motion.div
+                    key={editions[active].photo.src}
+                    className="x-map__photo"
+                    initial={{ opacity: 0, y: 14, rotate: -2 }}
+                    animate={{ opacity: 1, y: 0, rotate: 1.5 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <Image src={editions[active].photo.src} alt={editions[active].photo.alt} fill sizes="(min-width: 64rem) 18rem, 40vw" quality={80} className="object-cover" />
+                  </motion.div>
+                ) : null}
+              </AnimatePresence>
               <p className="x-map__year" aria-hidden="true" key={editions[active].year + active}>
                 {editions[active].year}
               </p>
               <svg viewBox={`${X0 - 20} ${Y0 - 20} ${X1 - X0 + 40} ${Y1 - Y0 + 40}`} role="img" aria-label={`Map of India showing the routes of past editions up to ${editions[active].year}: ${editions[active].route}.`}>
                 <defs>
                   <filter id="x-map-shadow" x="-10%" y="-10%" width="120%" height="120%">
-                    <feDropShadow dx="0" dy="10" stdDeviation="12" floodColor="#5c1026" floodOpacity="0.16" />
+                    <feDropShadow dx="0" dy="10" stdDeviation="12" floodColor="#cd1f36" floodOpacity="0.16" />
                   </filter>
                 </defs>
                 <g filter="url(#x-map-shadow)">

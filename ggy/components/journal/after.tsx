@@ -1,61 +1,32 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { BROCHURE, careerPaths, CONCEPT_NOTE, saarthi, takeaways } from "@/content/ggy";
-import { gsap, MOTION_QUERIES, ScrollTrigger, useGSAP } from "@/lib/gsap";
+import { gsap, MOTION_QUERIES, useGSAP } from "@/lib/gsap";
 import { NoteRef } from "../primitives";
 import { Head, Title } from "./head";
-import { Briefcase, Compass, FlaskConical, Landmark, Network, UsersRound, type LucideIcon } from "lucide-react";
-import SpotlightCard from "../SpotlightCard";
+import { Briefcase, Compass, FlaskConical, GraduationCap, HeartHandshake, Landmark, Network, UsersRound, type LucideIcon } from "lucide-react";
 
 const TOOK_ICONS: LucideIcon[] = [Compass, UsersRound, Briefcase, FlaskConical, Landmark, Network];
 
+/* The ten paths exactly as the brochure prints them, under four headings
+   of the site's own. */
+const P = careerPaths;
+const FIELDS: { name: string; Icon: LucideIcon; paths: string[] }[] = [
+  { name: "Public service", Icon: Landmark, paths: [P[1], P[0], P[4]] },
+  { name: "Private sector", Icon: Briefcase, paths: [P[2], P[8], P[9]] },
+  { name: "Learning and research", Icon: GraduationCap, paths: [P[5], P[6]] },
+  { name: "Social impact", Icon: HeartHandshake, paths: [P[7], P[3]] },
+];
+
 /**
- * Afterwards, on the crimson ground. The concept note's purpose for its
- * alumni is set as a statement; then one line comes in from the left and
- * forks into the ten paths the brochure lists, each branch ending level with
- * its row. What delegates took away follows as a bento of six cards.
+ * Afterwards, on the dark ground. The concept note's purpose for its alumni
+ * is set as a statement; then the ten paths the brochure lists, in four
+ * cards by field. What
+ * delegates took away follows as a bento of six cards.
  */
 export function After() {
   const root = useRef<HTMLElement>(null);
-  const [paths, setPaths] = useState<string[]>([]);
-  const [box, setBox] = useState({ w: 0, h: 0 });
-  const [hover, setHover] = useState<number | null>(null);
-
-  // The branches are measured from the rows they end at, so they stay level
-  // with the list at any width.
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia();
-      mm.add("(min-width: 64rem)", () => {
-        const fork = root.current!.querySelector<HTMLElement>("[data-fork]")!;
-        const rows = gsap.utils.toArray<HTMLElement>("[data-path-row]");
-        const measure = () => {
-          const w = fork.offsetWidth;
-          const h = fork.offsetHeight;
-          const y0 = h / 2;
-          const top = fork.getBoundingClientRect().top;
-          setBox({ w, h });
-          setPaths(
-            rows.map((r) => {
-              const b = r.getBoundingClientRect();
-              const y = b.top - top + b.height / 2;
-              return `M0,${y0} C${(w * 0.62).toFixed(1)},${y0} ${(w * 0.42).toFixed(1)},${y.toFixed(1)} ${w},${y.toFixed(1)}`;
-            }),
-          );
-        };
-        measure();
-        ScrollTrigger.addEventListener("refreshInit", measure);
-        return () => {
-          ScrollTrigger.removeEventListener("refreshInit", measure);
-          setPaths([]);
-        };
-      });
-      return () => mm.revert();
-    },
-    { scope: root },
-  );
-
   // The alumni figure counts up once as it arrives.
   useGSAP(
     () => {
@@ -74,25 +45,6 @@ export function After() {
     { scope: root },
   );
 
-  // Once the branches exist, they draw themselves at the pace of the scroll.
-  useGSAP(
-    () => {
-      if (!paths.length) return;
-      const mm = gsap.matchMedia();
-      mm.add(MOTION_QUERIES.desktop, () => {
-        const tl = gsap.timeline({ scrollTrigger: { trigger: "[data-fork-wrap]", start: "top 70%", end: "bottom 75%", scrub: 0.6 } });
-        tl.fromTo("[data-branch]", { drawSVG: "0%" }, { drawSVG: "100%", ease: "none", stagger: 0.12 }, 0).fromTo(
-          "[data-path-row]",
-          { opacity: 0.3 },
-          { opacity: 1, ease: "none", stagger: 0.12, duration: 0.4 },
-          0.45,
-        );
-      });
-      return () => mm.revert();
-    },
-    { scope: root, dependencies: [paths.length], revertOnUpdate: true },
-  );
-
   return (
     <section ref={root} id="after" className="j-sec j-deep j-sheet on-dark" data-nav="light" data-j-station="after" data-arch aria-labelledby="after-title">
       <div className="j-wrap">
@@ -105,25 +57,27 @@ export function After() {
           <p>As listed in the {BROCHURE} under “Life after Good Governance Yatra”.</p>
         </Head>
 
-        <div className="j-fork" data-fork-wrap>
-          <div className="j-fork__art" data-fork aria-hidden="true">
-            {paths.length ? (
-              <svg viewBox={`0 0 ${box.w} ${box.h}`} width={box.w} height={box.h}>
-                {paths.map((d, i) => (
-                  <path key={i} d={d} data-branch className={hover === i ? "is-on" : hover === null ? undefined : "is-off"} />
+        <ul className="x-paths">
+          {FIELDS.map((f) => (
+            <li key={f.name} className="x-card x-paths__card" data-row>
+              <div className="x-paths__head">
+                <span className="x-paths__icon">
+                  <f.Icon aria-hidden="true" strokeWidth={1.5} />
+                </span>
+                <span className="x-paths__count">
+                  {f.paths.length} {f.paths.length === 1 ? "path" : "paths"}
+                </span>
+              </div>
+              <h3 className="x-paths__name">{f.name}</h3>
+              <ul className="x-paths__list">
+                {f.paths.map((name) => (
+                  <li key={name}>{name}</li>
                 ))}
-                <circle cx="5" cy={box.h / 2} r="5" />
-              </svg>
-            ) : null}
-          </div>
-          <ul className="j-paths" aria-label="Paths alumni have taken" onPointerLeave={() => setHover(null)}>
-            {careerPaths.map((c, i) => (
-              <li key={c} data-path-row data-on={hover === i ? "" : undefined} onPointerEnter={(e) => e.pointerType === "mouse" && setHover(i)}>
-                {c}
-              </li>
-            ))}
-          </ul>
-        </div>
+              </ul>
+            </li>
+          ))}
+        </ul>
+        <p className="j-meta x-paths__src">The ten paths are the brochure’s; the four headings are added here to group them.</p>
 
         <div className="j-took">
           <Title as="h3" sub title="What delegates" em="took away" />
@@ -133,14 +87,7 @@ export function After() {
               const alumni = t.name === "Impact Legacy" ? t.text.match(/(\d+)\+/) : null;
               return (
                 <li key={t.name} className={`x-bento__cell x-bento__cell--${i}`} data-row>
-                  <SpotlightCard
-                    theme="dark"
-                    className="x-bento__card"
-                    spotlightColor="#e0a383"
-                    intensity={0.2}
-                    spotlightSize={320}
-                    style={{ "--spotlight-card-surface": "rgb(255 255 255 / 0.04)", "--spotlight-card-border": "rgb(247 241 232 / 0.13)", "--spotlight-card-shadow": "none" }}
-                  >
+                  <div className="x-card x-bento__card">
                     <div className="x-bento__top">
                       <span className="x-bento__icon">
                         <Icon aria-hidden="true" strokeWidth={1.5} />
@@ -160,7 +107,7 @@ export function After() {
                       {t.text}
                       {t.note ? <NoteRef id={t.note} /> : null}
                     </p>
-                  </SpotlightCard>
+                  </div>
                 </li>
               );
             })}

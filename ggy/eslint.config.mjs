@@ -8,7 +8,7 @@ const eslintConfig = defineConfig([
   // React Bits components, kept as published so registry updates drop in.
   // They mirror their latest props into refs during render on purpose.
   {
-    files: ["components/{BorderGlow,DepthCarousel,HoloCard,TiltedCard}.jsx"],
+    files: ["components/{BorderGlow,CardSwap,DepthCarousel,HoloCard,MaskedHeading,ScrollStack,SpotlightCard,TextLoop,TiltedCard}.jsx"],
     rules: { "react-hooks/refs": "off", "@next/next/no-img-element": "off" },
   },
   // Override default ignores of eslint-config-next.

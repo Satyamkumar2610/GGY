@@ -4,7 +4,21 @@ import Image from "next/image";
 import { useRef } from "react";
 import { atlas, fit, INDIA_BOX, lerpCamera, project, type Camera } from "@/lib/atlas";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
-import { photos } from "@/content/ggy";
+import { ArrowDownToLine, ArrowRight } from "lucide-react";
+
+/**
+ * What plays inside the map: the three states of the 9th edition, one after
+ * another, each drifting slowly (CSS only: lp-hero__reel). Stands in for the
+ * combined tourism film the brief asks for; swap in a <video> here when it exists.
+ */
+const REEL = [
+  { src: "/images/ggy27/hero/gujarat-dandi.jpg", state: "Gujarat" },
+  { src: "/images/ggy27/hero/maharashtra-gateway.jpg", state: "Maharashtra" },
+  { src: "/images/ggy27/hero/goa-bom-jesus.jpg", state: "Goa" },
+];
+
+/** The brochure, as printed for the 2025 edition. */
+const BROCHURE_HREF = "/docs/ggy-brochure.pdf";
 
 /** A paper sheet the size of the world with India cut out of it. */
 const SHEET = `M-100000,-100000H100000V100000H-100000Z${atlas.outline}`;
@@ -33,8 +47,8 @@ const tf = (c: Camera) => `translate(${c.x.toFixed(2)} ${c.y.toFixed(2)}) scale(
 const NAV_PROBE_Y = 34;
 
 /**
- * The opening. India is a window cut in a paper sheet; through it, the
- * Gateway of India. Scrolling dives the camera into Maharashtra until the
+ * The opening. India is a window cut in a cream sheet; through it, the three
+ * states of the upcoming edition in turn. Scrolling dives the camera into Maharashtra until the
  * window is larger than the screen and the photograph is all that is left.
  */
 export function LandingHero() {
@@ -62,7 +76,9 @@ export function LandingHero() {
         W = stage.clientWidth;
         H = stage.clientHeight;
         const narrow = W < 768;
-        A = fit(INDIA_BOX, [narrow ? 16 : 40, narrow ? 96 : 84, W - (narrow ? 16 : 40), H - (narrow ? 120 : 36)]);
+        // The map stops short of the foot of the screen, leaving a clear strip
+        // for the invitation centred beneath it.
+        A = fit(INDIA_BOX, [narrow ? 16 : 40, narrow ? 96 : 84, W - (narrow ? 16 : 40), H - (narrow ? 120 : 108)]);
         const k = (Math.hypot(W, H) / 2 / DIVE_CLEARANCE) * 1.08;
         B = { k, x: W / 2 - DIVE[0] * k, y: H / 2 - DIVE[1] * k };
         // The title sits on the heart of the peninsula, sized to the map so it
@@ -70,7 +86,7 @@ export function LandingHero() {
         const mapW = (INDIA_BOX[2] - INDIA_BOX[0]) * A.k;
         stage.style.setProperty("--tx", `${(TITLE_AT[0] * A.k + A.x).toFixed(1)}px`);
         stage.style.setProperty("--ty", `${(TITLE_AT[1] * A.k + A.y).toFixed(1)}px`);
-        stage.style.setProperty("--tw", `${(mapW * (narrow ? 0.62 : 0.52)).toFixed(1)}px`);
+        stage.style.setProperty("--tw", `${(mapW * 0.52).toFixed(1)}px`);
       };
 
       const render = () => {
@@ -162,17 +178,20 @@ export function LandingHero() {
     { scope: root },
   );
 
-  const p = photos.gateway;
   return (
     <section ref={root} id="top" className="lp-hero" aria-labelledby="lp-hero-title">
       <h1 id="lp-hero-title" className="sr-only">
-        The Good Governance Yatra. An immersive journey through the institutions, people and ideas shaping India’s future.
+        Good Governance Yatra’ 27: India’s Oldest Immersive Yatra into Governance and Leadership.
       </h1>
       <div className="lp-hero__stage" data-stage data-nav="dark" data-nav-bare>
         <div className="lp-hero__lens">
           <div ref={photo} className="lp-hero__photo">
-            <div className="lp-hero__zoom">
-              <Image src={p.src} alt="" fill sizes="100vw" quality={82} loading="eager" fetchPriority="high" className="object-cover" />
+            <div className="lp-hero__zoom lp-hero__reel">
+              {REEL.map((r, i) => (
+                <div key={r.src} className="lp-hero__frame" style={{ "--i": i } as React.CSSProperties}>
+                  <Image src={r.src} alt="" fill sizes="100vw" quality={82} loading={i === 0 ? "eager" : "lazy"} fetchPriority={i === 0 ? "high" : "auto"} className="object-cover" />
+                </div>
+              ))}
             </div>
           </div>
           <div className="lp-hero__tint" />
@@ -186,15 +205,17 @@ export function LandingHero() {
         </svg>
 
         <div className="lp-hero__title" data-lift>
-          <p data-intro className="lp-hero__sub">
-            An immersive journey through the institutions, people and ideas shaping India’s future.
+          <p data-intro className="lp-hero__name" aria-hidden="true">
+            <span>Good Governance</span>
+            <em>Yatra’ 27</em>
           </p>
+          <p data-intro className="lp-hero__sub">India’s Oldest Immersive Yatra into Governance and Leadership</p>
         </div>
 
         <div className="lp-hero__cue" data-cue>
           <div className="lp-hero__cue-row">
             <span data-intro className="lp-chip">
-              Upcoming edition: Gujarat, Maharashtra, Goa
+              9th Edition: Gujarat - Maharashtra - Goa
             </span>
             <a data-intro href="#yatra" className="lp-pill lp-pill--crimson">
               Explore
@@ -207,14 +228,24 @@ export function LandingHero() {
         <div className="lp-hero__spacer" />
         <div id="yatra" className="lp-hero__second" data-nav="light">
           <h2 className="lp-hero__statement">
-            <span>We learn</span> <span className="is-mid">governance</span> <span className="is-end">
-              where it <em>happens</em>
+            <span>Learn governance</span> <span className="is-mid">and public policy</span> <span className="is-end">
+              while <em>travelling</em>
             </span>
           </h2>
-          <div className="lp-hero__body">
-            <p>The Good Governance Yatra is an immersive programme for aspiring public leaders, policymakers, changemakers and impact creators.</p>
-            <p>Delegates travel to see governance projects first-hand and to meet the people who run them, state by state.</p>
-            <p>The upcoming edition moves through Gujarat, Maharashtra and Goa. Dates and stops are still to be announced.</p>
+          <div className="lp-hero__intro">
+            <p className="lp-hero__lede">
+              Good Governance Yatra (GGY) is a premier 7-day immersive travel program designed for aspiring public leaders, policymakers, changemakers, and social entrepreneurs. This unique journey offers selected delegates the opportunity to witness transformative governance projects firsthand and engage with visionary policymakers shaping India’s future.
+            </p>
+            <div className="lp-hero__actions">
+              <a href="#connect" className="lp-pill lp-pill--solid">
+                Apply Now
+                <ArrowRight aria-hidden="true" strokeWidth={1.8} />
+              </a>
+              <a href={BROCHURE_HREF} className="lp-pill lp-pill--ghost" download="Good-Governance-Yatra-Brochure.pdf">
+                Download Brochure
+                <ArrowDownToLine aria-hidden="true" strokeWidth={1.8} />
+              </a>
+            </div>
           </div>
         </div>
       </div>

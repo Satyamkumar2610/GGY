@@ -5,7 +5,6 @@ import { Readiness } from "../readiness";
 import { Head, Title } from "./head";
 import BorderGlow from "../BorderGlow";
 import HoloCard from "../HoloCard";
-import { ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
 import { AdmissionPath } from "./admission-path";
 
 /**
@@ -33,12 +32,12 @@ export function Joining() {
             backgroundColor="#ffffff"
             borderRadius={10}
             glowRadius={34}
-            glowColor="22 61 70"
+            glowColor="36 83 60"
             glowIntensity={0.9}
             edgeSensitivity={26}
             coneSpread={22}
             fillOpacity={0.32}
-            colors={["#e0a383", "#b66c4c", "#f4e7d6"]}
+            colors={["#ffeed3", "#cd1f36", "#fff6e6"]}
           >
         <div className="ticket j-pass">
           <div className="ticket-main">
@@ -76,7 +75,7 @@ export function Joining() {
               </dd>
             </dl>
             <div className="j-pass__seal">
-              <HoloCard image="/images/ggy-seal.png" alt="Foil seal of the Good Governance Yatra" preset="stars" width={112} radius={56} intensity={0.7} edgeSparkle={0.5} frame={0} glare={0.45} foilColor="#e9bfa8" tiltMax={18} hoverScale={1.06} shadow={false} />
+              <HoloCard image="/images/ggy-seal.png" alt="Foil seal of the Good Governance Yatra" preset="stars" width={112} radius={56} intensity={0.7} edgeSparkle={0.5} frame={0} glare={0.45} foilColor="#ffeed3" tiltMax={18} hoverScale={1.06} shadow={false} />
             </div>
             <span aria-hidden="true" className="ticket-code" />
           </div>
@@ -95,38 +94,6 @@ export function Joining() {
           <AdmissionPath />
         </div>
 
-        <address className="x-contact">
-          <p className="x-contact__lead">Contact, as printed in 2025. Details for the upcoming edition are to be confirmed.</p>
-          <div className="x-contact__row">
-            {[
-              { Icon: Mail, label: "Write", value: contact.email, href: `mailto:${contact.email}` },
-              { Icon: Phone, label: "Call", value: contact.phoneDisplay, href: contact.phoneHref },
-              { Icon: MapPin, label: "Visit", value: contact.address, href: null },
-            ].map(({ Icon, label, value, href }) => {
-              const body = (
-                <>
-                  <span className="x-contact__icon">
-                    <Icon aria-hidden="true" strokeWidth={1.6} />
-                  </span>
-                  <span className="x-contact__text">
-                    <span className="x-contact__label">{label}</span>
-                    <span className="x-contact__value">{value}</span>
-                  </span>
-                  {href ? <ArrowUpRight className="x-contact__go" aria-hidden="true" strokeWidth={1.6} /> : null}
-                </>
-              );
-              return href ? (
-                <a key={label} href={href} className="x-contact__item">
-                  {body}
-                </a>
-              ) : (
-                <div key={label} className="x-contact__item">
-                  {body}
-                </div>
-              );
-            })}
-          </div>
-        </address>
       </div>
       <TicketMotion />
     </section>

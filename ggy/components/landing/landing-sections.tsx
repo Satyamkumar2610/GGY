@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { atlas } from "@/lib/atlas";
-import { about, components, contact, photos, previousEdition } from "@/content/ggy";
+import { Mail, MapPin, Phone } from "lucide-react";
+import { about, components, photos } from "@/content/ggy";
+import { contact27 } from "@/content/ggy27";
 
 const field = components.find((c) => c.name === "Field Visit")!;
 const policy = components.find((c) => c.name === "Interaction with Policy Architects")!;
@@ -111,28 +113,61 @@ export function ComeAndSee() {
 
 const FOOTER_LINKS = [
   { href: "#yatra", label: "The Yatra" },
-  { href: "#journey", label: "The journey" },
-  { href: "#idea", label: "The idea" },
+  { href: "#visits", label: "Key Visits" },
   { href: "#programme", label: "Programme" },
-  { href: "#archive", label: "Archive" },
-  { href: "#people", label: "People" },
-  { href: "#questions", label: "Questions" },
-  { href: "#connect", label: "Admissions" },
+  { href: "#journey", label: "Journey" },
+  { href: "#alumni", label: "Alumni" },
+  { href: "#archive", label: "Past Editions" },
+  { href: "#questions", label: "FAQs" },
+  { href: "#connect", label: "Apply" },
 ];
 
 /**
- * The footer, kept to one screen-width band: the mark and a way back up, the
- * contents in a single row, contact and address side by side, and the
- * provenance in the fine print.
+ * The footer, on cream: the Rashtram School of Public Leadership logo and the
+ * edition's name; how to write, call and visit; the contents and the
+ * copyright on a second line; the edition's name set very large and faint
+ * behind it all.
  */
 export function LandingFooter() {
+  const c = contact27;
   return (
-    <footer id="notes" className="lp-footer on-dark" data-nav="light" aria-label="Contents and contact">
+    <footer id="notes" className="lp-footer" data-nav="dark" aria-label="Contact and contents">
       <div className="lp-footer__top">
-        <a href="#top" className="lp-footer__brand" aria-label="Good Governance Yatra, back to top">
-          <span className="lp-footer__mono">GGY</span>
-          <span className="lp-footer__name">Good Governance Yatra</span>
-        </a>
+        <div className="lp-footer__brand">
+          <a href="#top" aria-label="Rashtram School of Public Leadership, Rishihood University: back to top">
+            {/* eslint-disable-next-line @next/next/no-img-element -- pre-sized logo */}
+            <img src="/images/ggy27/brand/rashtram-color.png" alt="" width={900} height={271} className="lp-footer__logo" />
+          </a>
+          <p className="lp-footer__edition">Good Governance Yatra’ 27</p>
+        </div>
+        <dl className="lp-footer__contact">
+          <div>
+            <dt>Write to us</dt>
+            <dd>
+              <Mail aria-hidden="true" strokeWidth={1.6} />
+              <a href={`mailto:${c.email}`}>{c.email}</a>
+            </dd>
+          </div>
+          <div>
+            <dt>Call us</dt>
+            <dd>
+              <Phone aria-hidden="true" strokeWidth={1.6} />
+              <span>
+                <a href={c.phoneHref}>{c.phoneDisplay}</a>
+                <small>{c.phoneName}</small>
+              </span>
+            </dd>
+          </div>
+          <div>
+            <dt>Visit us</dt>
+            <dd>
+              <MapPin aria-hidden="true" strokeWidth={1.6} />
+              <span>{c.address}</span>
+            </dd>
+          </div>
+        </dl>
+      </div>
+      <div className="lp-footer__base">
         <nav className="lp-footer__nav" aria-label="Contents">
           {FOOTER_LINKS.map((l) => (
             <a key={l.href} href={l.href}>
@@ -140,24 +175,11 @@ export function LandingFooter() {
             </a>
           ))}
         </nav>
+        <p className="lp-footer__copy">{c.copyright}</p>
       </div>
-      <div className="lp-footer__row">
-        <div className="lp-footer__contact">
-          <a href={`mailto:${contact.email}`}>{contact.email}</a>
-          <a href={contact.phoneHref}>{contact.phoneDisplay}</a>
-          <p>{contact.address}</p>
-        </div>
-        <p className="lp-footer__fine">
-          Contact details as printed in the 2025 brochure; those for the upcoming edition are to be confirmed. The {previousEdition.label} was organised by {previousEdition.organisedBy}, “an initiative by {previousEdition.initiativeOf}”. The organiser of the upcoming edition is to be confirmed.
-        </p>
-        <a href="#top" className="lp-footer__up" data-magnetic>
-          <span aria-hidden="true">↑</span> Back to top
-        </a>
-      </div>
-      <div className="lp-footer__base">
-        <span>© Good Governance Yatra</span>
-        <span>Photographs: GGY brochure, Wikimedia Commons, Unsplash</span>
-      </div>
+      <p className="lp-footer__mark" aria-hidden="true">
+        Good Governance Yatra’ 27
+      </p>
     </footer>
   );
 }

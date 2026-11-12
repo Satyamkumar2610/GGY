@@ -1,16 +1,31 @@
 import { atlas } from "@/lib/atlas";
-import { about, BROCHURE, upcoming } from "@/content/ggy";
+import { about, BROCHURE } from "@/content/ggy";
 import { NoteRef } from "../primitives";
-import { Head, STAR, Title } from "./head";
+import { Head, Title } from "./head";
 import { FieldCompare } from "./field-compare";
+import { IdeaPanels } from "./idea-panels";
 
-// The confirmed route, north to south.
-const ROUTE = ["Gujarat", "Maharashtra", "Goa"].map((n) => upcoming.states.find((s) => s.name === n)!);
+// The Yatra at a glance, as given in the GGY'27 brief.
+const STATS = [
+  { value: "1", label: "Unforgettable Experience" },
+  { value: "7", label: "Immersive Days" },
+  { value: "1000+", label: "Kms of Exploration" },
+  { value: "3", label: "States" },
+  { value: "40", label: "Handpicked Delegates" },
+].map((s) => ({ ...s, count: s.value.replace(/\D/g, "") }));
+
+/* What each cover word stands for, in lines the brochure itself prints. */
+const WORD_LINES: Record<string, string> = {
+  Immerse: "“witness transformative governance projects firsthand”",
+  Engage: "“engage with visionary policymakers shaping India’s future”",
+  Learn: "“Live exposure to last-mile governance institutions”",
+  Network: "“Join an exclusive network of 350+ alumni”",
+};
 
 /**
- * Departure: the crimson band after the opening. The states of India draw
- * themselves in beside the claim, and the four words from the brochure cover
- * open across the full width of the page as the band is crossed.
+ * Departure: the red band after the opening. The states of India draw
+ * themselves in beside the claim; the Yatra in five figures; and the four
+ * words from the brochure cover open across the full width of the page.
  */
 export function Departure() {
   const [x0, y0, x1, y1] = atlas.outlineBounds;
@@ -35,29 +50,20 @@ export function Departure() {
         </svg>
       </div>
       <div className="j-wrap">
-        <div className="j-glide" role="img" aria-label="The upcoming edition: Gujarat, Maharashtra, Goa">
-          <div className="j-glide__belt" aria-hidden="true">
-            {[0, 1].map((copy) => (
-              <span key={copy} className="j-glide__row">
-                {ROUTE.map((s) => (
-                  <span key={s.name} className="j-glide__item">
-                    <b>{s.name}</b>
-                    <span lang={s.lang} className="j-glide__native">
-                      {s.native}
-                    </span>
-                    <svg viewBox="0 0 28.1 32" className="j-glide__star">
-                      <path d={STAR} />
-                    </svg>
-                  </span>
-                ))}
-              </span>
-            ))}
-          </div>
-        </div>
+        <dl className="j-stats" aria-label="The Yatra at a glance">
+          {STATS.map((f) => (
+            <div key={f.label} className="j-stats__item">
+              <dt className="j-stats__label">{f.label}</dt>
+              <dd className="j-stats__value" data-count={f.count}>
+                {f.value}
+              </dd>
+            </div>
+          ))}
+        </dl>
       </div>
       <p className="j-wrap j-words" data-words aria-label={`The four words on the brochure cover: ${about.tagline.join(", ")}`}>
         {about.tagline.map((w) => (
-          <span key={w} aria-hidden="true">
+          <span key={w} aria-hidden="true" data-tip={WORD_LINES[w]}>
             {w}
           </span>
         ))}
@@ -65,15 +71,6 @@ export function Departure() {
     </section>
   );
 }
-
-/* What the Yatra is for, each in the words of the 2025 brochure. */
-const MODES = [
-  { name: "First-hand exposure", quote: "witness transformative governance projects firsthand", src: "Brochure, p.2" },
-  { name: "Leaders and institutions", quote: "engage with visionary policymakers shaping India’s future", src: "Brochure, p.2" },
-  { name: "Learning in the field", quote: "Live exposure to last-mile governance institutions and interaction with stakeholders", src: "Field Visit, brochure p.10" },
-  { name: "Administration in practice", quote: "experience first-hand the complications and contradictions of the policy implementation processes", src: "Experience, brochure p.7" },
-  { name: "People and places", quote: "Deepen your understanding of Bharat through insights from grassroots leaders", src: "Bharat Insights, brochure p.3" },
-];
 
 /**
  * The field: the lecture hall and the open country in one frame, divided by
@@ -98,16 +95,7 @@ export function Field() {
               <NoteRef id="duration" />
             </p>
           </div>
-          <ul className="j-rows j-idea__rows">
-            {MODES.map((m) => (
-              <li key={m.name} className="j-row">
-                <i className="j-rule" data-rule />
-                <h3 className="j-h3">{m.name}</h3>
-                <p className="j-quote">“{m.quote}”</p>
-                <p className="j-meta">{m.src}</p>
-              </li>
-            ))}
-          </ul>
+          <IdeaPanels />
         </div>
 
         <p className="j-statement" data-ink>

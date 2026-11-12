@@ -2,11 +2,10 @@
 
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import { useEffect, useMemo, useState } from "react";
-import { BookOpen, MapPin } from "lucide-react";
+import { BookOpen, Building2, ChevronDown, MapPin, Sparkles, UserRound } from "lucide-react";
 import { BROCHURE, CONCEPT_NOTE, met8, previousEdition, roleModels } from "@/content/ggy";
 import { ScrollTrigger } from "@/lib/gsap";
 import { NoteRef } from "../primitives";
-import SpotlightCard from "../SpotlightCard";
 import { Head, Title } from "./head";
 
 type Person = { name: string; title: string; from: "8th" | "brochure"; where: string };
@@ -26,6 +25,8 @@ function initials(name: string) {
 }
 
 const EASE = [0.22, 1, 0.36, 1] as const;
+/** How many cards show before "Show all". */
+const FIRST = 12;
 
 const FILTERS = [
   { id: "all", label: "Everyone" },
@@ -41,14 +42,16 @@ type FilterId = (typeof FILTERS)[number]["id"];
  */
 export function People() {
   const [filter, setFilter] = useState<FilterId>("all");
-  const shown = useMemo(() => people.filter((p) => filter === "all" || p.from === filter), [filter]);
+  const [all, setAll] = useState(false);
+  const matching = useMemo(() => people.filter((p) => filter === "all" || p.from === filter), [filter]);
+  const shown = all ? matching : matching.slice(0, FIRST);
 
   // The wall changed height: everything below it moved. Refresh once the
   // cards have settled.
   useEffect(() => {
     const t = window.setTimeout(() => ScrollTrigger.refresh(), 650);
     return () => window.clearTimeout(t);
-  }, [filter]);
+  }, [filter, all]);
 
   return (
     <section id="people" className="j-sec j-paper" data-nav="dark" data-j-station="people" data-arch aria-labelledby="people-title">
@@ -86,7 +89,7 @@ export function People() {
                   transition={{ duration: 0.5, ease: EASE }}
                   className="x-wall__cell"
                 >
-                  <SpotlightCard theme="light" className="x-person" spotlightColor="#871b38" intensity={0.5} spotlightSize={220} borderGlow={0.9} tabIndex={0}>
+                  <div className="x-card x-person" tabIndex={0}>
                     <span className={`x-person__mono${p.from === "8th" ? " is-8th" : ""}`} aria-hidden="true">
                       {initials(p.name)}
                     </span>
@@ -96,34 +99,39 @@ export function People() {
                       {p.from === "8th" ? <MapPin aria-hidden="true" strokeWidth={1.8} /> : <BookOpen aria-hidden="true" strokeWidth={1.8} />}
                       {p.where}
                     </p>
-                  </SpotlightCard>
+                  </div>
                 </motion.li>
               ))}
             </AnimatePresence>
           </motion.ul>
         </LayoutGroup>
 
+        {matching.length > FIRST ? (
+          <div className="x-wall__more">
+            <button type="button" className="x-wall__btn" aria-expanded={all} onClick={() => setAll((v) => !v)}>
+              {all ? "Show fewer" : `Show all ${matching.length}`}
+              <ChevronDown aria-hidden="true" strokeWidth={1.8} />
+            </button>
+          </div>
+        ) : null}
+
         <div className="j-inst">
           <Title as="h3" sub title="The institutions behind" em="the 2025 edition" />
-          <dl className="j-inst__cols">
-            <div>
-              <i className="j-rule" data-rule aria-hidden="true" />
-              <dt>Organised by</dt>
-              <dd>Rashtram School of Public Leadership</dd>
-              <dd className="j-meta">Rishihood University, Sonipat</dd>
-            </div>
-            <div>
-              <i className="j-rule" data-rule aria-hidden="true" />
-              <dt>An initiative of</dt>
-              <dd>{previousEdition.initiativeOf}</dd>
-              <dd className="j-meta">As printed on the 2025 brochure cover</dd>
-            </div>
-            <div>
-              <i className="j-rule" data-rule aria-hidden="true" />
-              <dt>Yatra leader, 2025</dt>
-              <dd>Shri Shantanu Gupta</dd>
-              <dd className="j-meta">Professor of Practice, Rashtram School of Public Leadership, Rishihood University</dd>
-            </div>
+          <dl className="x-inst">
+            {[
+              { Icon: Building2, k: "Organised by", v: "Rashtram School of Public Leadership", m: "Rishihood University, Sonipat" },
+              { Icon: Sparkles, k: "An initiative of", v: previousEdition.initiativeOf, m: "As printed on the 2025 brochure cover" },
+              { Icon: UserRound, k: "Yatra leader, 2025", v: "Shri Shantanu Gupta", m: "Professor of Practice, Rashtram School of Public Leadership, Rishihood University" },
+            ].map(({ Icon, k, v, m }) => (
+              <div key={k} className="x-inst__card" data-row>
+                <span className="x-inst__icon" aria-hidden="true">
+                  <Icon strokeWidth={1.5} />
+                </span>
+                <dt>{k}</dt>
+                <dd>{v}</dd>
+                <dd className="x-inst__meta">{m}</dd>
+              </div>
+            ))}
           </dl>
           <p className="j-meta j-inst__src">From the {BROCHURE}. The organiser and Yatra leader of the upcoming edition are to be confirmed.</p>
         </div>

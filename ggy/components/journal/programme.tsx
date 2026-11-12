@@ -4,20 +4,17 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
 import { useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Building2, Hammer, Lightbulb, Mic2, Route, Scale, type LucideIcon } from "lucide-react";
-import { BROCHURE, components, photos, type Photo } from "@/content/ggy";
+import { BROCHURE, components } from "@/content/ggy";
+import { programmePhotos, type Pic } from "@/content/ggy27";
 import { NoteRef } from "../primitives";
 import CardSwap, { Card, type CardSwapHandle } from "../CardSwap";
 import { Head } from "./head";
 
-/** One photograph and one mark for each part, in the brochure's order. */
-const DRESS: { photo: Photo; Icon: LucideIcon }[] = [
-  { photo: photos.fieldGroup, Icon: Route },
-  { photo: photos.overhead, Icon: Hammer },
-  { photo: photos.legislatureSteps, Icon: Scale },
-  { photo: photos.address, Icon: Mic2 },
-  { photo: photos.lectureHall, Icon: Lightbulb },
-  { photo: photos.openLandscape, Icon: Building2 },
-];
+/** One mark for each part, in the brochure's order. */
+const ICONS: LucideIcon[] = [Route, Hammer, Scale, Mic2, Lightbulb, Building2];
+
+/** Each part's own brochure photograph (the GGY'25 brochure images). */
+const DRESS: { photo: Pic; Icon: LucideIcon }[] = components.map((c, i) => ({ photo: programmePhotos[c.name], Icon: ICONS[i] }));
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 const N = components.length;

@@ -14,21 +14,22 @@ const FOCUS = FOCUS_ISO.map((iso) => stateByIso(iso)?.d ?? "");
 
 /** The stations of the page, in order: a section's id and the name shown beside it. */
 const STATIONS: [string, string][] = [
-  ["band", "Departure"],
-  ["field", "The field"],
+  ["band", "At a glance"],
+  ["visits", "Key visits"],
   ["act-where", "The western coast"],
   ["journey", "The route"],
-  ["editions", "What is confirmed"],
   ["act-how", "The days"],
   ["learning", "How it runs"],
+  ["takeaways", "Takeaways"],
   ["act-proof", "The record"],
-  ["archive", "A decade"],
+  ["archive", "Past editions"],
   ["itinerary", "Nine days"],
   ["gallery", "Photographs"],
   ["people", "People"],
   ["after", "Afterwards"],
+  ["alumni", "Alumni voices"],
   ["act-joining", "The next edition"],
-  ["questions", "Questions"],
+  ["questions", "FAQs"],
   ["connect", "Joining"],
 ];
 const LAST = STATIONS.length - 1;

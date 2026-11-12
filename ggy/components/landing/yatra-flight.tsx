@@ -455,6 +455,9 @@ export function YatraFlight() {
                     </div>
                   ))}
                 </dl>
+                <p className="lp-card__plan">
+                  <b>Stops, people and learnings</b> <span className="tba">To be announced</span>
+                </p>
                 <p className="lp-card__past">Visited by the Yatra in {s.editions.join(" and ")}</p>
               </div>
             </article>
@@ -471,11 +474,12 @@ export function YatraFlight() {
               ))}
             </svg>
             <div className="lp-card__body">
-              <p className="lp-card__native">Gujarat, Maharashtra, Goa</p>
+              <p className="lp-card__native">Yatra Route: Gujarat - Maharashtra - Goa</p>
               <h3 className="lp-card__title">
                 One coast, <em>three</em> states
               </h3>
-              <p className="lp-card__intro">From the Gulf of Kutch to the Konkan. The GGY team will announce the stops, the dates and the order of travel.</p>
+              <p className="lp-card__km">Covering 1000+ Kms</p>
+              <p className="lp-card__intro">The GGY team will announce the dates and stops for the Yatra.</p>
               <a href="#connect" className="lp-pill lp-pill--crimson">
                 Connect with the GGY team
               </a>

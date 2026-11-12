@@ -5,7 +5,6 @@ import { BadgeCheck, CreditCard, FileSearch, Send, TrainFront, type LucideIcon }
 import { admissionSteps } from "@/content/ggy";
 import { gsap, MOTION_QUERIES, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { NoteRef } from "../primitives";
-import SpotlightCard from "../SpotlightCard";
 
 const ICONS: LucideIcon[] = [Send, FileSearch, CreditCard, BadgeCheck, TrainFront];
 
@@ -114,14 +113,7 @@ export function AdmissionPath() {
           const Icon = ICONS[i] ?? Send;
           return (
             <li key={step.name} className="x-climb__step" data-step data-lit="" style={{ "--i": i } as CSSProperties}>
-              <SpotlightCard
-                theme="dark"
-                className="x-climb__card"
-                spotlightColor="#e0a383"
-                intensity={0.22}
-                spotlightSize={260}
-                style={{ "--spotlight-card-surface": "rgb(255 255 255 / 0.045)", "--spotlight-card-border": "rgb(247 241 232 / 0.14)", "--spotlight-card-shadow": "none" }}
-              >
+              <div className="x-card x-climb__card">
                 <div className="x-climb__head">
                   <span className="x-climb__badge" data-badge>
                     <Icon aria-hidden="true" strokeWidth={1.6} />
@@ -135,7 +127,7 @@ export function AdmissionPath() {
                   {step.text}
                   {step.note ? <NoteRef id={step.note} /> : null}
                 </p>
-              </SpotlightCard>
+              </div>
             </li>
           );
         })}

@@ -1,0 +1,279 @@
+/* =====================================================================
+   Finish and grounds, laid over the existing palette.
+
+   The base colours do not change: crimson #cd1f36, deep crimson #cd1f36,
+   marigold and ivory stay exactly as set in landing.css.
+
+   Grounds   Three flat colours only: paper, ivory, deep crimson. No washes,
+             no glows, no patterns, nothing moving behind the content. Every
+             ground carries the same fine paper grain and nothing else.
+   Sheen     Metal is a hint, not a gradient: titles and figures move
+             through two close tones of their own colour, rims are a faint
+             gold hairline, buttons take a slight highlight.
+   Nothing here animates; it costs nothing while scrolling.
+   ===================================================================== */
+
+.lp {
+  /* Sheen: each runs between near neighbours of one colour. */
+  --metal-gold: linear-gradient(100deg, #ffeed3 0%, #fff6e6 48%, #ffeed3 100%);
+  --metal-gold-dark: var(--metal-gold);
+  --metal-gold-ink: linear-gradient(100deg, #b81b30 0%, #cd1f36 50%, #b81b30 100%);
+  --metal-crimson: linear-gradient(100deg, #cd1f36 0%, #d8344a 50%, #b81b30 100%);
+  --metal-pearl: linear-gradient(100deg, #ffeed3 0%, #ffffff 50%, #ffeed3 100%);
+  /* Rims: a gold hairline that is strongest at two corners. */
+  --metal-rim-light: linear-gradient(135deg, rgb(205 31 54 / 0.38), rgb(205 31 54 / 0.1) 35%, rgb(205 31 54 / 0.1) 65%, rgb(205 31 54 / 0.34));
+  --metal-rim-dark: linear-gradient(135deg, rgb(255 238 211 / 0.42), rgb(255 238 211 / 0.1) 35%, rgb(255 238 211 / 0.1) 65%, rgb(255 238 211 / 0.36));
+  /* A slight highlight along the top of solid buttons and tabs. */
+  --metal-bevel: linear-gradient(180deg, rgb(255 255 255 / 0.1) 0%, rgb(255 255 255 / 0) 45%, rgb(0 0 0 / 0.06) 100%);
+
+  /* Ground grain: one SVG noise tile, tinted crimson for light grounds
+     and cream for dark ones. */
+  --tex-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.36 0 0 0 0 0.06 0 0 0 0 0.15 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  --tex-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.97 0 0 0 0 0.95 0 0 0 0 0.91 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  --tex-size: 180px 180px;
+}
+
+/* ---- Foil ----------------------------------------------------------- */
+
+.lp :is(.j-wrap, .fp-stage) .j-title span:not(.note, .note *),
+.lp .act__intro .act__title,
+.lp .x-figs dd > span,
+.lp .x-year__n,
+.lp .x-ready__count > span:first-child,
+.lp .x-faq__count > span,
+.lp .x-day__city,
+.lp .x-prog__title,
+.lp .x-plan__title,
+.lp .x-plan__tab-n {
+  background: var(--metal-crimson);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.lp :is(.j-wrap, .fp-stage) .j-title em,
+.lp .x-trip__facts dt,
+.lp .x-inst dt {
+  background: var(--metal-gold-ink);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+/* On the dark grounds: pearl capitals, gold-leaf phrases and figures. */
+.lp .on-dark :is(.j-wrap, .fp-stage) .j-title span:not(.note, .note *),
+.lp .lp-hero__name span {
+  background: var(--metal-pearl);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.lp .on-dark :is(.j-wrap, .fp-stage) .j-title em,
+.lp .lp-hero__name em,
+.lp .x-bento__figure > span,
+.lp .lp-footer__mono,
+.lp .x-climb__name,
+.lp .x-bento__name {
+  background: var(--metal-gold);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.lp .x-climb__name,
+.lp .x-bento__name {
+  background: var(--metal-pearl);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+/* Foil is painted under the glyphs, so a text-shadow would sit on top of
+   it; the glow moves to a drop-shadow on the block instead. */
+.lp .act__intro .act__title {
+  text-shadow: none;
+  filter: drop-shadow(0 0 22px rgb(255 255 255 / 0.9));
+}
+.lp .lp-hero__name {
+  text-shadow: none;
+  filter: drop-shadow(0 2px 16px rgb(70 8 16 / 0.6));
+}
+
+/* Selected states turn these elements crimson; their text goes back to plain. */
+.lp .x-year[data-on] .x-year__n,
+.lp .x-plan__tab[aria-selected="true"] .x-plan__tab-n {
+  background: var(--metal-pearl);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* ---- Bevel ---------------------------------------------------------- */
+
+.lp .btn,
+.lp :is(.lp-pill--crimson, .lp-pill--solid),
+.lp .x-seg__pill,
+.lp .x-prog__hl,
+.lp .x-plan__tab-bg,
+.lp .x-tile[data-on],
+.lp .x-year[data-on] .x-year__btn,
+.lp .x-idea__panel[data-open],
+.lp .x-faq__ask,
+.lp .x-climb__step[data-lit] .x-climb__badge,
+.lp .x-cmp__spot {
+  background-image: var(--metal-bevel);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.16), 0 14px 30px -20px rgb(110 15 28 / 0.55);
+}
+.lp .x-climb__step[data-lit] .x-climb__badge {
+  background-image: var(--metal-gold);
+  box-shadow: 0 0 0 6px rgb(255 238 211 / 0.14);
+}
+/* Hairlines catch the light: gold toward the start, fading out. */
+.lp .j-rule {
+  background: linear-gradient(90deg, rgb(205 31 54 / 0.45), rgb(205 31 54 / 0.18) 40%, rgb(205 31 54 / 0.14));
+}
+.lp .on-dark .j-rule {
+  background: linear-gradient(90deg, rgb(255 238 211 / 0.5), rgb(255 238 211 / 0.2) 40%, rgb(255 238 211 / 0.16));
+}
+
+/* ---- Rims ----------------------------------------------------------- */
+
+.lp :is(
+    .x-figs__card,
+    .x-inst__card,
+    .x-day,
+    .x-trip__facts > div,
+    .x-plan__panel,
+    .x-plan__tab,
+    .x-year__btn,
+    .x-tile,
+    .x-ready,
+    .x-prog__detail,
+    .x-map__plate,
+    .x-cmp__cap,
+    .x-seg,
+    .x-idea__panel,
+    .x-contact__item,
+    .x-card,
+    .j-rail__capsule
+  ) {
+  position: relative;
+  border-color: transparent;
+}
+.lp :is(
+    .x-figs__card,
+    .x-inst__card,
+    .x-day,
+    .x-trip__facts > div,
+    .x-plan__panel,
+    .x-plan__tab,
+    .x-year__btn,
+    .x-tile,
+    .x-ready,
+    .x-prog__detail,
+    .x-map__plate,
+    .x-cmp__cap,
+    .x-seg,
+    .x-idea__panel,
+    .x-contact__item,
+    .x-card,
+    .j-rail__capsule
+  )::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding: 1px;
+  border-radius: inherit;
+  background: var(--metal-rim-light);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  pointer-events: none;
+  transition: opacity 400ms ease;
+}
+.lp .x-contact__item::before,
+.lp .on-dark .x-card::before,
+.lp .j-rail[data-tone="light"] .j-rail__capsule::before {
+  background: var(--metal-rim-dark);
+}
+/* Sheet cards lift a little more light when pointed at. */
+.lp :is(.x-figs__card, .x-inst__card, .x-day, .x-contact__item, .x-tile):hover::before {
+  background: linear-gradient(135deg, rgb(205 31 54 / 0.7), rgb(205 31 54 / 0.28) 35%, rgb(205 31 54 / 0.28) 65%, rgb(205 31 54 / 0.65));
+}
+
+/* ---- Grounds -------------------------------------------------------- */
+
+/* Flat colour and one fine grain on every ground, light or dark. */
+.lp :is(.j-paper, .j-cream, .act, .lp-flight),
+.lp #editions {
+  background-image: var(--tex-light);
+  background-size: var(--tex-size);
+}
+.lp :is(.j-deep, .lp-band, .lp-footer),
+.lp .lp-chapters .fs {
+  background-image: var(--tex-dark);
+  background-size: var(--tex-size);
+}
+/* Domes rise in the plain ground colour. */
+.lp [data-arch] > .arch-dome {
+  background-image: none;
+}
+.lp .x-map__plate {
+  background: #fff;
+}
+
+/* ---- The route flight's state cards -------------------------------- */
+
+.lp .lp-card {
+  border-radius: var(--x-card-r, 1.35rem);
+}
+.lp .lp-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 1px;
+  border-radius: inherit;
+  background: var(--metal-rim-light);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  pointer-events: none;
+}
+.lp .lp-card__title {
+  background: var(--metal-crimson);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.lp .lp-card__title em {
+  background: var(--metal-gold-ink);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+/* The route card stands on the red ground: cream foil, not red. */
+.lp .lp-card--end .lp-card__title,
+.lp .lp-card--end .lp-card__title em {
+  background: var(--metal-pearl);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* ---- The pass: a foil band, a foil mark, a gilt edge --------------- */
+
+.lp .ticket-band {
+  height: 7px;
+  background: var(--metal-gold);
+}
+.lp .j-pass {
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.9), 0 0 0 1px rgb(255 238 211 / 0.6), 0 50px 90px -50px rgb(40 4 9 / 0.8);
+}
+.lp :is(.j-pass__route, .j-pass__mark) {
+  background: var(--metal-crimson);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

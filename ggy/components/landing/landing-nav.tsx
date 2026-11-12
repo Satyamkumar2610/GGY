@@ -4,12 +4,16 @@ import { useEffect, useRef, useState } from "react";
 
 const LINKS = [
   { href: "#yatra", label: "The Yatra" },
-  { href: "#journey", label: "Journey" },
+  { href: "#visits", label: "Key Visits" },
   { href: "#programme", label: "Programme" },
-  { href: "#archive", label: "Archive" },
-  { href: "#people", label: "People" },
+  { href: "#journey", label: "Journey" },
+  { href: "#alumni", label: "Alumni" },
+  { href: "#archive", label: "Past Editions" },
+  { href: "#questions", label: "FAQs" },
 ];
-const MENU = [...LINKS.slice(0, 2), { href: "#idea", label: "The idea" }, ...LINKS.slice(2), { href: "#questions", label: "Questions" }, { href: "#connect", label: "Admissions" }];
+const MENU = [...LINKS, { href: "#connect", label: "Admissions" }];
+/** Where "Apply Now" leads until an application form is published: the admissions section. */
+const APPLY_HREF = "#connect";
 
 /** "dark" (crimson text) over light grounds, "light" (cream text) over dark grounds and photographs. */
 function toneOf(start: Element): "dark" | "light" {
@@ -26,14 +30,35 @@ function toneOf(start: Element): "dark" | "light" {
 }
 
 /**
- * Floating nav: links on the left, the wordmark in the centre, one pill on
- * the right. Its tone follows whatever sits under it: any element with
+ * Floating nav: the Rashtram School of Public Leadership logo on the left,
+ * the section links in the centre, "Apply Now" on the right. Its tone follows whatever sits under it: any element with
  * data-nav="dark" (crimson text, for paper grounds) or data-nav="light"
  * (cream text, for photographs and crimson grounds).
  */
 export function LandingNav() {
   const ref = useRef<HTMLElement>(null);
   const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(-1);
+
+  // Which nav section is being read: the last one whose start has crossed
+  // the middle of the window. An observer on a hairline at mid-screen, so
+  // nothing is measured while scrolling.
+  useEffect(() => {
+    const targets = LINKS.map((l) => document.querySelector(l.href));
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          const i = targets.indexOf(e.target);
+          if (e.isIntersecting) setActive(i);
+          // Left upward, back past its start: the section before it is current.
+          else if (e.boundingClientRect.top > 0) setActive((a) => (a === i ? i - 1 : a));
+        }
+      },
+      { rootMargin: "-50% 0px -50% 0px" },
+    );
+    targets.forEach((t) => t && io.observe(t));
+    return () => io.disconnect();
+  }, []);
 
   useEffect(() => {
     const nav = ref.current;
@@ -96,20 +121,22 @@ export function LandingNav() {
 
   return (
     <header ref={ref} className="lp-nav" data-site-header data-tone="dark" data-open={open || undefined}>
+      <a href="#top" className="lp-nav__brand" aria-label="Rashtram School of Public Leadership, Rishihood University: back to top">
+        {/* eslint-disable-next-line @next/next/no-img-element -- two pre-sized logo variants swapped by tone */}
+        <img src="/images/ggy27/brand/rashtram-color.png" alt="" width={900} height={271} className="lp-nav__logo lp-nav__logo--dark" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/ggy27/brand/rashtram-white.png" alt="" width={900} height={271} className="lp-nav__logo lp-nav__logo--light" />
+      </a>
       <nav className="lp-nav__links" aria-label="Sections">
-        {LINKS.map((l) => (
-          <a key={l.href} href={l.href} className="lp-nav__link" onClick={() => setOpen(false)}>
+        {LINKS.map((l, i) => (
+          <a key={l.href} href={l.href} className="lp-nav__link" aria-current={i === active ? "true" : undefined} onClick={() => setOpen(false)}>
             {l.label}
           </a>
         ))}
       </nav>
-      <a href="#top" className="lp-nav__brand" aria-label="Good Governance Yatra, back to top">
-        <b>GGY</b>
-        <span>Good Governance Yatra</span>
-      </a>
       <div className="lp-nav__end">
-        <a href="#connect" className="lp-pill lp-pill--line">
-          Connect
+        <a href={APPLY_HREF} className="lp-pill lp-pill--apply">
+          Apply Now
         </a>
         <button
           type="button"

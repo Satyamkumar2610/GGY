@@ -26,7 +26,7 @@
   overflow: hidden;
 }
 .js-motion .act {
-  height: 300svh;
+  height: 220svh;
 }
 .js-motion .act__stage {
   position: sticky;
@@ -45,7 +45,7 @@
   overflow: hidden;
   border-radius: 0.4rem;
   background: var(--c-deep);
-  box-shadow: 0 30px 60px -30px rgb(46 6 18 / 0.45);
+  box-shadow: 0 30px 60px -30px rgb(70 8 16 / 0.45);
 }
 .act__zoom.is-main .act__print {
   border-radius: 1.6rem;
@@ -64,8 +64,8 @@
   inset: 0;
   z-index: 2;
   background:
-    linear-gradient(to top, rgb(46 6 18 / 0.82), rgb(46 6 18 / 0.2) 50%, transparent 75%),
-    linear-gradient(to right, rgb(46 6 18 / 0.55), transparent 60%);
+    linear-gradient(to top, rgb(70 8 16 / 0.82), rgb(70 8 16 / 0.2) 50%, transparent 75%),
+    linear-gradient(to right, rgb(70 8 16 / 0.55), transparent 60%);
   opacity: 0;
   pointer-events: none;
 }
@@ -81,7 +81,7 @@
   display: inline-flex;
   margin: 0 0 1rem;
   padding: 0.35rem 0.8rem;
-  border: 1px solid rgb(135 27 56 / 0.25);
+  border: 1px solid rgb(205 31 54 / 0.25);
   border-radius: 999px;
   background: rgb(255 255 255 / 0.72);
   -webkit-backdrop-filter: blur(10px);
@@ -123,7 +123,7 @@
   font-size: 0.78rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--c-saffron-ink, #8c4a2f);
+  color: var(--c-saffron-ink, #a5182b);
 }
 .act__cue::before {
   content: "";

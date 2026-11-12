@@ -55,7 +55,7 @@ export function FieldGallery() {
                   setOpen(i);
                 }}
               >
-                <Image src={p.src} alt={p.alt} fill quality={82} sizes="(min-width: 64rem) 70vw, 92vw" draggable={false} className="object-cover" />
+                <Image src={p.src} alt={p.alt} fill quality={82} sizes="(min-width: 64rem) 46rem, 92vw" draggable={false} className="object-cover" />
               </button>
               <p className="fs-card__cap">
                 <span className="num">

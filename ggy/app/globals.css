@@ -11,56 +11,55 @@
    ===================================================================== */
 
 @theme {
-  /* The Western India Field Journal. Archival paper, deep charcoal ink,
-     one Rashtram maroon; terracotta, sage and a restrained coastal blue for
-     cartography. Contrast figures are WCAG 2.x against the surface named. */
-  --color-paper: #ffffff; /* archival ivory: main page, 15.9:1 with ink */
-  --color-sand: #f1e8e7; /* quiet fills, land on the map */
-  --color-light: #fdfafa; /* raised surfaces */
-  --color-ink: #191817; /* 15.9:1 on paper */
-  --color-ink-2: #24211f;
-  --color-ivory: #ffffff; /* on maroon, ink and photographs */
+  /* Good Governance Yatra'27: the Rishihood brand pair, red #cd1f36 and
+     cream #ffeed3 (fixed by the brief). Everything else is a shade or tint
+     of one of the two. Contrast is WCAG 2.x against the surface named. */
+  --color-paper: #ffeed3; /* brand cream: the main ground */
+  --color-sand: #fbe2bd; /* deeper cream: quiet fills, land on the maps */
+  --color-light: #fff6e6; /* lighter cream: raised cards */
+  --color-ink: #5c0d18; /* deepest red, running text: 12.9:1 on cream */
+  --color-ink-2: #5c0d18;
+  --color-ivory: #ffeed3; /* text on the red ground: 4.8:1 */
 
-  --color-ink-soft: #46413b; /* 8.9:1 on paper */
-  --color-muted: #6a625a; /* 5.3:1 on paper */
-  --color-dim: #b3aaa0; /* secondary on ink, 7.6:1 */
+  --color-ink-soft: #8e1424; /* 8.1:1 on cream */
+  --color-muted: #a5182b; /* 6.7:1 on cream */
+  --color-dim: #f2cfb3;
 
-  /* The primary: Rashtram maroon. Ivory on it 8.6:1. */
-  --color-crimson: #871b38; /* 8.1:1 on paper */
-  --color-crimson-deep: #5c1026; /* finale ground */
-  --color-crimson-lit: #962244;
-  --color-crimson-on-ink: #e48aa1; /* 7:1 on ink */
+  /* The brand red: headings, actions, and the red ground. 4.8:1 on cream. */
+  --color-crimson: #cd1f36;
+  --color-crimson-deep: #cd1f36; /* the red ground */
+  --color-crimson-lit: #d8344a;
+  --color-crimson-on-ink: #ffeed3;
 
-  /* Terracotta carries the cartographic marks and large display accents;
-     small text takes the deeper terracotta-ink, 5.4:1 on paper. */
-  --color-cream: #f7efef;
-  --color-cream-deep: #ecdedf;
-  --color-saffron: #b66c4c;
-  --color-saffron-ink: #8c4a2f;
-  --color-saffron-soft: #e0a383; /* on maroon and ink: 6.3:1 on crimson-deep */
-  /* Small text over the lighter crimson card grounds (#832a42–#923049), where
-     saffron-soft only reaches 3.5–4.1:1. 4.6:1 and 5.3:1 on those two. */
-  --color-saffron-soft-hi: #e9bfa8;
-  --color-ember: #2a1a1c; /* deep warm charcoal ground */
-  --color-ember-2: #3a2527;
+  /* The former marigold accents now resolve to the brand pair: red on the
+     cream grounds, cream on the red ground. Names are kept so every rule
+     that used them follows. */
+  --color-cream: #ffeed3;
+  --color-cream-deep: #f7d9b0;
+  --color-saffron: #cd1f36;
+  --color-saffron-ink: #a5182b;
+  --color-saffron-soft: #ffeed3;
+  --color-saffron-soft-hi: #ffeed3;
+  --color-ember: #8e1424;
+  --color-ember-2: #a5182b;
 
-  /* Cartography */
-  --color-sage: #73817c;
-  --color-coast: #5c7a86;
-  --color-sea: #f4f0f0;
+  /* Cartography: tints of the red. */
+  --color-sage: #e07a86;
+  --color-coast: #b5404f;
+  --color-sea: #fff6e6;
 
-  --color-hair: #e7dbdc;
-  --color-hair-strong: #8c8378;
-  --color-hair-ink: #3a3531;
-  --color-hair-ember: #4d3436;
-  --color-hair-cream: #e6d6d8;
+  --color-hair: #f2cfb3;
+  --color-hair-strong: #c98a7a;
+  --color-hair-ink: #a5182b;
+  --color-hair-ember: #a5182b;
+  --color-hair-cream: #f2cfb3;
 }
 
 @theme inline {
-  --font-display: var(--font-anek-latin), "Helvetica Neue", Arial, sans-serif;
-  --font-wide: var(--font-anek-latin), "Helvetica Neue", Arial, sans-serif;
-  --font-serif: var(--font-gambetta), "Iowan Old Style", Georgia, serif;
-  --font-sans: var(--font-switzer), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-montserrat), "Montserrat", "Helvetica Neue", Arial, sans-serif;
+  --font-wide: var(--font-montserrat), "Montserrat", "Helvetica Neue", Arial, sans-serif;
+  --font-serif: var(--font-garamond), "Adobe Garamond Pro", "EB Garamond", Garamond, Georgia, serif;
+  --font-sans: var(--font-montserrat), "Montserrat", ui-sans-serif, system-ui, sans-serif;
   --font-deva: var(--font-anek-devanagari), "Kohinoor Devanagari", "Noto Sans Devanagari", sans-serif;
   --font-guj: var(--font-anek-gujarati), "Gujarati Sangam MN", "Noto Sans Gujarati", sans-serif;
   --font-heading: var(--font-display);
@@ -124,44 +123,44 @@
      on the map rather than frosted over it. Blur is zero everywhere except
      the nav bar, where it keeps text legible over moving photographs. */
   --glass-blur: 0px;
-  --glass-paper: #ffffff;
-  --glass-paper-strong: #ffffff;
-  --glass-cream: #f7efef;
-  --glass-crimson: #6b1530;
-  --glass-on-dark: rgb(255 244 236 / 0.06);
+  --glass-paper: #fff6e6;
+  --glass-paper-strong: #fff6e6;
+  --glass-cream: #ffeed3;
+  --glass-crimson: #a5182b;
+  --glass-on-dark: rgb(255 238 211 / 0.06);
   --glass-shadow:
-    0 0 0 1px rgb(92 16 38 / 0.12),
-    0 1px 2px rgb(92 16 38 / 0.06),
-    0 10px 24px -16px rgb(92 16 38 / 0.32);
+    0 0 0 1px rgb(110 15 28 / 0.12),
+    0 1px 2px rgb(110 15 28 / 0.06),
+    0 10px 24px -16px rgb(110 15 28 / 0.32);
   --glass-shadow-dark:
-    0 0 0 1px rgb(255 236 226 / 0.14),
-    0 12px 28px -18px rgb(30 4 12 / 0.6);
+    0 0 0 1px rgb(255 238 211 / 0.14),
+    0 12px 28px -18px rgb(50 5 12 / 0.6);
   color-scheme: light;
   /* shadcn's semantic tokens, mapped onto the GGY palette so anything added
      from a registry inherits paper, ink, crimson and saffron, not neutral grey. */
-  --background: #ffffff;
-  --foreground: #191817;
-  --card: #ffffff;
-  --card-foreground: #191817;
-  --popover: #ffffff;
-  --popover-foreground: #191817;
-  --primary: #871b38;
+  --background: #ffeed3;
+  --foreground: #5c0d18;
+  --card: #fff6e6;
+  --card-foreground: #5c0d18;
+  --popover: #fff6e6;
+  --popover-foreground: #5c0d18;
+  --primary: #cd1f36;
   --primary-foreground: #ffffff;
-  --secondary: #f1e8e7;
-  --secondary-foreground: #5c1026;
-  --muted: #f1e8e7;
-  --muted-foreground: #6a625a;
-  --accent: #f7efef;
-  --accent-foreground: #5c1026;
+  --secondary: #fbe2bd;
+  --secondary-foreground: #cd1f36;
+  --muted: #fbe2bd;
+  --muted-foreground: #a5182b;
+  --accent: #ffeed3;
+  --accent-foreground: #cd1f36;
   --destructive: #a3242b;
-  --border: #e7dbdc;
-  --input: #e7dbdc;
-  --ring: #b66c4c;
-  --chart-1: #871b38;
-  --chart-2: #b66c4c;
-  --chart-3: #5c7a86;
-  --chart-4: #73817c;
-  --chart-5: #e0a383;
+  --border: #f2cfb3;
+  --input: #f2cfb3;
+  --ring: #cd1f36;
+  --chart-1: #cd1f36;
+  --chart-2: #cd1f36;
+  --chart-3: #b5404f;
+  --chart-4: #e07a86;
+  --chart-5: #ffeed3;
   --radius: 0.375rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
@@ -508,7 +507,7 @@ html.lenis body {
     white-space: normal;
     text-transform: none;
     font-variation-settings: normal;
-    box-shadow: 0 12px 30px -12px rgb(42 17 20 / 0.45), 0 0 0 1px rgb(42 17 20 / 0.08);
+    box-shadow: 0 12px 30px -12px rgb(110 15 28 / 0.45), 0 0 0 1px rgb(110 15 28 / 0.08);
     opacity: 0;
     visibility: hidden;
     /* --note-shift is set by useNoteClamp() in interactions.tsx: the distance
@@ -580,7 +579,7 @@ html.lenis body {
     display: grid;
     place-items: center;
     background-color: var(--color-sand);
-    background-image: repeating-linear-gradient(-45deg, transparent 0 18px, rgb(140 131 120 / 0.16) 18px 19px);
+    background-image: repeating-linear-gradient(-45deg, transparent 0 18px, rgb(201 138 122 / 0.16) 18px 19px);
   }
 
   .skip-link {
@@ -626,7 +625,7 @@ html.lenis body {
   background: var(--glass-paper);
   -webkit-backdrop-filter: blur(18px) saturate(1.15);
   backdrop-filter: blur(18px) saturate(1.15);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.7), inset 0 0 0 1px rgb(255 255 255 / 0.45), 0 18px 40px -26px rgb(92 16 38 / 0.4);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.7), inset 0 0 0 1px rgb(255 255 255 / 0.45), 0 18px 40px -26px rgb(110 15 28 / 0.4);
   pointer-events: auto;
   transition: background-color 450ms var(--ease), box-shadow 450ms var(--ease);
 }
@@ -717,7 +716,7 @@ html.lenis body {
   font-weight: 500;
   letter-spacing: -0.005em;
   line-height: 1;
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.22), 0 14px 30px -16px rgb(92 16 38 / 0.6);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.22), 0 14px 30px -16px rgb(110 15 28 / 0.6);
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
@@ -766,8 +765,8 @@ html.lenis body {
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.6), inset 0 0 0 1px color-mix(in srgb, currentColor 30%, transparent);
 }
 .on-dark .btn-ghost {
-  --btn-bg: rgb(255 244 236 / 0.08);
-  box-shadow: inset 0 1px 0 rgb(255 236 226 / 0.25), inset 0 0 0 1px rgb(255 236 226 / 0.3);
+  --btn-bg: rgb(255 238 211 / 0.08);
+  box-shadow: inset 0 1px 0 rgb(255 238 211 / 0.25), inset 0 0 0 1px rgb(255 238 211 / 0.3);
 }
 /* On crimson: cream, filling saffron. */
 .btn-cream {
@@ -966,7 +965,7 @@ html.lenis body {
   position: absolute;
   inset: 0 0 auto 0;
   height: 1px;
-  background: rgb(135 27 56 / 0.35);
+  background: rgb(205 31 54 / 0.35);
 }
 .edition-field dd {
   position: relative;
@@ -1014,7 +1013,7 @@ html.lenis body {
   font-size: 1.05rem;
   box-shadow:
     0 0 0 1px color-mix(in srgb, var(--color-saffron) 55%, transparent),
-    0 18px 36px -18px rgb(20 18 16 / 0.7);
+    0 18px 36px -18px rgb(92 13 24 / 0.7);
 }
 
 /* =====================================================================
@@ -1097,7 +1096,7 @@ html.lenis body {
 .immersion-scrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgb(40 0 8 / 0.78), rgb(40 0 8 / 0.15) 45%, transparent 70%);
+  background: linear-gradient(to top, rgb(50 5 12 / 0.78), rgb(50 5 12 / 0.15) 45%, transparent 70%);
   opacity: 0;
   pointer-events: none;
 }
@@ -1218,7 +1217,7 @@ html.lenis body {
 
 .journey-frame {
   border-radius: var(--radius-media);
-  box-shadow: 0 40px 80px -56px rgb(20 18 16 / 0.55);
+  box-shadow: 0 40px 80px -56px rgb(92 13 24 / 0.55);
 }
 /* Which stage the camera is on, set into the corner of the frame. */
 .journey-readout {
@@ -1278,7 +1277,7 @@ html.lenis body {
     bottom: 0;
     width: 4px;
     border-radius: 999px;
-    background: rgb(182 108 76 / 0.2);
+    background: rgb(205 31 54 / 0.2);
   }
   .journey-stage {
     isolation: isolate;
@@ -1317,7 +1316,7 @@ html.lenis body {
   }
   .journey-stage.is-active .journey-milestone {
     background: var(--color-crimson);
-    box-shadow: inset 0 0 0 4px var(--color-ivory), 0 0 0 6px rgb(182 108 76 / 0.25);
+    box-shadow: inset 0 0 0 4px var(--color-ivory), 0 0 0 6px rgb(205 31 54 / 0.25);
     scale: 1.25;
   }
 }
@@ -1333,7 +1332,7 @@ html.lenis body {
   transition: color 600ms var(--ease);
 }
 .journey-stage.is-active .journey-num {
-  color: #8c4a2f;
+  color: #a5182b;
 }
 
 /* Programme components, as a numbered set of cards. */
@@ -1448,17 +1447,17 @@ html.lenis body {
   background: var(--glass-paper);
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.5);
   backdrop-filter: blur(var(--glass-blur)) saturate(1.5);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.85), inset 0 0 0 1px rgb(135 27 56 / 0.12);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.85), inset 0 0 0 1px rgb(205 31 54 / 0.12);
   font-size: 0.9rem;
   color: var(--color-ink);
   transition: background-color 300ms var(--ease), color 300ms var(--ease), border-color 300ms var(--ease);
 }
 .roll-filter:hover {
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.85), inset 0 0 0 1px rgb(135 27 56 / 0.35);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.85), inset 0 0 0 1px rgb(205 31 54 / 0.35);
 }
 .roll-filter[aria-pressed="true"] {
   background: var(--color-crimson);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.2), 0 12px 26px -14px rgb(92 16 38 / 0.7);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.2), 0 12px 26px -14px rgb(110 15 28 / 0.7);
   color: var(--color-ivory);
 }
 .roll-filter-count {
@@ -1467,7 +1466,7 @@ html.lenis body {
   min-width: 1.9rem;
   height: 1.9rem;
   border-radius: 999px;
-  background: rgb(135 27 56 / 0.1);
+  background: rgb(205 31 54 / 0.1);
   font-size: 0.75rem;
 }
 .roll-filter[aria-pressed="true"] .roll-filter-count {
@@ -1485,15 +1484,15 @@ html.lenis body {
   min-height: min(34rem, 70svh);
   padding: clamp(1.5rem, 2.4vw, 2.25rem);
   border-radius: var(--radius-sheet);
-  background: rgb(118 20 47 / 0.9);
+  background: rgb(165 24 43 / 0.9);
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.5);
   backdrop-filter: blur(var(--glass-blur)) saturate(1.5);
-  box-shadow: var(--glass-shadow-dark), 0 40px 80px -40px rgb(92 16 38 / 0.7);
+  box-shadow: var(--glass-shadow-dark), 0 40px 80px -40px rgb(110 15 28 / 0.7);
   color: var(--color-ivory);
   animation: roll-spot-in 600ms var(--ease);
 }
 .roll-spot .contours {
-  color: rgb(255 226 214 / 0.12);
+  color: rgb(255 238 211 / 0.12);
 }
 .roll-spot-head {
   display: flex;
@@ -1608,7 +1607,7 @@ html:not(.js-motion) .itin-plate-head {
   justify-content: space-between;
   gap: 1rem;
   padding-bottom: 1.2rem;
-  border-bottom: 1px solid rgb(135 27 56 / 0.12);
+  border-bottom: 1px solid rgb(205 31 54 / 0.12);
 }
 .itin-plate-day {
   display: flex;
@@ -1651,7 +1650,7 @@ html:not(.js-motion) .itin-plate-head {
   bottom: 0.95rem;
   width: 4px;
   border-radius: 999px;
-  background: rgb(135 27 56 / 0.1);
+  background: rgb(205 31 54 / 0.1);
   overflow: hidden;
 }
 .itin-stops-line span {
@@ -1673,7 +1672,7 @@ html:not(.js-motion) .itin-plate-head {
   translate: -50% -50%;
   border-radius: 999px;
   background: var(--color-ivory);
-  box-shadow: inset 0 0 0 4px var(--color-crimson), 0 0 0 5px rgb(182 108 76 / 0.25), 0 6px 14px -4px rgb(92 16 38 / 0.5);
+  box-shadow: inset 0 0 0 4px var(--color-crimson), 0 0 0 5px rgb(205 31 54 / 0.25), 0 6px 14px -4px rgb(110 15 28 / 0.5);
 }
 html:not(.js-motion) .itin-bead {
   display: none;
@@ -1717,7 +1716,7 @@ html:not(.js-motion) .itin-bead {
   box-shadow: none;
 }
 .itin-stop[data-state="now"] {
-  background: rgb(135 27 56 / 0.08);
+  background: rgb(205 31 54 / 0.08);
   color: var(--color-crimson);
   font-weight: 500;
 }
@@ -1747,7 +1746,7 @@ html:not(.js-motion) .itin-bead {
   }
   .js-motion .itin-day[data-now] {
     opacity: 1;
-    box-shadow: var(--glass-shadow), inset 0 0 0 1.5px rgb(135 27 56 / 0.22);
+    box-shadow: var(--glass-shadow), inset 0 0 0 1.5px rgb(205 31 54 / 0.22);
   }
 }
 .itin-day-meta {
@@ -1800,7 +1799,7 @@ html:not(.js-motion) .itin-bead {
   max-width: 38rem;
   border-radius: 1.25rem;
   background: rgb(255 255 255 / 0.5);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.9), inset 0 0 0 1px rgb(135 27 56 / 0.08);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.9), inset 0 0 0 1px rgb(205 31 54 / 0.08);
 }
 .itin-field summary {
   display: grid;
@@ -1821,7 +1820,7 @@ html:not(.js-motion) .itin-bead {
   min-height: 2rem;
   padding: 0 0.75rem;
   border-radius: 999px;
-  background: rgb(182 108 76 / 0.16);
+  background: rgb(205 31 54 / 0.16);
   font-size: 0.8rem;
   font-weight: 500;
   color: var(--color-saffron-ink);
@@ -1911,7 +1910,7 @@ html:not(.js-motion) .itin-bead {
     left: 0.5rem;
     right: 0;
     top: 0.5rem;
-    border-top: 2px dashed rgb(140 74 47 / 0.55);
+    border-top: 2px dashed rgb(165 24 43 / 0.55);
   }
 }
 .itin-next-days > li {
@@ -1962,7 +1961,7 @@ html:not(.js-motion) .itin-bead {
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.5);
   backdrop-filter: blur(var(--glass-blur)) saturate(1.5);
   color: var(--color-ink);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.9), inset 0 0 0 1px rgb(255 255 255 / 0.5), 0 50px 90px -50px rgb(20 4 10 / 0.8);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.9), inset 0 0 0 1px rgb(255 255 255 / 0.5), 0 50px 90px -50px rgb(40 4 9 / 0.8);
 }
 .ticket-main {
   overflow: hidden;
@@ -1995,7 +1994,7 @@ html:not(.js-motion) .itin-bead {
   border-radius: 0 0 var(--radius-sheet) var(--radius-sheet);
   position: relative;
   padding: clamp(1.75rem, 3vw, 2.75rem);
-  border-top: 1.5px dashed rgb(135 27 56 / 0.25);
+  border-top: 1.5px dashed rgb(205 31 54 / 0.25);
   background: transparent;
 }
 /* The punched holes at each end of the perforation. */
@@ -2043,7 +2042,7 @@ html:not(.js-motion) .itin-bead {
   .ticket-stub {
     border-radius: 0 var(--radius-sheet) var(--radius-sheet) 0;
     border-top: 0;
-    border-left: 1.5px dashed rgb(135 27 56 / 0.25);
+    border-left: 1.5px dashed rgb(205 31 54 / 0.25);
   }
   .ticket-stub::before,
   .ticket-stub::after {
@@ -2083,7 +2082,7 @@ html:not(.js-motion) .itin-bead {
     height: 1px;
   }
   .steps::before {
-    background: rgb(245 241 234 / 0.25);
+    background: rgb(255 238 211 / 0.25);
   }
   .steps::after {
     background: var(--color-ivory);
@@ -2158,7 +2157,7 @@ html:not(.js-motion) .itin-bead {
   color: var(--color-ink);
   font-size: 0.8rem;
   font-weight: 600;
-  box-shadow: 0 6px 18px rgb(20 18 16 / 0.35);
+  box-shadow: 0 6px 18px rgb(92 13 24 / 0.35);
   transition: scale 300ms var(--ease), background-color 300ms ease, color 300ms ease;
 }
 .annot-dot::before {
@@ -2166,7 +2165,7 @@ html:not(.js-motion) .itin-bead {
   position: absolute;
   inset: -6px;
   border-radius: inherit;
-  border: 1px solid rgb(245 241 234 / 0.8);
+  border: 1px solid rgb(255 238 211 / 0.8);
   animation: map-pulse 2.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 .annot-dot:hover,
@@ -2236,7 +2235,7 @@ html:not(.js-motion) .itin-bead {
   /* The print's own white edge. */
   border: 0.4rem solid var(--color-light);
   background: var(--color-ember-2);
-  box-shadow: 0 1px 1px rgb(20 2 8 / 0.5), 0 1.2rem 2rem -0.8rem rgb(20 2 8 / 0.7);
+  box-shadow: 0 1px 1px rgb(40 4 9 / 0.5), 0 1.2rem 2rem -0.8rem rgb(40 4 9 / 0.7);
   cursor: pointer;
   touch-action: pan-y;
 }
@@ -2572,11 +2571,11 @@ html:not(.js-motion) .itin-bead {
 }
 .atlas-grat path {
   fill: none;
-  stroke: #d9d0c1;
+  stroke: #f2cfb3;
   stroke-width: 0.7;
 }
 .atlas-neighbours path {
-  fill: #ece6db;
+  fill: #fbe2bd;
   stroke: #d2c8b8;
   stroke-width: 0.6;
 }
@@ -2590,10 +2589,10 @@ html:not(.js-motion) .itin-bead {
   transition: stroke 900ms var(--ease);
 }
 .atlas[data-active="india"] .atlas-states path {
-  stroke: rgb(244 240 232 / 0.55);
+  stroke: rgb(255 238 211 / 0.55);
 }
 .atlas-focus-fill {
-  fill: #e6dacd;
+  fill: #f7d9b0;
 }
 .atlas-focus-line {
   fill: none;
@@ -2705,7 +2704,7 @@ html:not(.js-motion) .itin-bead {
   background: var(--glass-paper);
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.6);
   backdrop-filter: blur(var(--glass-blur)) saturate(1.6);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.85), inset 0 0 0 1px rgb(255 255 255 / 0.5), 0 10px 24px -12px rgb(92 16 38 / 0.45);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.85), inset 0 0 0 1px rgb(255 255 255 / 0.5), 0 10px 24px -12px rgb(110 15 28 / 0.45);
 }
 .atlas-label-capital .atlas-label-name {
   font-size: 0.8rem;
@@ -2725,7 +2724,7 @@ html:not(.js-motion) .itin-bead {
   border: 2px solid var(--color-ink);
   border-radius: 50%;
   background: var(--color-paper);
-  box-shadow: 0 0 0 3px rgb(244 240 232 / 0.7);
+  box-shadow: 0 0 0 3px rgb(255 238 211 / 0.7);
 }
 .atlas-label-sea .atlas-label-name {
   font-family: var(--font-serif);
@@ -2945,8 +2944,8 @@ html:not(.js-motion) .itin-bead {
 .atlas-caveat {
   padding: 0.85rem 1rem 0.85rem 1.1rem;
   border-radius: var(--radius-sheet);
-  background: rgb(182 108 76 / 0.08);
-  box-shadow: inset 0 0 0 1px rgb(182 108 76 / 0.32);
+  background: rgb(205 31 54 / 0.08);
+  box-shadow: inset 0 0 0 1px rgb(205 31 54 / 0.32);
   font-size: 0.85rem;
   line-height: 1.5;
   color: var(--color-ink-soft);
@@ -2996,7 +2995,7 @@ html:not(.js-motion) .itin-bead {
   min-height: 2.75rem;
   padding: 0.25rem 0.3rem 0.25rem 1.1rem;
   border-radius: 999px;
-  background: rgb(135 27 56 / 0.08);
+  background: rgb(205 31 54 / 0.08);
   font-size: 0.9rem;
   font-weight: 500;
   color: var(--color-crimson);
@@ -3004,7 +3003,7 @@ html:not(.js-motion) .itin-bead {
   transition: background-color 350ms var(--ease);
 }
 .atlas-open:hover {
-  background: rgb(135 27 56 / 0.14);
+  background: rgb(205 31 54 / 0.14);
 }
 .atlas-open-plus {
   position: relative;
@@ -3041,7 +3040,7 @@ html:not(.js-motion) .itin-bead {
   border-radius: 999px;
   background: rgb(255 255 255 / 0.4);
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.8);
-  border: 1px solid rgb(135 27 56 / 0.16);
+  border: 1px solid rgb(205 31 54 / 0.16);
   font-size: 0.8125rem;
   font-weight: 500;
   cursor: pointer;
@@ -3066,7 +3065,7 @@ html:not(.js-motion) .itin-bead {
 .dossier-scrim {
   position: absolute;
   inset: 0;
-  background: rgb(25 24 23 / 0.32);
+  background: rgb(92 13 24 / 0.32);
 }
 .dossier {
   position: absolute;
@@ -3076,11 +3075,11 @@ html:not(.js-motion) .itin-bead {
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.6);
   backdrop-filter: blur(var(--glass-blur)) saturate(1.6);
   color: var(--color-ink);
-  box-shadow: var(--glass-shadow), 0 40px 90px -40px rgb(25 24 23 / 0.5);
+  box-shadow: var(--glass-shadow), 0 40px 90px -40px rgb(92 13 24 / 0.5);
 }
 @media (min-width: 64rem) {
   .dossier-scrim {
-    background: rgb(25 24 23 / 0.14);
+    background: rgb(92 13 24 / 0.14);
   }
   .dossier {
     left: var(--gutter);
@@ -3124,7 +3123,7 @@ html:not(.js-motion) .itin-bead {
   padding: 0.9rem 0;
   margin-bottom: 0.6rem;
   background: var(--glass-paper);
-  border-bottom: 1px solid rgb(135 27 56 / 0.1);
+  border-bottom: 1px solid rgb(205 31 54 / 0.1);
 }
 .dossier-close {
   display: inline-flex;
@@ -3133,7 +3132,7 @@ html:not(.js-motion) .itin-bead {
   min-height: 2.5rem;
   padding: 0 1rem;
   border-radius: 999px;
-  background: rgb(135 27 56 / 0.08);
+  background: rgb(205 31 54 / 0.08);
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
@@ -3206,7 +3205,7 @@ html:not(.js-motion) .itin-bead {
   margin-left: 0.6rem;
   padding: 0.2rem 0.6rem;
   border-radius: 999px;
-  background: rgb(182 108 76 / 0.14);
+  background: rgb(205 31 54 / 0.14);
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0;
@@ -3267,7 +3266,7 @@ html:not(.js-motion) .itin-bead {
   vector-effect: non-scaling-stroke;
 }
 .journey-line-bed {
-  stroke: rgb(135 27 56 / 0.07);
+  stroke: rgb(205 31 54 / 0.07);
   stroke-width: 22;
 }
 .journey-line-ghost {
@@ -3290,7 +3289,7 @@ html:not(.js-motion) .itin-bead {
   stroke-width: 2.5;
 }
 .journey-pen-halo {
-  fill: rgb(182 108 76 / 0.22);
+  fill: rgb(205 31 54 / 0.22);
   transform-box: fill-box;
   transform-origin: center;
   animation: pen-breathe 2.4s var(--ease) infinite;
@@ -3367,7 +3366,7 @@ html:not(.js-motion) .itin-bead {
 .journey-caveat {
   padding: 0.85rem 1rem 0.85rem 1.1rem;
   border-radius: var(--radius-sheet);
-  box-shadow: inset 0 0 0 1px rgb(182 108 76 / 0.32);
+  box-shadow: inset 0 0 0 1px rgb(205 31 54 / 0.32);
   background: var(--color-paper);
   font-size: 0.875rem;
   line-height: 1.5;
@@ -3414,7 +3413,7 @@ html:not(.js-motion) .itin-bead {
   overflow: hidden;
   border-radius: var(--radius-media);
   background: var(--color-sand);
-  box-shadow: 0 40px 80px -50px rgb(92 16 38 / 0.55);
+  box-shadow: 0 40px 80px -50px rgb(110 15 28 / 0.55);
 }
 .journey-second {
   position: absolute;
@@ -3489,7 +3488,7 @@ html:not(.js-motion) .itin-bead {
   }
 }
 .journey-comp[data-reached] .journey-text {
-  box-shadow: var(--glass-shadow), inset 0 0 0 1.5px rgb(135 27 56 / 0.28);
+  box-shadow: var(--glass-shadow), inset 0 0 0 1.5px rgb(205 31 54 / 0.28);
 }
 .journey .journey-num {
   position: absolute;
@@ -3501,13 +3500,13 @@ html:not(.js-motion) .itin-bead {
   font-size: clamp(5rem, 3rem + 5vw, 9rem);
   line-height: 1;
   letter-spacing: -0.06em;
-  color: rgb(182 108 76 / 0.2);
+  color: rgb(205 31 54 / 0.2);
   -webkit-text-stroke: 0;
   pointer-events: none;
   transition: color 900ms var(--ease);
 }
 .journey-comp[data-reached] .journey-num {
-  color: rgb(182 108 76 / 0.55);
+  color: rgb(205 31 54 / 0.55);
 }
 /* The station: a glass ring on the card's edge that fills when reached. */
 .journey-node {
@@ -3518,7 +3517,7 @@ html:not(.js-motion) .itin-bead {
   height: 28px;
   border-radius: 50%;
   background: var(--glass-paper);
-  box-shadow: inset 0 0 0 2px var(--color-crimson), 0 6px 16px -6px rgb(92 16 38 / 0.5);
+  box-shadow: inset 0 0 0 2px var(--color-crimson), 0 6px 16px -6px rgb(110 15 28 / 0.5);
 }
 .journey-node::after {
   content: "";
@@ -3554,7 +3553,7 @@ html:not(.js-motion) .itin-bead {
   overflow: visible;
 }
 .journey-sil path {
-  fill: rgb(182 108 76 / 0);
+  fill: rgb(205 31 54 / 0);
   stroke: var(--color-crimson);
   stroke-width: 1.4;
   stroke-dasharray: 1;
@@ -3562,7 +3561,7 @@ html:not(.js-motion) .itin-bead {
   transition: fill 900ms var(--ease);
 }
 .journey-comp[data-reached] .journey-sil path {
-  fill: rgb(182 108 76 / 0.28);
+  fill: rgb(205 31 54 / 0.28);
 }
 /* Without motion the whole route is drawn, so every station is reached. */
 @media (prefers-reduced-motion: reduce) {
@@ -3570,10 +3569,10 @@ html:not(.js-motion) .itin-bead {
     scale: 1;
   }
   .journey-sil path {
-    fill: rgb(182 108 76 / 0.28);
+    fill: rgb(205 31 54 / 0.28);
   }
   .journey .journey-num {
-    color: rgb(182 108 76 / 0.55);
+    color: rgb(205 31 54 / 0.55);
   }
 }
 .journey-name {
@@ -3766,7 +3765,7 @@ html:not(.js-motion) .itin-bead {
   flex-direction: column-reverse;
   justify-content: flex-end;
   padding-top: 0.9rem;
-  border-top: 1px solid rgb(135 27 56 / 0.35);
+  border-top: 1px solid rgb(205 31 54 / 0.35);
 }
 .archive-fig-num {
   font-size: clamp(2.6rem, 1.8rem + 2.4vw, 4.2rem);
@@ -4116,7 +4115,7 @@ html:not(.js-motion) .itin-bead {
   height: 100%;
   overflow: hidden;
   pointer-events: none;
-  color: rgb(135 27 56 / 0.11);
+  color: rgb(205 31 54 / 0.11);
 }
 .contours path {
   fill: none;
@@ -4131,11 +4130,11 @@ html:not(.js-motion) .itin-bead {
   will-change: transform;
 }
 .on-dark .contours {
-  color: rgb(255 226 214 / 0.1);
+  color: rgb(255 238 211 / 0.1);
 }
 .bg-cream .contours,
 .archive-atlas .contours {
-  color: rgb(182 108 76 / 0.2);
+  color: rgb(205 31 54 / 0.2);
 }
 
 .dark {

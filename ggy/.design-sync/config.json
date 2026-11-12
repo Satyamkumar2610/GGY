@@ -1,0 +1,161 @@
+{
+  "pkg": "ggy",
+  "globalName": "Ggy",
+  "shape": "package",
+  "buildCmd": "node .design-sync/ds/build.mjs",
+  "entry": ".ds-dist/index.js",
+  "cssEntry": "styles.css",
+  "provider": {
+    "component": "SiteShell"
+  },
+  "componentSrcMap": {
+    "SiteShell": null,
+    "MotionProvider": null,
+    "SmoothScroll": null,
+    "ScrollRefresh": null,
+    "LandingMotion": null,
+    "JournalMotion": null,
+    "CinemaMotion": null,
+    "PageMotion": null,
+    "Interactions": null,
+    "TicketMotion": null,
+    "Card": null,
+    "ScrollStackItem": null,
+    "Thread": null,
+    "ScrollProgress": null,
+    "AtlasMap": null
+  },
+  "dtsPropsFor": {
+    "Act": "  /** Anchor id for the section; also used for its heading id. */\n  id: string;\n  /** Roman numeral shown on the act label, e.g. \"II\". */\n  n: string;\n  title: string;\n  /** One-sentence standfirst under the title. */\n  dek: string;\n  /** Five keys of window.Ggy.photos (highCourt, municipalCorporation, oldSecretariat, sabarmati, gateway, bomJesus, cohort, openLandscape, lectureHall, overhead, fieldGroup, legislatureSteps, flagOff, address). The first is the full-bleed photograph. */\n  photos: [string, string, string, string, string];"
+  },
+  "overrides": {
+    "LandingHero": {
+      "cardMode": "single",
+      "viewport": "1280x800"
+    },
+    "Departure": {
+      "cardMode": "single",
+      "viewport": "1280x900"
+    },
+    "Field": {
+      "cardMode": "single",
+      "viewport": "1280x900"
+    },
+    "FieldCompare": {
+      "cardMode": "single",
+      "viewport": "1280x900"
+    },
+    "IdeaPanels": {
+      "cardMode": "single",
+      "viewport": "1280x900"
+    },
+    "YatraFlight": {
+      "cardMode": "single",
+      "viewport": "1280x900"
+    },
+    "Coda": {
+      "cardMode": "single",
+      "viewport": "1280x900"
+    },
+    "ProposedPlan": {
+      "cardMode": "single",
+      "viewport": "1280x900"
+    },
+    "Stages": {
+      "cardMode": "single",
+      "viewport": "1280x900"
+    },
+    "Programme": {
+      "cardMode": "single",
+      "viewport": "1280x900"
+    },
+    "Decade": {
+      "cardMode": "single",
+      "viewport": "1280x900"
+    },
+    "Ledger": {
+      "cardMode": "single",
+      "viewport": "1280x900"
+    },
+    "FieldGallery": {
+      "cardMode": "single",
+      "viewport": "1280x900"
+    },
+    "People": {
+      "cardMode": "single",
+      "viewport": "1280x900"
+    },
+    "After": {
+      "cardMode": "single",
+      "viewport": "1280x900"
+    },
+    "Questions": {
+      "cardMode": "single",
+      "viewport": "1280x900"
+    },
+    "ComeAndSee": {
+      "cardMode": "single",
+      "viewport": "1280x900"
+    },
+    "Joining": {
+      "cardMode": "single",
+      "viewport": "1280x900"
+    },
+    "AdmissionPath": {
+      "cardMode": "single",
+      "viewport": "1280x900"
+    },
+    "Readiness": {
+      "cardMode": "single",
+      "viewport": "1280x900"
+    },
+    "LandingFooter": {
+      "cardMode": "single",
+      "viewport": "1280x900"
+    },
+    "Act": {
+      "cardMode": "column",
+      "viewport": "1280x800"
+    },
+    "Head": {
+      "cardMode": "column"
+    },
+    "LandingNav": {
+      "cardMode": "single",
+      "primaryStory": "OverAPhotograph",
+      "viewport": "1280x300"
+    },
+    "Button": {
+      "cardMode": "column"
+    },
+    "Title": {
+      "cardMode": "column"
+    },
+    "CardSwap": {
+      "cardMode": "column"
+    },
+    "ScrollStack": {
+      "cardMode": "column"
+    },
+    "Star": {
+      "cardMode": "column"
+    },
+    "Value": {
+      "cardMode": "column"
+    },
+    "NoteRef": {
+      "cardMode": "column"
+    },
+    "Script": {
+      "cardMode": "column"
+    },
+    "BorderGlow": {
+      "cardMode": "column"
+    },
+    "HoloCard": {
+      "cardMode": "column"
+    }
+  },
+  "docsDir": "../.design-sync/docs",
+  "readmeHeader": ".design-sync/conventions.md"
+}

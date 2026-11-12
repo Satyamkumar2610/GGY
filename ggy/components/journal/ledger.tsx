@@ -131,9 +131,6 @@ export function Ledger() {
           {itinerary8.map((d) => (
             <li key={d.day} className={`x-day${d.field ? " x-day--wide" : ""}`} data-trip-day>
               <header className="x-day__head">
-                <span className="x-day__n" aria-hidden="true">
-                  {String(d.day).padStart(2, "0")}
-                </span>
                 <div>
                   <p className="x-day__date">
                     Day {d.day} · {d.date}

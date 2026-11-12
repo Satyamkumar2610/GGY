@@ -49,16 +49,15 @@ export function JournalMotion() {
         });
       });
     });
-    // The four words open from condensed to their full width as the band is crossed.
-    const widen = (to: number) => () => {
+    // The four words rise into place, one after another, as the band is crossed.
+    // Transform and opacity only, so the scrub never re-lays-out the text.
+    mm.add(MOTION_QUERIES.any, () => {
       gsap.fromTo(
         "[data-words] span",
-        { "--w": 75, opacity: 0.4 },
-        { "--w": to, opacity: 1, ease: "none", stagger: 0.12, scrollTrigger: { trigger: "[data-words]", start: "top 96%", end: "top 48%", scrub: 0.5 } },
+        { yPercent: 60, opacity: 0.25 },
+        { yPercent: 0, opacity: 1, ease: "none", stagger: 0.12, force3D: true, scrollTrigger: { trigger: "[data-words]", start: "top 96%", end: "top 55%", scrub: 0.4 } },
       );
-    };
-    mm.add(MOTION_QUERIES.desktop, widen(125));
-    mm.add("(max-width: 63.99rem) and (prefers-reduced-motion: no-preference)", widen(100));
+    });
 
     mm.add(MOTION_QUERIES.any, () => {
       // The field: the two photographs open outward from the gutter between them.

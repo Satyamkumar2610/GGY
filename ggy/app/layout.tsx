@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import localFont from "next/font/local";
-import { Anek_Devanagari, Anek_Gujarati, Anek_Latin } from "next/font/google";
+import { Anek_Devanagari, Anek_Gujarati, EB_Garamond, Montserrat } from "next/font/google";
 import "./globals.css";
 import { MotionProvider } from "@/components/motion/motion-provider";
 import { SmoothScroll } from "@/components/motion/smooth-scroll";
@@ -8,36 +7,14 @@ import { INDEXABLE, SITE_URL } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 
-// Gambetta (quotations and unconfirmed values) and Switzer (text) by the Indian Type Foundry, from Fontshare, under the
-// ITF Free Font License. Self-hosting for our own website is permitted.
-// The official .woff2 files are served unmodified (the licence forbids
-// subsetting or conversion) and must not be redistributed, for example by
-// publishing them in a public repository.
-const gambetta = localFont({
-  variable: "--font-gambetta",
-  display: "swap",
-  src: [
-    { path: "./fonts/Gambetta-Light.woff2", weight: "300", style: "normal" },
-    { path: "./fonts/Gambetta-LightItalic.woff2", weight: "300", style: "italic" },
-    { path: "./fonts/Gambetta-Regular.woff2", weight: "400", style: "normal" },
-    { path: "./fonts/Gambetta-Italic.woff2", weight: "400", style: "italic" },
-    { path: "./fonts/Gambetta-Medium.woff2", weight: "500", style: "normal" },
-  ],
-});
+// Brand type (Rishihood): Montserrat for display and text, and a Garamond for
+// the italic carry-lines and quotations. Adobe Garamond is licensed through
+// Adobe Fonts only; EB Garamond (SIL Open Font License) is the open revival of
+// the same Garamond faces and stands in for it until an Adobe Fonts kit is added.
+const montserrat = Montserrat({ variable: "--font-montserrat", subsets: ["latin", "latin-ext"], style: ["normal", "italic"], display: "swap" });
+const garamond = EB_Garamond({ variable: "--font-garamond", subsets: ["latin", "latin-ext"], style: ["normal", "italic"], display: "swap" });
 
-const switzer = localFont({
-  variable: "--font-switzer",
-  display: "swap",
-  src: [
-    { path: "./fonts/Switzer-Regular.woff2", weight: "400", style: "normal" },
-    { path: "./fonts/Switzer-Medium.woff2", weight: "500", style: "normal" },
-    { path: "./fonts/Switzer-Semibold.woff2", weight: "600", style: "normal" },
-  ],
-});
-
-// Display: Anek by Ek Type (Mumbai), SIL Open Font License 1.1. One design
-// across Latin, Devanagari and Gujarati, with a width axis; set extended and light.
-const anekLatin = Anek_Latin({ variable: "--font-anek-latin", subsets: ["latin"], axes: ["wdth"], display: "swap" });
+// State names in their own scripts: Anek by Ek Type (Mumbai), SIL Open Font License 1.1.
 const anekDevanagari = Anek_Devanagari({ variable: "--font-anek-devanagari", subsets: ["devanagari"], axes: ["wdth"], display: "swap", preload: false });
 const anekGujarati = Anek_Gujarati({ variable: "--font-anek-gujarati", subsets: ["gujarati"], axes: ["wdth"], display: "swap", preload: false });
 
@@ -65,8 +42,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#5c1026" },
+    { media: "(prefers-color-scheme: light)", color: "#ffeed3" },
+    { media: "(prefers-color-scheme: dark)", color: "#cd1f36" },
   ],
 };
 
@@ -79,7 +56,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en-IN"
       suppressHydrationWarning
-      className={cn(anekLatin.variable, gambetta.variable, switzer.variable, anekDevanagari.variable, anekGujarati.variable)}
+      className={cn(montserrat.variable, garamond.variable, anekDevanagari.variable, anekGujarati.variable)}
     >
       <head>
         {/* suppressHydrationWarning: some browser extensions inject their own

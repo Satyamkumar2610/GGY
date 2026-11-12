@@ -1,0 +1,20 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "incremental": false,
+    "tsBuildInfoFile": null,
+    "plugins": [],
+    "rootDir": "../..",
+    "outDir": "../../.ds-dist/types",
+    "paths": {
+      "@/*": ["../../*"],
+      "@ds/*": ["./*"],
+      "next/image": ["./next-image.tsx"]
+    }
+  },
+  "include": ["./index.ts"],
+  "exclude": []
+}
