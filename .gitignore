@@ -20,3 +20,14 @@ ggy/.claude/skills/
 ggy/.agents/
 ggy/.impeccable/
 ggy/skills-lock.json
+
+# design-sync (claude.ai/design): staged scripts, build output, machine state
+ggy/.ds-sync/
+ggy/.ds-dist/
+ggy/ds-bundle/
+ggy/.design-sync/.cache/
+ggy/.design-sync/learnings/
+ggy/.design-sync/node_modules
+
+# Client reference material (large originals); resized copies live in ggy/public/images/ggy27
+Referencs/
