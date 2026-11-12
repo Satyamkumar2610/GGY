@@ -491,10 +491,12 @@
 }
 .lp-hero__sub {
   max-width: 82%;
-  font: 500 clamp(0.7rem, 1vw, 1rem) / 1.4 var(--f-sans);
+  font: 600 clamp(0.7rem, 1vw, 1rem) / 1.4 var(--f-sans);
   color: var(--c-on-dark);
   text-wrap: balance;
-  text-shadow: 0 1px 14px rgb(70 8 16 / 0.7);
+  /* A tight shadow under the soft one: the line sits over the pale part of
+     the photograph and needs an edge, not just a haze. */
+  text-shadow: 0 1px 2px rgb(70 8 16 / 0.65), 0 0 12px rgb(70 8 16 / 0.75), 0 1px 28px rgb(70 8 16 / 0.6);
 }
 /* The edition and the invitation, bottom left. */
 .lp-hero__cue {

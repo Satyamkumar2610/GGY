@@ -509,6 +509,12 @@
   .j-rail {
     display: block;
   }
+  /* The rail sits in the left margin (0.7rem + a 2.5rem capsule): keep every
+     column clear of it, on both sides so the page stays centred. */
+  .lp {
+    --gutter: clamp(4.75rem, 5.2vw, 5.75rem);
+    --pad: var(--gutter);
+  }
   /* The rail takes over from the bar across the top. */
   .lp .scroll-progress {
     display: none;
@@ -1896,6 +1902,208 @@
   fill: none;
 }
 
+/* ---- Field photographs: a strip of prints that travels past -------- */
+
+.fs.x-film {
+  padding: 0;
+}
+.x-film__pin {
+  position: relative;
+  height: 100svh;
+  min-height: 36rem;
+  overflow: hidden;
+}
+.x-film__track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  height: 100%;
+  padding: calc(var(--header-h) + 5svh) 0 10svh var(--edge, var(--gutter));
+  will-change: transform;
+}
+.x-film__intro {
+  flex: 0 0 clamp(17rem, 27vw, 26rem);
+  margin-right: clamp(3rem, 7vw, 7rem);
+  color: var(--c-on-dark);
+}
+.x-film__title {
+  margin: 0;
+}
+.x-film__title span {
+  display: block;
+  font: 800 clamp(2.4rem, 4.6vw, 4.4rem) / 0.95 var(--f-display);
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+.x-film__title em {
+  display: block;
+  margin-top: 0.1em;
+  font: italic 400 clamp(2.6rem, 5.2vw, 5rem) / 0.95 var(--f-serif);
+  letter-spacing: -0.02em;
+  color: var(--c-saffron-soft);
+}
+.x-film__help {
+  max-width: 22rem;
+  margin: clamp(1.25rem, 2.4vw, 2rem) 0 0;
+  font: 400 clamp(0.98rem, 1.1vw, 1.08rem) / 1.55 var(--f-serif);
+  color: rgb(255 238 211 / 0.85);
+}
+.x-film__row {
+  display: flex;
+  align-items: flex-start;
+  align-self: stretch;
+  margin: 0;
+  padding: 0 12vw 0 0;
+  list-style: none;
+}
+.x-film__print {
+  position: relative;
+  flex: none;
+  margin-top: calc(var(--y) * 0.55svh);
+  rotate: -0.6deg;
+}
+.x-film__print:nth-child(even) {
+  rotate: 0.8deg;
+}
+/* Every other print tucks under its neighbour's edge. */
+.x-film__print + .x-film__print {
+  margin-left: clamp(2rem, 4.5vw, 4.5rem);
+}
+.x-film__print:nth-child(even) {
+  margin-left: clamp(-4rem, -3vw, -1.5rem);
+}
+.x-film__print:nth-child(even) .x-film__cap {
+  padding-left: clamp(2rem, 4vw, 4.5rem);
+}
+.x-film__frame {
+  position: relative;
+  display: block;
+  height: calc(var(--h) * 0.9svh);
+  max-height: 58svh;
+  aspect-ratio: var(--ar);
+  max-width: 46vw;
+  padding: 0;
+  border: 0.5rem solid var(--c-paper);
+  border-radius: var(--radius-thumb);
+  background: var(--c-paper);
+  box-shadow: 0 34px 60px -30px rgb(30 2 6 / 0.85), 0 2px 6px rgb(30 2 6 / 0.25);
+  cursor: zoom-in;
+  transition: translate 600ms var(--ease), box-shadow 600ms var(--ease);
+}
+.x-film__frame:hover,
+.x-film__frame:focus-visible {
+  translate: 0 -8px;
+  box-shadow: 0 44px 70px -30px rgb(30 2 6 / 0.9), 0 2px 6px rgb(30 2 6 / 0.25);
+}
+.x-film__frame:focus-visible {
+  outline: 2px solid var(--c-saffron-soft);
+  outline-offset: 4px;
+}
+.x-film__clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+/* Wider than its frame, so it can drift inside it. */
+.x-film__img {
+  position: absolute;
+  inset: 0 -8%;
+}
+.x-film__cap {
+  display: flex;
+  gap: 0.8rem;
+  max-width: 22rem;
+  margin: 0.95rem 0 0;
+  font: 400 0.98rem / 1.45 var(--f-serif);
+  color: rgb(255 238 211 / 0.88);
+}
+.x-film__n {
+  flex: none;
+  padding-top: 0.2rem;
+  font: 600 0.72rem / 1 var(--f-display);
+  letter-spacing: 0.16em;
+  color: var(--c-saffron-soft);
+}
+.x-film__meter {
+  position: absolute;
+  left: var(--edge, var(--gutter));
+  right: var(--edge, var(--gutter));
+  bottom: 4.5svh;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  color: var(--c-on-dark);
+}
+.x-film__count {
+  font: 600 0.78rem / 1 var(--f-display);
+  letter-spacing: 0.16em;
+  font-variant-numeric: tabular-nums;
+  color: rgb(255 238 211 / 0.7);
+}
+.x-film__count b {
+  font-size: 1.15rem;
+  color: var(--c-on-dark);
+}
+.x-film__line {
+  position: relative;
+  flex: 1;
+  height: 1px;
+  background: rgb(255 238 211 / 0.25);
+}
+.x-film__line i {
+  position: absolute;
+  inset: 0;
+  background: var(--c-on-dark);
+  transform: scaleX(0.02);
+  transform-origin: left;
+}
+/* Phones, and without motion: a row of prints to swipe through. */
+@media (max-width: 63.99rem), (prefers-reduced-motion: reduce) {
+  .fs.x-film {
+    padding-block: clamp(5rem, 10vw, 8rem);
+  }
+  .x-film__pin {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+  .x-film__track {
+    flex-direction: column;
+    align-items: stretch;
+    width: auto;
+    padding: 0;
+  }
+  .x-film__intro {
+    flex: none;
+    margin: 0 0 2rem;
+    padding-inline: var(--edge, var(--gutter));
+  }
+  .x-film__row {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--edge, var(--gutter));
+    padding: 1rem var(--edge, var(--gutter)) 1.5rem;
+    scrollbar-width: none;
+  }
+  .x-film__row::-webkit-scrollbar {
+    display: none;
+  }
+  .x-film__print {
+    margin-top: calc(var(--y) * 0.15rem);
+    scroll-snap-align: start;
+  }
+  .x-film__print:nth-child(even) {
+    margin-left: -1rem;
+  }
+  .x-film__frame {
+    height: clamp(14rem, 58vw, 24rem);
+    max-width: 82vw;
+  }
+  .x-film__meter {
+    display: none;
+  }
+}
+
 /* ---- Field photographs: a stack of prints -------------------------- */
 
 .fs {
@@ -1948,8 +2156,10 @@
   font-size: clamp(1rem, 1.4vw, 1.25rem);
 }
 .fs-card__cap .num {
+  flex: none;
   font-size: 1.6rem;
   line-height: 1;
+  white-space: nowrap;
 }
 .fs-card__cap small {
   font-size: 0.8rem;

@@ -1,9 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
-import ScrollStack, { ScrollStackItem } from "@/components/ScrollStack";
 import { photos, type PhotoKey } from "@/content/ggy";
 import { gsap, MOTION_QUERIES, useGSAP } from "@/lib/gsap";
 import { lockScroll } from "@/lib/scroll";
@@ -22,51 +21,132 @@ const prints: { key: PhotoKey }[] = [
 
 const sentence = (s: string) => (/[.!?]$/.test(s) ? s : `${s}.`);
 
+/* How each print hangs on the strip: its height (share of the screen) and
+   how far it drops from the top line. Every other print tucks under its
+   neighbour's edge, so the strip reads as prints laid down by hand. */
+const HANG = [
+  { h: 64, y: 0 },
+  { h: 46, y: 22 },
+  { h: 56, y: 6 },
+  { h: 42, y: 30 },
+  { h: 60, y: 2 },
+  { h: 48, y: 20 },
+  { h: 58, y: 4 },
+  { h: 44, y: 26 },
+];
+
 /**
- * Field photographs from past editions, as a stack of prints. Each print
- * pins in turn as the page scrolls and the earlier ones shrink and dim
- * beneath it. Any print opens in a full-screen viewer.
+ * Field photographs from past editions, as a strip of prints that travels
+ * past as the page is scrolled: the section holds still and the strip moves
+ * sideways under it, each photograph drifting a little inside its own frame,
+ * with a counter and a hairline that follow. Any print opens in the
+ * full-screen viewer. On phones, and without motion, the strip is a row to
+ * swipe through.
  */
 export function FieldGallery() {
   const [open, setOpen] = useState<number | null>(null);
   const lastFocus = useRef<HTMLElement | null>(null);
+  const root = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+      mm.add(MOTION_QUERIES.desktop, () => {
+        const el = root.current!;
+        const pin = el.querySelector<HTMLElement>("[data-film-pin]")!;
+        const track = el.querySelector<HTMLElement>("[data-film-track]")!;
+        const count = el.querySelector<HTMLElement>("[data-film-count]");
+        const bar = el.querySelector<HTMLElement>("[data-film-bar]");
+        const shots = gsap.utils.toArray<HTMLElement>("[data-film-print]", el);
+        const distance = () => Math.max(0, track.scrollWidth - window.innerWidth);
+        let shown = 0;
+
+        const run = gsap.to(track, {
+          x: () => -distance(),
+          ease: "none",
+          scrollTrigger: {
+            trigger: pin,
+            pin: true,
+            start: "top top",
+            end: () => `+=${distance()}`,
+            scrub: 0.8,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            onUpdate: (self) => {
+              bar?.style.setProperty("transform", `scaleX(${Math.max(0.02, self.progress)})`);
+              const i = Math.min(prints.length - 1, Math.round(self.progress * (prints.length - 1)));
+              if (i !== shown && count) {
+                shown = i;
+                count.textContent = String(i + 1).padStart(2, "0");
+              }
+            },
+          },
+        });
+
+        // Each photograph drifts against the strip inside its frame.
+        shots.forEach((shot) => {
+          const img = shot.querySelector("[data-film-img]");
+          if (!img) return;
+          gsap.fromTo(img, { xPercent: -6 }, { xPercent: 6, ease: "none", scrollTrigger: { trigger: shot, containerAnimation: run, start: "left right", end: "right left", scrub: true } });
+        });
+      });
+      return () => mm.revert();
+    },
+    { scope: root },
+  );
 
   return (
-    <section id="gallery" aria-labelledby="gallery-title" className="fs on-dark on-ember ground gloss" data-j-station="gallery" data-arch>
-      <header className="fs-head">
-        <h2 id="gallery-title" className="j-title fp-title">
-          <span>Field</span>
-          <em>photographs</em>
-        </h2>
-        <p className="fs-help">From past editions, as printed in the GGY brochure. Scroll to lay the prints down; select one to see it full screen.</p>
-      </header>
+    <section ref={root} id="gallery" aria-labelledby="gallery-title" className="fs x-film on-dark on-ember ground gloss" data-j-station="gallery" data-arch>
+      <div className="x-film__pin" data-film-pin>
+        <div className="x-film__track" data-film-track>
+          <header className="x-film__intro">
+            <h2 id="gallery-title" className="x-film__title">
+              <span>Field</span>
+              <em>photographs</em>
+            </h2>
+            <p className="x-film__help">From past editions, as printed in the GGY brochure. Keep scrolling to travel along the prints; select one to see it full screen.</p>
+          </header>
 
-      <ScrollStack useWindowScroll smoothScroll={false} stackPosition="18%" itemDistance={90} itemStackDistance={28} itemScale={0.04} baseScale={0.85} dimAmount={0.18} rotationAmount={1.2} holdDistance={160}>
-        {prints.map((s, i) => {
-          const p = photos[s.key];
-          return (
-            <ScrollStackItem key={s.key} itemClassName="fs-card">
-              <button
-                type="button"
-                className="fs-card__btn"
-                aria-label={`Open photograph ${i + 1} of ${prints.length}: ${p.caption}`}
-                onClick={(e) => {
-                  lastFocus.current = e.currentTarget;
-                  setOpen(i);
-                }}
-              >
-                <Image src={p.src} alt={p.alt} fill quality={82} sizes="(min-width: 64rem) 46rem, 92vw" draggable={false} className="object-cover" />
-              </button>
-              <p className="fs-card__cap">
-                <span className="num">
-                  {i + 1} <small>of {prints.length}</small>
-                </span>
-                {sentence(p.caption)}
-              </p>
-            </ScrollStackItem>
-          );
-        })}
-      </ScrollStack>
+          <ol className="x-film__row" aria-label="Field photographs">
+            {prints.map((s, i) => {
+              const p = photos[s.key];
+              const hang = HANG[i % HANG.length];
+              return (
+                <li key={s.key} className="x-film__print" data-film-print style={{ "--h": hang.h, "--y": hang.y, "--ar": `${p.width} / ${p.height}`, zIndex: i % 2 ? 2 : 1 } as CSSProperties}>
+                  <button
+                    type="button"
+                    className="x-film__frame"
+                    aria-label={`Open photograph ${i + 1} of ${prints.length}: ${p.caption}`}
+                    onClick={(e) => {
+                      lastFocus.current = e.currentTarget;
+                      setOpen(i);
+                    }}
+                  >
+                    <span className="x-film__clip">
+                      <span className="x-film__img" data-film-img>
+                        <Image src={p.src} alt={p.alt} fill quality={82} sizes="(min-width: 64rem) 50vw, 80vw" draggable={false} className="object-cover" />
+                      </span>
+                    </span>
+                  </button>
+                  <p className="x-film__cap">
+                    <span className="x-film__n">{String(i + 1).padStart(2, "0")}</span>
+                    {sentence(p.caption)}
+                  </p>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
+
+        <div className="x-film__meter" aria-hidden="true">
+          <span className="x-film__count">
+            <b data-film-count>01</b> / {String(prints.length).padStart(2, "0")}
+          </span>
+          <span className="x-film__line">
+            <i data-film-bar />
+          </span>
+        </div>
+      </div>
 
       {open !== null ? (
         <Viewer

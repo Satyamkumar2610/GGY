@@ -21,10 +21,12 @@ type ActProps = {
    stays sharp when it fills the screen. */
 const FRAMES = [
   { x: 0, y: 0, w: 100, h: 100, from: 0.25, to: 1 },
-  { x: 5, y: -30, w: 30, h: 26, from: 1, to: 5.2 },
-  { x: -25, y: -15, w: 18, h: 32, from: 1, to: 6 },
-  { x: 28, y: 2, w: 22, h: 26, from: 1, to: 5.4 },
-  { x: 8, y: 29, w: 18, h: 22, from: 1, to: 6.4 },
+  // Each print keeps clear of the bar at the top, of the title at the lower
+  // left, and of the others, so all five read before the camera moves.
+  { x: 2, y: -25, w: 24, h: 19, from: 1, to: 5.2 },
+  { x: -28, y: -17, w: 16, h: 27, from: 1, to: 6 },
+  { x: 31, y: -5, w: 19, h: 28, from: 1, to: 5.4 },
+  { x: 24, y: 28, w: 17, h: 20, from: 1, to: 6.4 },
 ];
 
 /**
@@ -52,8 +54,12 @@ export function Act({ id, n, title, dek, photos: keys }: ActProps) {
           defaults: { ease: "none" },
           scrollTrigger: { trigger: el, start: "top top", end: "bottom bottom", scrub: 0.5 },
         });
+        // The camera moves through the prints one after another: each outer
+        // print gets its own stretch of the scroll to grow and fly past, so
+        // all of them are seen; the centre one opens steadily to full bleed.
         q("[data-zoom]").forEach((frame, i) => {
-          tl.fromTo(frame, { scale: FRAMES[i].from }, { scale: FRAMES[i].to, ease: "power2.in", duration: 1, force3D: true }, 0);
+          if (i === 0) tl.fromTo(frame, { scale: FRAMES[0].from }, { scale: FRAMES[0].to, ease: "power1.inOut", duration: 1, force3D: true }, 0);
+          else tl.fromTo(frame, { scale: FRAMES[i].from }, { scale: FRAMES[i].to, ease: "power1.in", duration: 0.62, force3D: true }, 0.04 + (i - 1) * 0.09);
         });
         tl.fromTo(q("[data-zoom-img]"), { scale: 1.25 }, { scale: 1, duration: 1 }, 0)
           .fromTo(q(".is-main .act__print"), { borderRadius: "1.6rem" }, { borderRadius: "0rem", duration: 0.9, ease: "power2.in" }, 0)
@@ -93,13 +99,15 @@ export function Act({ id, n, title, dek, photos: keys }: ActProps) {
           const p = photos[keys[i]];
           return (
             <div key={keys[i] + i} className={`act__zoom${i === 0 ? " is-main" : ""}`} data-zoom>
-              <div
-                className="act__print"
-                data-zoom-inner
-                style={{ width: `${f.w}vw`, height: `${f.h}vh`, translate: `${f.x}vw ${f.y}vh` }}
-              >
-                <div className="act__img" data-zoom-img>
-                  <Image src={p.src} alt={i === 0 ? p.alt : ""} fill quality={80} sizes={i === 0 ? "100vw" : "40vw"} className="object-cover" />
+              {/* The resting place is on its own element: GSAP writes the
+                  pointer drift to the print's transform, which would
+                  otherwise wipe the offset and pile every print in the
+                  centre. */}
+              <div className="act__place" style={{ transform: `translate(${f.x}vw, ${f.y}vh)` }}>
+                <div className="act__print" data-zoom-inner style={{ width: `${f.w}vw`, height: `${f.h}vh` }}>
+                  <div className="act__img" data-zoom-img>
+                    <Image src={p.src} alt={i === 0 ? p.alt : ""} fill quality={80} sizes={i === 0 ? "100vw" : "40vw"} className="object-cover" />
+                  </div>
                 </div>
               </div>
             </div>

@@ -213,10 +213,8 @@
   background-image: var(--tex-dark);
   background-size: var(--tex-size);
 }
-/* Domes rise in the plain ground colour. */
-.lp [data-arch] > .arch-dome {
-  background-image: none;
-}
+/* The rising sheet carries the same grain as its ground, so no seam shows
+   where it meets the section. */
 .lp .x-map__plate {
   background: #fff;
 }

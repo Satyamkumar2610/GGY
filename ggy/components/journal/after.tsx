@@ -1,7 +1,10 @@
 "use client";
 
-import { useRef } from "react";
+import Image from "next/image";
+import { useRef, type CSSProperties } from "react";
 import { BROCHURE, careerPaths, CONCEPT_NOTE, saarthi, takeaways } from "@/content/ggy";
+import { institutionLogos, starAlums } from "@/content/ggy27";
+import { Marquee } from "./marquee";
 import { gsap, MOTION_QUERIES, useGSAP } from "@/lib/gsap";
 import { NoteRef } from "../primitives";
 import { Head, Title } from "./head";
@@ -78,6 +81,38 @@ export function After() {
           ))}
         </ul>
         <p className="j-meta x-paths__src">The ten paths are the brochure’s; the four headings are added here to group them.</p>
+
+        {/* Star alumni, held like a hand of photographs that opens when it is
+            pointed at; then the institutions, carried past on a paper strip. */}
+        <div className="x-stars">
+          <Title as="h3" sub title="Some of our" em="star alumni" />
+          <ul className="x-stars__hand" aria-label="GGY star alumni">
+            {starAlums.map((a, i) => (
+              <li key={a.name} className="x-stars__card" style={{ "--i": i - (starAlums.length - 1) / 2, "--a": Math.abs(i - (starAlums.length - 1) / 2) } as CSSProperties}>
+                <figure tabIndex={0}>
+                  <div className="x-stars__photo">
+                    <Image src={a.photo.src} alt={a.photo.alt} fill sizes="(min-width: 64rem) 15rem, 40vw" quality={80} className="object-cover" />
+                  </div>
+                  <figcaption>{a.name}</figcaption>
+                </figure>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <div className="x-logos">
+        <p className="x-logos__label">Where GGY alumni have worked and studied</p>
+        <Marquee
+          className="x-logos__belt"
+          label="Institutions and organisations"
+          items={institutionLogos.map((l) => (
+            <Image key={l.name} src={l.src} alt={l.name} width={l.width} height={l.height} sizes="10rem" className="x-logos__img" data-invert={l.invert ? "" : undefined} />
+          ))}
+        />
+      </div>
+
+      <div className="j-wrap">
 
         <div className="j-took">
           <Title as="h3" sub title="What delegates" em="took away" />

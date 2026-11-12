@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { CalendarClock, Check, Mail, Sparkles, Timer, Wallet, type LucideIcon } from "lucide-react";
 import { contact, readiness } from "@/content/ggy";
 
@@ -81,6 +81,51 @@ export function Readiness() {
           );
         })}
       </ul>
+      <NotifyLine ready={n === total} />
     </div>
+  );
+}
+
+/**
+ * The one thing a visitor can do before applications open: ask to be told.
+ * There is no form service behind the page, so this is set as a sentence to
+ * fill in, and sending it opens the visitor's own email with the note
+ * already written to the GGY team. Nothing is stored here.
+ */
+function NotifyLine({ ready }: { ready: boolean }) {
+  const [name, setName] = useState("");
+  const [from, setFrom] = useState("");
+
+  const send = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const who = name.trim() || "A prospective delegate";
+    const subject = "Please tell me when GGY'27 applications open";
+    const body = `Hello GGY team,\n\nI am ${who}${from.trim() ? ` from ${from.trim()}` : ""}. Please let me know when applications for Good Governance Yatra'27 open.\n\nThank you.`;
+    window.location.href = `mailto:${contact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
+  return (
+    <form className="x-notify" data-ready={ready ? "" : undefined} onSubmit={send} aria-label="Ask to be told when applications open">
+      <p className="x-notify__line">
+        <span>I’m</span>
+        <label className="x-notify__field">
+          <span className="sr-only">Your name</span>
+          <input value={name} onChange={(e) => setName(e.target.value)} placeholder="your name" autoComplete="name" size={Math.max(9, name.length + 1)} />
+        </label>
+        <span>from</span>
+        <label className="x-notify__field">
+          <span className="sr-only">Your college, organisation or city</span>
+          <input value={from} onChange={(e) => setFrom(e.target.value)} placeholder="college or city" autoComplete="organization" size={Math.max(12, from.length + 1)} />
+        </label>
+        <span>— tell me when applications open.</span>
+      </p>
+      <div className="x-notify__act">
+        <button type="submit" className="x-notify__btn">
+          <Mail aria-hidden="true" strokeWidth={1.8} />
+          Send to the GGY team
+        </button>
+        <small>Opens your email app with the note written to {contact.email}.</small>
+      </div>
+    </form>
   );
 }

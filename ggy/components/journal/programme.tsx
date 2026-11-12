@@ -6,6 +6,7 @@ import { useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Building2, Hammer, Lightbulb, Mic2, Route, Scale, type LucideIcon } from "lucide-react";
 import { BROCHURE, components } from "@/content/ggy";
 import { programmePhotos, type Pic } from "@/content/ggy27";
+import { gsap, MOTION_QUERIES, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { NoteRef } from "../primitives";
 import CardSwap, { Card, type CardSwapHandle } from "../CardSwap";
 import { Head } from "./head";
@@ -25,29 +26,68 @@ const N = components.length;
  * beside it an index that follows the card in front and carries its text.
  */
 export function Programme() {
+  const root = useRef<HTMLElement>(null);
   const deck = useRef<CardSwapHandle>(null);
   const [front, setFront] = useState(0);
+  const frontRef = useRef(0);
   const busy = useRef(false);
 
-  // The deck only moves one card at a time; walk it to the chosen part.
-  const goTo = (i: number) => {
-    if (busy.current || i === front) return;
-    const steps = (i - front + N) % N;
-    busy.current = true;
-    for (let k = 0; k < steps; k++) window.setTimeout(() => deck.current?.next(), k * 140);
-    window.setTimeout(() => (busy.current = false), steps * 140 + 60);
+  const onChange = (i: number) => {
+    frontRef.current = i;
+    setFront(i);
   };
+
+  // The deck only moves one card at a time; walk it to the chosen part,
+  // forward or back, whichever is the way the reader is going.
+  const goTo = (i: number, dir: 1 | -1 | 0 = 0) => {
+    const at = frontRef.current;
+    if (busy.current || i === at) return;
+    const fwd = (i - at + N) % N;
+    const back = (at - i + N) % N;
+    const forward = dir === 1 || (dir === 0 && fwd <= back);
+    const steps = forward ? fwd : back;
+    busy.current = true;
+    for (let k = 0; k < steps; k++) window.setTimeout(() => (forward ? deck.current?.next() : deck.current?.prev()), k * 160);
+    window.setTimeout(() => (busy.current = false), steps * 160 + 80);
+  };
+
+  // As the section passes through the screen the deck deals itself: each
+  // part gets an equal stretch of the scroll, so reading down the page walks
+  // through all six, and scrolling back walks them back. The deck's own
+  // timer is off so the two never fight; the arrows and the index still work.
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+      mm.add(MOTION_QUERIES.any, () => {
+        let last = 0;
+        ScrollTrigger.create({
+          trigger: root.current!.querySelector("[data-prog-grid]"),
+          start: "top 70%",
+          end: "bottom 35%",
+          onUpdate: (self) => {
+            const i = Math.min(N - 1, Math.floor(self.progress * N));
+            if (i !== last) {
+              goTo(i, i > last ? 1 : -1);
+              last = i;
+            }
+          },
+        });
+      });
+      return () => mm.revert();
+    },
+    { scope: root },
+  );
 
   const active = components[front];
 
   return (
-    <section id="programme" className="j-sec j-paper x-prog" data-arch data-nav="dark" aria-labelledby="programme-title">
+    <section ref={root} id="programme" className="j-sec j-paper x-prog" data-arch data-nav="dark" aria-labelledby="programme-title">
       <div className="j-wrap">
         <Head id="programme-title" title="Six parts of the programme" em="as run in 2025">
           <p>As the {BROCHURE} describes them. The programme for the upcoming edition will be confirmed with its dates.</p>
         </Head>
 
-        <div className="x-prog__grid">
+        <div className="x-prog__grid" data-prog-grid>
           <div className="x-prog__index">
             <ol className="x-prog__list">
               {components.map((c, i) => {
@@ -99,10 +139,11 @@ export function Programme() {
               cardDistance={54}
               verticalDistance={58}
               delay={5200}
+              autoplay={false}
               skewAmount={4}
               visibleCards={4}
               cardRadius={22}
-              onChange={setFront}
+              onChange={onChange}
               ariaLabel="The six parts of the programme, as photographs"
             >
               {components.map((c, i) => {

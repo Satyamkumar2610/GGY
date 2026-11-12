@@ -138,6 +138,65 @@ export const editionPhotos: Record<string, Pic> = {
 };
 
 /* ------------------------------------------------------------------ */
+/* Past governance role models: one photograph per name on brochure    */
+/* p.10, keyed by the name exactly as content/ggy.ts prints it.         */
+/* ------------------------------------------------------------------ */
+
+const rm = (file: string, alt: string, width: number, height: number): Pic => ({ src: `${IMG}/role-models/${file}.jpg`, alt, width, height });
+
+export const portraits: Record<string, Pic> = {
+  "Late Shri Pranab Mukherjee": rm("pranab-mukherjee", "Portrait of Pranab Mukherjee.", 457, 640),
+  "Shri Arun Maira": rm("arun-maira", "Portrait of Arun Maira.", 640, 426),
+  "Shri Saurabh Bhai Patel": rm("saurabh-bhai-patel", "Portrait of Saurabh Bhai Patel.", 640, 384),
+  "Shri Aman Singh": rm("aman-singh", "Portrait of Aman Singh.", 640, 640),
+  "Shri Basavaraj Patil": rm("basavaraj-patil", "Portrait of Basavaraj Patil.", 640, 640),
+  "Dr Raman Singh": rm("raman-singh", "Portrait of Raman Singh.", 462, 640),
+  "Shri Pratyaya Amrit": rm("pratyaya-amrit", "Portrait of Pratyaya Amrit.", 640, 480),
+  "Smt. Vasuben Trivedi": rm("vasuben-trivedi", "Portrait of Vasuben Trivedi.", 640, 640),
+  "Smt. Nidhi Kamdar": rm("nidhi-kamdar", "Portrait of Nidhi Kamdar.", 640, 463),
+  "Shri Anna Hazare": rm("anna-hazare", "Portrait of Anna Hazare.", 482, 640),
+  "Shri Ajoy Mehta": rm("ajoy-mehta", "Portrait of Ajoy Mehta.", 570, 640),
+  "Shri Ananth Kumar": rm("ananth-kumar", "Portrait of Ananth Kumar.", 540, 640),
+  "Shri TR Raghunandan": rm("raghunandan", "Portrait of T R Raghunandan.", 640, 640),
+  "Shri Avinash Mohanty": rm("avinash-mohanty", "Portrait of Avinash Mohanty.", 640, 640),
+};
+
+/* ------------------------------------------------------------------ */
+/* GGY Star Alums: names and photographs as supplied with the brief.    */
+/* Their roles are not given, so none are shown.                        */
+/* ------------------------------------------------------------------ */
+
+export const starAlums: { name: string; photo: Pic }[] = [
+  { name: "Dr. Jigar Inamdar", photo: { src: `${IMG}/alums/dr-jigar-inamdar.jpg`, alt: "Dr. Jigar Inamdar speaking at a lectern.", width: 800, height: 533 } },
+  { name: "Shishu Ranjan", photo: { src: `${IMG}/alums/shishu-ranjan.jpg`, alt: "Portrait of Shishu Ranjan.", width: 800, height: 800 } },
+  { name: "Srutanjay Narayanan", photo: { src: `${IMG}/alums/srutanjay-narayanan.jpg`, alt: "Portrait of Srutanjay Narayanan.", width: 800, height: 800 } },
+  { name: "Suyash Pande", photo: { src: `${IMG}/alums/suyash-pande.jpg`, alt: "Portrait of Suyash Pande.", width: 800, height: 800 } },
+  { name: "Vignesh Venkatachalam", photo: { src: `${IMG}/alums/vignesh-venkatachalam.jpg`, alt: "Portrait of Vignesh Venkatachalam.", width: 800, height: 800 } },
+];
+
+/* ------------------------------------------------------------------ */
+/* Institution logos supplied with the brief for the alumni section.    */
+/* ------------------------------------------------------------------ */
+
+/** invert: the mark is reversed out of a dark square, so it is printed inverted. */
+const logo = (file: string, name: string, width: number, height: number, invert = false) => ({ src: `${IMG}/logos/${file}`, name, width, height, invert });
+
+export const institutionLogos = [
+  logo("brookings-logo.png", "Brookings", 200, 200, true),
+  logo("unicef-logo.png", "UNICEF", 348, 320),
+  logo("google-logo.png", "Google", 900, 675),
+  logo("capacity-building-commission-logo.png", "Capacity Building Commission", 1024, 423),
+  logo("microsoft.png", "Microsoft", 371, 136),
+  logo("unesco-logo.png", "UNESCO", 2400, 2400),
+  logo("piramal-foundation.png", "Piramal Foundation", 225, 225),
+  logo("university-of-bath.png", "University of Bath", 351, 144),
+  logo("indian-political-action-committee-i-pac.jpg", "Indian Political Action Committee (I-PAC)", 237, 212),
+  logo("hp-logo.png", "HP", 360, 180),
+  logo("startup-india-govt-of-india.jpg", "Startup India, Government of India", 480, 360),
+  logo("primus-partners.jpg", "Primus Partners", 225, 225),
+];
+
+/* ------------------------------------------------------------------ */
 /* Contact, as given for the bottom of the page                         */
 /* ------------------------------------------------------------------ */
 

@@ -26,7 +26,7 @@
   overflow: hidden;
 }
 .js-motion .act {
-  height: 220svh;
+  height: 200svh;
 }
 .js-motion .act__stage {
   position: sticky;
@@ -160,10 +160,14 @@ html:not(.js-motion) .act__zoom:not(.is-main),
 html:not(.js-motion) .act__intro {
   display: none;
 }
+html:not(.js-motion) .act__zoom.is-main .act__place {
+  width: 100%;
+  height: 100%;
+  transform: none !important;
+}
 html:not(.js-motion) .act__zoom.is-main .act__print {
   width: 100% !important;
   height: 100% !important;
-  translate: none !important;
 }
 html:not(.js-motion) .act__scrim {
   opacity: 1;
@@ -174,43 +178,42 @@ html:not(.js-motion) .act__scrim {
   }
 }
 
-/* ---- Domes ---------------------------------------------------------- */
+/* ---- Stacked pages -------------------------------------------------- */
 
-/* The next ground swells up over the last, then flattens as it arrives.
-   The dome is the section's own colour, drawn above its top edge and
-   scaled from its base; --arch runs 1 to 0 with the scroll. */
-/* z-index 4 clears the opening band (3), so every dome paints over the
-   ground before it; the nav (50) and the thread (55) stay above. */
+/* Each section that arrives is a page laid over the one before it: it
+   paints above it (z-index 4 clears the opening band; the nav and the rail
+   stay above), and casts a shadow along its top edge onto the page below.
+   The page below shrinks, slows and dims (components/motion/cinema-motion.tsx). */
 .js-motion [data-arch] {
-  --arch-h: clamp(3.5rem, 9vw, 9rem);
   position: relative;
   z-index: 4;
+  box-shadow: 0 -28px 60px -24px rgb(50 5 12 / 0.45);
 }
-/* Grounds that clip their overflow still clip sideways, but let the dome
-   out of the top. */
+/* Grounds that clip their overflow still clip sideways, but let the
+   shadow out of the top. */
 .js-motion .gloss[data-arch],
 .js-motion .j-sec--led[data-arch] {
   overflow-x: clip;
   overflow-y: visible;
 }
-.js-motion [data-arch] > .arch-dome {
-  position: absolute;
-  left: 0;
-  right: 0;
-  /* Overlaps the section by a pixel, so no seam shows at its base. */
-  bottom: calc(100% - 1px);
-  height: calc(var(--arch-h) + 1px);
-  background: inherit;
-  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
-  transform: scaleY(0);
-  transform-origin: 50% 100%;
-  will-change: transform;
-  pointer-events: none;
-}
-/* Sheets that rise as a dome no longer need their fixed rounded lip. */
 .js-motion .j-sheet[data-arch] {
   margin-top: 0;
   border-radius: 0;
+}
+.js-motion .stack-prev {
+  transform-origin: 50% 100%;
+}
+.js-motion .stack-prev:not([data-arch]) {
+  position: relative;
+  z-index: 3;
+}
+.stack-dim {
+  position: absolute;
+  inset: 0;
+  z-index: 60;
+  background: rgb(50 5 12 / 0.32);
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* ---- Locator -------------------------------------------------------- */
