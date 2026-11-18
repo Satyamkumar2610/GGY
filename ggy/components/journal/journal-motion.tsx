@@ -51,12 +51,59 @@ export function JournalMotion() {
     });
     // The four words rise into place, one after another, as the band is crossed.
     // Transform and opacity only, so the scrub never re-lays-out the text.
+    // They finish early: the next page starts to slide over the band once
+    // its top passes the middle of the window (cinema-motion.tsx), so the
+    // words must be in place while the band's foot is still in view.
     mm.add(MOTION_QUERIES.any, () => {
       gsap.fromTo(
         "[data-words] span",
-        { yPercent: 60, opacity: 0.25 },
-        { yPercent: 0, opacity: 1, ease: "none", stagger: 0.12, force3D: true, scrollTrigger: { trigger: "[data-words]", start: "top 96%", end: "top 55%", scrub: 0.4 } },
+        { yPercent: 45, opacity: 0.2 },
+        { yPercent: 0, opacity: 1, ease: "none", stagger: 0.1, force3D: true, scrollTrigger: { trigger: "[data-words]", start: "top 100%", end: "top 78%", scrub: 0.4 } },
       );
+    });
+
+    // The Yatra at a glance: the five figures count up as the row arrives,
+    // one after another, and count again under the pointer. The printed
+    // figure ("1000+") is the target, so a figure is never left half-counted.
+    mm.add(MOTION_QUERIES.any, () => {
+      const row = document.querySelector<HTMLElement>(".j-stats");
+      if (!row) return;
+      const items = gsap.utils.toArray<HTMLElement>(".j-stats__item", row);
+      const figs = items.map((item) => {
+        const el = item.querySelector<HTMLElement>("[data-count]")!;
+        const full = el.textContent ?? "";
+        const to = parseInt(full, 10) || 0;
+        const tail = full.replace(/^\d+/, "");
+        const n = { v: to };
+        const show = () => (el.textContent = `${Math.round(n.v)}${tail}`);
+        const count = (duration: number, delay = 0) =>
+          gsap.fromTo(n, { v: 0 }, { v: to, duration, delay, ease: "power3.out", onUpdate: show, overwrite: true });
+        return { item, el, full, count };
+      });
+      gsap.set(figs.map((f) => f.el), { yPercent: 40, opacity: 0 });
+      const st = ScrollTrigger.create({
+        trigger: row,
+        start: "top 85%",
+        once: true,
+        onEnter: () => {
+          figs.forEach((f, i) => {
+            gsap.to(f.el, { yPercent: 0, opacity: 1, duration: 0.9, delay: i * 0.12, ease: "land" });
+            f.count(1.6, i * 0.12);
+          });
+        },
+      });
+      const hover = figs.map((f) => {
+        const h = (e: PointerEvent) => e.pointerType === "mouse" && f.count(0.7);
+        f.item.addEventListener("pointerenter", h);
+        return h;
+      });
+      return () => {
+        st.kill();
+        figs.forEach((f, i) => {
+          f.item.removeEventListener("pointerenter", hover[i]);
+          f.el.textContent = f.full;
+        });
+      };
     });
 
     mm.add(MOTION_QUERIES.any, () => {

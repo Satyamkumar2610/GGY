@@ -5,6 +5,8 @@ import { useRef } from "react";
 import { atlas, atLeast, fit, formatCoords, invert, lerpCamera, project, stateByIso, unionBox, type Box, type Camera } from "@/lib/atlas";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { photos, stateDossiers, upcoming, type PhotoKey } from "@/content/ggy";
+import { stateStops } from "@/content/ggy27";
+import { Moon } from "lucide-react";
 import { STATE_TEXTURE } from "@/components/atlas/atlas-map";
 
 type Pt = [number, number];
@@ -34,6 +36,8 @@ const STOPS = ORDER.map((iso, i) => {
     photo: photos[CARD_PHOTO[iso]],
     city: CITY[iso],
     geo,
+    /** The places this leg visits, in groups ending with a night stay; empty until announced. */
+    stops: stateStops[iso] ?? [],
   };
 });
 
@@ -77,8 +81,18 @@ const context = atlas.states.filter((s) => !ORDER.includes(s.iso as (typeof ORDE
 
 const LEGS = ["Gujarat", "Gujarat to Maharashtra", "Maharashtra", "Maharashtra to Goa", "Goa", "Gujarat, Maharashtra, Goa"];
 
+/**
+ * The scroll, as shares of the section: where the camera holds on each
+ * state. Gujarat's hold is the long one: its card turns from the state to
+ * the list of stops, and the stops light one by one as the reader goes on.
+ */
+const HOLD: [number, number][] = [
+  [0.06, 0.32],
+  [0.52, 0.62],
+  [0.8, 0.89],
+];
 /** Where each station sits in the scroll, for the rail's buttons. */
-const STATION_AT = [0.14, 0.5, 0.83];
+const STATION_AT = [0.1, 0.57, 0.845];
 
 const clamp01 = gsap.utils.clamp(0, 1);
 const swing = (x: number) => gsap.parseEase("power2.inOut")(clamp01(x));
@@ -108,6 +122,9 @@ export function YatraFlight() {
       const cards = Array.from(el.querySelectorAll<HTMLElement>("[data-card]"));
       const fill = el.querySelector<HTMLElement>("[data-fill]")!;
       const stations = Array.from(el.querySelectorAll<HTMLElement>("[data-station]"));
+      const stopRows = cards.map((k) => Array.from(k.querySelectorAll<HTMLElement>("[data-stop]")));
+      const stopView = cards.map(() => "");
+      const stopLit = cards.map(() => -1);
 
       svg.removeAttribute("viewBox");
       const L = legs.map((p) => p.getTotalLength());
@@ -175,35 +192,35 @@ export function YatraFlight() {
         let u2 = 0;
         let card = 0;
         let li = 0;
-        if (p < 0.08) {
-          c = lerpCamera(C0, CG, swing(p / 0.08), cx, cy);
-        } else if (p < 0.2) {
+        if (p < HOLD[0][0]) {
+          c = lerpCamera(C0, CG, swing(p / HOLD[0][0]), cx, cy);
+        } else if (p < HOLD[0][1]) {
           c = CG;
-        } else if (p < 0.44) {
-          const s = swing((p - 0.2) / 0.24);
+        } else if (p < HOLD[1][0]) {
+          const s = swing((p - HOLD[0][1]) / (HOLD[1][0] - HOLD[0][1]));
           u1 = s;
           c = follow(CG, CM, CITY["IN-GJ"].pt, CITY["IN-MH"].pt, legs[0].getPointAtLength(L[0] * s), s);
           card = s > 0.94 ? 1 : 0;
           li = s > 0.94 ? 2 : 1;
-        } else if (p < 0.56) {
+        } else if (p < HOLD[1][1]) {
           u1 = 1;
           c = CM;
           card = 1;
           li = 2;
-        } else if (p < 0.78) {
-          const s = swing((p - 0.56) / 0.22);
+        } else if (p < HOLD[2][0]) {
+          const s = swing((p - HOLD[1][1]) / (HOLD[2][0] - HOLD[1][1]));
           u1 = 1;
           u2 = s;
           c = follow(CM, CA, CITY["IN-MH"].pt, CITY["IN-GA"].pt, legs[1].getPointAtLength(L[1] * s), s);
           card = s > 0.94 ? 2 : 1;
           li = s > 0.94 ? 4 : 3;
-        } else if (p < 0.88) {
+        } else if (p < HOLD[2][1]) {
           u1 = u2 = 1;
           c = CA;
           card = 2;
           li = 4;
         } else {
-          const s = swing((p - 0.88) / 0.12);
+          const s = swing((p - HOLD[2][1]) / (1 - HOLD[2][1]));
           u1 = u2 = 1;
           c = lerpCamera(CA, C0, s, cx, cy);
           card = s > 0.5 ? 3 : 2;
@@ -249,7 +266,7 @@ export function YatraFlight() {
         const pt = path.getPointAtLength((onLeg2 ? L[1] * u2 : L[0] * u1) || 0);
         const [mx, my] = toScreen(c, pt);
         place(marker, mx, my);
-        marker.classList.toggle("is-on", p > 0.03 && p < 0.9);
+        marker.classList.toggle("is-on", p > 0.03 && p < HOLD[2][1] + 0.01);
         const ll = invert(pt.x, pt.y);
         if (ll) {
           const s = formatCoords(ll[0], ll[1]);
@@ -266,6 +283,26 @@ export function YatraFlight() {
           legIdx = li;
           leg.textContent = LEGS[li];
         }
+        // A state's stops: a little way into its hold the card turns from the
+        // state to its stops, which then light one after another. Only
+        // classes change, and only when the count moves.
+        STOPS.forEach((st, i) => {
+          const rows = stopRows[i];
+          if (!rows.length) return;
+          const [a, b] = HOLD[i];
+          const view = p >= a + (b - a) * 0.22 ? "stops" : "about";
+          if (view !== stopView[i]) {
+            stopView[i] = view;
+            cards[i].dataset.view = view;
+          }
+          const f = clamp01((p - (a + (b - a) * 0.26)) / ((b - a) * 0.62));
+          const lit = f > 0 ? Math.ceil(f * rows.length) : 0;
+          if (lit !== stopLit[i]) {
+            stopLit[i] = lit;
+            rows.forEach((r, k) => r.toggleAttribute("data-on", k < lit));
+          }
+        });
+
         if (card !== active) {
           active = card;
           el.classList.toggle("is-summary", card === 3);
@@ -289,7 +326,9 @@ export function YatraFlight() {
             cards.forEach((k) => {
               k.dataset.state = "active";
               k.removeAttribute("inert");
+              delete k.dataset.view;
             });
+            stopRows.flat().forEach((r) => r.setAttribute("data-on", ""));
             return () => el.classList.remove("is-static");
           }
           const proxy = { p: 0 };
@@ -446,18 +485,61 @@ export function YatraFlight() {
                   {s.native}
                 </p>
                 <h3 className="lp-card__title">{s.name}</h3>
-                <p className="lp-card__intro">{s.intro}</p>
-                <dl className="lp-card__facts">
-                  {s.facts.map((f) => (
-                    <div key={f.term}>
-                      <dt>{f.term}</dt>
-                      <dd>{f.value}</dd>
+                <div className="lp-card__about">
+                  <div>
+                    <p className="lp-card__intro">{s.intro}</p>
+                    <dl className="lp-card__facts">
+                      {s.facts.map((f) => (
+                        <div key={f.term}>
+                          <dt>{f.term}</dt>
+                          <dd>{f.value}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </div>
+                </div>
+                {s.stops.length ? (
+                  <div className="lp-card__stops">
+                    <div>
+                      <p className="lp-card__stops-head">
+                        <b>Where the Yatra goes</b>
+                        <span>{s.stops.flat().length} stops</span>
+                      </p>
+                      <ol className="lp-stops" aria-label={`Stops in ${s.name}, in order of travel`}>
+                        {s.stops.map((group, g) => (
+                          <li key={g} className="lp-stops__group">
+                            <ol>
+                              {group.map((stop) => {
+                                const n = s.stops.slice(0, g).flat().length + group.indexOf(stop) + 1;
+                                return (
+                                  <li key={`${g}-${stop.name}`} className="lp-stops__stop" data-stop style={{ "--k": n - 1 } as React.CSSProperties}>
+                                    <span className="lp-stops__n" aria-hidden="true">
+                                      {String(n).padStart(2, "0")}
+                                    </span>
+                                    <span className="lp-stops__name">
+                                      {stop.name}
+                                      {stop.note ? <small>{stop.note}</small> : null}
+                                    </span>
+                                    {stop.night ? (
+                                      <span className="lp-stops__night">
+                                        <Moon aria-hidden="true" strokeWidth={1.8} />
+                                        Night stay
+                                      </span>
+                                    ) : null}
+                                  </li>
+                                );
+                              })}
+                            </ol>
+                          </li>
+                        ))}
+                      </ol>
                     </div>
-                  ))}
-                </dl>
-                <p className="lp-card__plan">
-                  <b>Stops, people and learnings</b> <span className="tba">To be announced</span>
-                </p>
+                  </div>
+                ) : (
+                  <p className="lp-card__plan">
+                    <b>Stops, people and learnings</b> <span className="tba">To be announced</span>
+                  </p>
+                )}
                 <p className="lp-card__past">Visited by the Yatra in {s.editions.join(" and ")}</p>
               </div>
             </article>

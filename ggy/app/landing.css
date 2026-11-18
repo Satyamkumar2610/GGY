@@ -115,6 +115,10 @@
 .lp-pill:hover {
   transform: translateY(-2px);
 }
+.lp-pill:active {
+  transform: translateY(0);
+  transition-duration: 0.12s;
+}
 .lp-pill svg {
   width: 0.9rem;
   height: 0.9rem;
@@ -763,7 +767,8 @@ html:not(.js-motion) .lp-hero__second {
   background: var(--c-paper);
 }
 .js-motion .lp-flight {
-  height: 580svh;
+  /* Longer than the flight alone: Gujarat's hold carries its list of stops. */
+  height: 700svh;
 }
 .lp-flight__stage {
   position: relative;
@@ -1717,4 +1722,183 @@ html:not(.js-motion) .lp-hero__second {
 .lp .lp-field,
 .lp #editions {
   background: #ffeed3;
+}
+
+/* --------------------------------------------------------------- */
+/* Journey: a state's stops                                         */
+/* --------------------------------------------------------------- */
+
+/* The card has two views, turned by the scroll (yatra-flight.tsx): the
+   state, then its stops. Each part collapses to nothing rather than
+   leaving the card; without motion (no data-view) both are shown. */
+.lp-card__about,
+.lp-card__stops {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition:
+    grid-template-rows 0.7s var(--ease),
+    opacity 0.5s var(--ease);
+}
+.lp-card__about > div,
+.lp-card__stops > div {
+  min-height: 0;
+  overflow: hidden;
+}
+.lp-card__about > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.lp-card[data-view="about"] .lp-card__stops,
+.lp-card[data-view="stops"] .lp-card__about {
+  grid-template-rows: 0fr;
+  opacity: 0;
+}
+.lp-card__media {
+  transition: flex-basis 0.7s var(--ease);
+}
+.lp-card[data-view="stops"] .lp-card__media {
+  flex: 0 0 6.5rem;
+}
+/* In the stops view the heading sits tighter to make room for the list,
+   and the body takes the height the photograph gave up. */
+.lp-card[data-view="stops"] .lp-card__body {
+  flex: 1 1 auto;
+  gap: 0.5rem;
+  padding-top: 1rem;
+}
+.lp-card__stops-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid rgb(205 31 54 / 0.18);
+  font-size: 0.75rem;
+  color: var(--c-muted);
+}
+.lp-card__stops-head b {
+  font: 600 0.85rem / 1.2 var(--f-display);
+  color: var(--c-crimson);
+}
+
+/* The stops, in order of travel, on a thin route line. Each group ends
+   with a night stay; a dashed rule marks where the next one begins. */
+.lp-stops,
+.lp-stops ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.lp-stops {
+  position: relative;
+  margin-top: 0.55rem;
+}
+.lp-stops::before {
+  content: "";
+  position: absolute;
+  top: 0.55rem;
+  bottom: 0.55rem;
+  left: 0.725rem;
+  width: 1px;
+  background: rgb(205 31 54 / 0.2);
+}
+.lp-stops__group + .lp-stops__group {
+  margin-top: 0.3rem;
+  padding-top: 0.3rem;
+  background: linear-gradient(to right, rgb(205 31 54 / 0.3) 50%, transparent 0) top left / 6px 1px repeat-x;
+  background-position: 2.2rem 0;
+}
+.lp-stops__stop {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.45rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.14rem 0;
+  opacity: 0.38;
+  translate: -0.25rem 0;
+  transition:
+    opacity 0.45s var(--ease),
+    translate 0.55s var(--ease);
+}
+.lp-stops__stop[data-on] {
+  opacity: 1;
+  translate: 0 0;
+}
+.lp-stops__n {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 1.45rem;
+  height: 1.45rem;
+  border: 1px solid rgb(205 31 54 / 0.3);
+  border-radius: 50%;
+  background: var(--c-light);
+  font: 600 0.62rem / 1 var(--f-display);
+  letter-spacing: 0.04em;
+  color: var(--c-saffron-ink);
+  font-variant-numeric: tabular-nums;
+  transition:
+    background-color 0.45s var(--ease),
+    color 0.45s var(--ease),
+    border-color 0.45s var(--ease);
+}
+.lp-stops__stop[data-on] .lp-stops__n {
+  border-color: var(--c-crimson);
+  background: var(--c-crimson);
+  color: var(--c-paper);
+}
+.lp-stops__name {
+  font: 500 0.9rem / 1.25 var(--f-display);
+  color: var(--c-crimson);
+}
+.lp-stops__name small {
+  display: inline;
+  margin-left: 0.45rem;
+  font: 400 0.74rem / 1.3 var(--f-sans);
+  color: var(--c-ink-soft);
+}
+.lp-stops__night {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: rgb(205 31 54 / 0.08);
+  font: 600 0.66rem / 1 var(--f-display);
+  letter-spacing: 0.02em;
+  color: var(--c-crimson);
+  white-space: nowrap;
+}
+.lp-stops__night svg {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+@media (max-width: 767px) {
+  /* On a phone the card is a strip at the foot of the map: for the stops
+     it grows and lets the photograph go. */
+  .lp-flight__panel {
+    transition: height 0.7s var(--ease);
+  }
+  .lp-flight__panel:has(.lp-card[data-state="active"][data-view="stops"]) {
+    height: 60svh;
+  }
+  .lp-card[data-view="stops"] .lp-card__media {
+    flex: 0 0 0;
+    margin: 0;
+  }
+  .lp-stops__stop {
+    padding: 0.15rem 0;
+  }
+  .lp-stops__name {
+    font-size: 0.84rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lp-stops__stop {
+    opacity: 1;
+    translate: none;
+  }
 }

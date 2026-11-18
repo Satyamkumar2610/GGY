@@ -116,6 +116,7 @@ export function FieldGallery() {
                   <button
                     type="button"
                     className="x-film__frame"
+                    data-cursor="Open"
                     aria-label={`Open photograph ${i + 1} of ${prints.length}: ${p.caption}`}
                     onClick={(e) => {
                       lastFocus.current = e.currentTarget;

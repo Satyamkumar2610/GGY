@@ -17,11 +17,16 @@ export function Star({ className = "" }: { className?: string }) {
  */
 export function Title({ id, title, em, as: Tag = "h2", sub = false, children }: { id?: string; title: string; em?: string; as?: "h2" | "h3"; sub?: boolean; children?: ReactNode }) {
   return (
-    <Tag id={id} className={sub ? "j-title j-title--sub" : "j-title"} data-settle>
-      <span>{title}</span>
-      {em ? <em>{em}</em> : null}
-      {children}
-    </Tag>
+    <>
+      <Tag id={id} className={sub ? "j-title j-title--sub" : "j-title"} data-settle>
+        <span>{title}</span>
+        {em ? <em>{em}</em> : null}
+      </Tag>
+      {/* Anything that qualifies the title (a footnote dagger) sits beside
+          it, outside the heading: the heading's lines are masked for their
+          reveal, and a note opened inside them would be cut off. */}
+      {children ? <p className="j-title__aside">{children}</p> : null}
+    </>
   );
 }
 

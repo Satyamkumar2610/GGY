@@ -30,6 +30,9 @@ export function Questions() {
               <li key={f.q} className="x-faqc__item" data-open={on ? "" : undefined}>
                 <h3>
                   <button type="button" aria-expanded={on} aria-controls={`${id}-${i}`} onClick={() => setOpen(on ? null : i)}>
+                    <span className="x-faqc__n" aria-hidden="true">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
                     <span className="x-faqc__q">{f.q}</span>
                     <Plus className="x-faqc__icon" aria-hidden="true" strokeWidth={1.8} />
                   </button>

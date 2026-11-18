@@ -217,6 +217,7 @@ export function People() {
         ref={reel}
         className="x-faces"
         aria-label="People delegates have met"
+        data-cursor="Drag"
         onScroll={sync}
         onPointerDown={onDown}
         onPointerMove={onMove}

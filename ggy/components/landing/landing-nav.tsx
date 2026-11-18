@@ -73,9 +73,16 @@ export function LandingNav() {
       for (const el of hits) {
         if (nav.contains(el)) continue;
         const host = el.closest<HTMLElement>("[data-nav]");
-        // Doorways (.act) are read the same way: white paper or photograph,
-        // depending on how far the arch has opened.
-        const chapter = el.closest<HTMLElement>(".lp-chapters, .act");
+        // An act sets its own data-nav as its centre print opens to full
+        // bleed (act.tsx): its prints cannot be hit-tested, so the ground
+        // under the bar is never read from the elements themselves.
+        const act = el.closest<HTMLElement>(".act");
+        if (act) {
+          tone = act.dataset.nav ?? "dark";
+          glass = tone;
+          break;
+        }
+        const chapter = el.closest<HTMLElement>(".lp-chapters");
         if (chapter && (!host || chapter.contains(host))) {
           // The journal chapters carry no hints: read the ground under the nav.
           tone = toneOf(el);

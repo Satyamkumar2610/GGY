@@ -52,7 +52,22 @@ export function Act({ id, n, title, dek, photos: keys }: ActProps) {
         const q = gsap.utils.selector(el);
         const tl = gsap.timeline({
           defaults: { ease: "none" },
-          scrollTrigger: { trigger: el, start: "top top", end: "bottom bottom", scrub: 0.5 },
+          scrollTrigger: {
+            trigger: el,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 0.5,
+            // The nav reads its ground from here (landing-nav.tsx): paper
+            // while the prints lie on the table, the photograph once the
+            // centre print has grown past the bar and the scrim has come in.
+            onUpdate: (self) => {
+              const next = self.progress > 0.7 ? "light" : "dark";
+              if (el.dataset.nav !== next) {
+                el.dataset.nav = next;
+                window.dispatchEvent(new Event("lp:tone"));
+              }
+            },
+          },
         });
         // The camera moves through the prints one after another: each outer
         // print gets its own stretch of the scroll to grow and fly past, so
@@ -87,7 +102,10 @@ export function Act({ id, n, title, dek, photos: keys }: ActProps) {
         stage.addEventListener("pointermove", onMove);
         return () => stage.removeEventListener("pointermove", onMove);
       });
-      return () => mm.revert();
+      return () => {
+        mm.revert();
+        if (root.current) root.current.dataset.nav = "dark";
+      };
     },
     { scope: root },
   );

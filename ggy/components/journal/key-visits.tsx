@@ -7,7 +7,8 @@ import { keyVisits } from "@/content/ggy27";
 import { Head } from "./head";
 
 const N = keyVisits.length;
-const SPRING = { type: "spring", stiffness: 170, damping: 26, mass: 0.9 } as const;
+/** Every move of the deck, dealt or chosen: a 0.5s glide that settles softly. */
+const GLIDE = { duration: 0.5, ease: [0.22, 1, 0.36, 1] } as const;
 /** How long each visit holds before the deck deals the next (ms). */
 const HOLD = 5200;
 
@@ -39,7 +40,15 @@ export function KeyVisits() {
           <ol className="x-kv__index" aria-label="Key visits">
             {keyVisits.map((v, i) => (
               <li key={v.name}>
-                <button type="button" className="x-kv__item" aria-current={i === active ? "true" : undefined} onClick={() => setActive(i)}>
+                <button
+                  type="button"
+                  className="x-kv__item"
+                  aria-current={i === active ? "true" : undefined}
+                  onClick={() => setActive(i)}
+                  // Pointing at a visit brings its photograph to the front.
+                  onPointerEnter={(e) => e.pointerType === "mouse" && setActive(i)}
+                  onFocus={() => setActive(i)}
+                >
                   <span className="x-kv__n">{String(i + 1).padStart(2, "0")}</span>
                   <span className="x-kv__name">{v.name}</span>
                   {i === active ? (
@@ -56,7 +65,7 @@ export function KeyVisits() {
             ))}
           </ol>
 
-          <div className="x-kv__deck" aria-live="polite">
+          <div className="x-kv__deck" aria-live="polite" data-cursor="Drag">
             {keyVisits.map((v, i) => {
               // Where this card sits relative to the front: 0 front, 1..3 waiting behind, -1 just dealt away.
               let o = (i - active + N) % N;
@@ -76,7 +85,7 @@ export function KeyVisits() {
                     rotate: o < 0 ? -4 : 0,
                     opacity: o < 0 || o > 3 ? 0 : 1 - o * 0.12,
                   }}
-                  transition={still ? { duration: 0 } : SPRING}
+                  transition={still ? { duration: 0 } : GLIDE}
                   style={{ zIndex: N - (o < 0 ? N : o) }}
                   drag={front ? "x" : false}
                   dragConstraints={{ left: 0, right: 0 }}

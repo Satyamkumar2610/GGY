@@ -197,6 +197,36 @@ export const institutionLogos = [
 ];
 
 /* ------------------------------------------------------------------ */
+/* Where the Yatra goes in each state, as given by the GGY team.        */
+/* Stops are in the order of travel, in the groups the team gave them;  */
+/* a group ends with the night stay. A state with no list yet shows     */
+/* "To be announced".                                                   */
+/* ------------------------------------------------------------------ */
+
+export type StateStop = { name: string; note?: string; night?: boolean };
+
+export const stateStops: Record<string, StateStop[][]> = {
+  "IN-GJ": [
+    [
+      { name: "GIFT City", note: "CM / Vidhan Sabha Speaker" },
+      { name: "Vidya Samiksha Kendra" },
+      { name: "Mahatma Mandir" },
+      { name: "Sabarmati Riverfront" },
+      { name: "ASI", night: true },
+    ],
+    [
+      { name: "Amul" },
+      { name: "Statue of Unity", night: true },
+      { name: "Art of Living Ashram", night: true },
+    ],
+    [
+      { name: "Statue of Unity" },
+      { name: "Surat", note: "Diamond Room" },
+    ],
+  ],
+};
+
+/* ------------------------------------------------------------------ */
 /* Contact, as given for the bottom of the page                         */
 /* ------------------------------------------------------------------ */
 

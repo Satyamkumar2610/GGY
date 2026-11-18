@@ -3543,33 +3543,54 @@ a.x-contact__item:hover .x-contact__go {
   font-size: 0.95rem;
   color: var(--c-ink-soft);
 }
+/* A ruled list, not a stack of boxes: each question is a row between
+   hairlines, numbered in the margin; the open one is tinted and carries a
+   crimson rule down its left edge, and its answer opens under the question. */
 .x-faqc__list {
+  --faqc-x: clamp(1rem, 2.5vw, 1.6rem);
+  --faqc-n: 2.6rem;
   display: grid;
-  gap: 0.85rem;
+  gap: 0;
   max-width: 52rem;
   margin: 0 auto;
   padding: 0;
   list-style: none;
+  border-top: 1px solid rgb(205 31 54 / 0.2);
 }
 .x-faqc__item {
-  border-radius: var(--radius-sheet);
-  background: var(--c-light);
-  box-shadow: 0 0 0 1px rgb(205 31 54 / 0.1), 0 10px 26px -20px rgb(110 15 28 / 0.45);
-  transition: box-shadow 0.4s var(--ease);
+  position: relative;
+  border-bottom: 1px solid rgb(205 31 54 / 0.2);
+  transition: background-color 0.45s var(--ease);
+}
+.x-faqc__item::before {
+  content: "";
+  position: absolute;
+  inset: -1px auto -1px 0;
+  width: 2px;
+  background: var(--c-crimson);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.5s var(--ease);
+}
+.x-faqc__item:hover {
+  background: rgb(255 246 230 / 0.6);
 }
 .x-faqc__item[data-open] {
-  box-shadow: 0 0 0 1.5px rgb(205 31 54 / 0.45), 0 14px 32px -20px rgb(110 15 28 / 0.5);
+  background: var(--c-light);
+}
+.x-faqc__item[data-open]::before {
+  transform: scaleY(1);
 }
 .x-faqc__item h3 {
   margin: 0;
 }
 .x-faqc__item button {
-  display: flex;
+  display: grid;
+  grid-template-columns: var(--faqc-n) minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
+  gap: 1rem;
   width: 100%;
-  padding: 1.35rem clamp(1.25rem, 2.5vw, 1.9rem);
+  padding: 1.3rem var(--faqc-x);
   border: 0;
   background: none;
   color: var(--c-ink);
@@ -3577,15 +3598,38 @@ a.x-contact__item:hover .x-contact__go {
   text-align: left;
   cursor: pointer;
 }
+.x-faqc__n {
+  font: 600 0.72rem / 1 var(--f-display);
+  letter-spacing: 0.14em;
+  color: var(--c-saffron-ink);
+  font-variant-numeric: tabular-nums;
+}
+.x-faqc__q {
+  transition: color 0.3s ease;
+}
+.x-faqc__item:hover .x-faqc__q,
+.x-faqc__item[data-open] .x-faqc__q {
+  color: var(--c-crimson);
+}
 .x-faqc__icon {
   flex: none;
-  width: 1.35rem;
-  height: 1.35rem;
+  box-sizing: border-box;
+  width: 2rem;
+  height: 2rem;
+  padding: 0.45rem;
+  border: 1px solid rgb(205 31 54 / 0.3);
+  border-radius: 50%;
   color: var(--c-crimson);
-  transition: rotate 0.45s var(--ease);
+  transition: rotate 0.5s var(--ease), background-color 0.35s var(--ease), color 0.35s var(--ease), border-color 0.35s var(--ease);
+}
+.x-faqc__item button:hover .x-faqc__icon {
+  border-color: var(--c-crimson);
 }
 .x-faqc__item[data-open] .x-faqc__icon {
   rotate: 45deg;
+  background: var(--c-crimson);
+  border-color: var(--c-crimson);
+  color: var(--c-paper);
 }
 .x-faqc__a {
   display: grid;
@@ -3599,11 +3643,33 @@ a.x-contact__item:hover .x-contact__go {
   overflow: hidden;
 }
 .x-faqc__a p {
-  padding: 0 clamp(1.25rem, 2.5vw, 1.9rem) 1.5rem;
+  padding: 0 var(--faqc-x) 1.6rem calc(var(--faqc-x) + var(--faqc-n) + 1rem);
   max-width: 44rem;
   font-size: 1rem;
   line-height: 1.6;
   color: var(--c-ink-soft);
+  opacity: 0;
+  translate: 0 -6px;
+  transition: opacity 0.4s ease, translate 0.5s var(--ease);
+}
+.x-faqc__item[data-open] .x-faqc__a p {
+  opacity: 1;
+  translate: 0 0;
+  transition-delay: 0.1s;
+}
+@media (max-width: 39.99rem) {
+  .x-faqc__list {
+    --faqc-n: 0px;
+  }
+  .x-faqc__n {
+    display: none;
+  }
+  .x-faqc__item button {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .x-faqc__a p {
+    padding-left: var(--faqc-x);
+  }
 }
 .x-faqc__ask {
   display: flex;
@@ -3630,7 +3696,66 @@ a.x-contact__item:hover .x-contact__go {
 }
 @media (prefers-reduced-motion: reduce) {
   .x-faqc__a,
-  .x-faqc__icon {
+  .x-faqc__a p,
+  .x-faqc__icon,
+  .x-faqc__item::before {
     transition: none;
   }
+}
+
+/* =====================================================================
+   Small screens: controls that wrapped or collided
+   ===================================================================== */
+
+/* The people filter: one row that scrolls sideways inside its pill,
+   instead of three buttons stacked inside a tall rounded blob. */
+@media (max-width: 47.99rem) {
+  .x-faces__bar .x-seg {
+    display: flex;
+    flex-wrap: nowrap;
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .x-faces__bar .x-seg::-webkit-scrollbar {
+    display: none;
+  }
+  .x-faces__bar .x-seg__btn {
+    flex: none;
+    white-space: nowrap;
+  }
+}
+
+/* The itinerary's four facts: two across once there is room, the long
+   Yatra leader entry taking the full width. */
+@media (min-width: 26rem) and (max-width: 47.99rem) {
+  .x-trip__facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .x-trip__facts > div:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Swiped rather than pinned, each day's card is as tall as its own agenda,
+   not as the longest card in the row. */
+@media (max-width: 63.99rem), (prefers-reduced-motion: reduce) {
+  .x-trip__track:not([data-pinned] *) {
+    align-items: flex-start;
+  }
+}
+
+/* The map's legend keeps clear of the pinned photograph. */
+@media (max-width: 47.99rem) {
+  .x-map__legend {
+    max-width: calc(100% - 9.75rem);
+  }
+}
+
+/* Pressed state for the small round controls and the index buttons.
+   `scale` is its own property, so it composes with any transform GSAP or
+   a hover lift has written, and leaves each control's own transitions alone. */
+.lp :is(.x-faces__arrow, .x-prog__nav button, .x-year__btn, .x-kv__item, .x-prog__item, .lp-flight__station, .x-voices__play):active {
+  scale: 0.97;
 }

@@ -20,7 +20,6 @@ import { People } from "@/components/journal/people";
 import { After } from "@/components/journal/after";
 import { Questions } from "@/components/journal/questions";
 import { Joining } from "@/components/journal/joining";
-import { Thread } from "@/components/journal/thread";
 import { JournalMotion } from "@/components/journal/journal-motion";
 import { Act } from "@/components/journal/act";
 import { CinemaMotion } from "@/components/motion/cinema-motion";
@@ -82,7 +81,6 @@ export default function Home() {
         </div>
       </main>
       <LandingFooter />
-      <Thread />
       <LandingMotion />
       <JournalMotion />
       <CinemaMotion />

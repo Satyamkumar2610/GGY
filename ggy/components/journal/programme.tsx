@@ -130,7 +130,7 @@ export function Programme() {
             </div>
           </div>
 
-          <div className="x-prog__deck">
+          <div className="x-prog__deck" data-cursor="Drag">
             <CardSwap
               ref={deck}
               theme="light"

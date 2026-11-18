@@ -51,9 +51,11 @@ export function Stages() {
           }
           for (let i = 0; i < texts.length; i++) {
             const d = i - a;
-            tO[i](Math.max(0, 1 - Math.abs(d) * 1.6));
-            tY[i](d * 56);
-            texts[i].style.visibility = Math.abs(d) < 0.62 ? "visible" : "hidden";
+            // A tight crossfade: the leaving text is nearly gone before the
+            // next one has come up, so two paragraphs never read over each other.
+            tO[i](Math.max(0, 1 - Math.abs(d) * 2.2));
+            tY[i](d * 44);
+            texts[i].style.visibility = Math.abs(d) < 0.46 ? "visible" : "hidden";
           }
           const r = Math.round(a);
           if (r !== lastTick) {
